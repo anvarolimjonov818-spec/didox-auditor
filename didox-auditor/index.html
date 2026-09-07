@@ -17,6 +17,9 @@
   <!-- SheetJS (xlsx) CDN for Excel Import/Export -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   
+  <!-- JSZip CDN for ZIP file extraction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  
   <!-- Chart.js for Visual Analytics -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -427,9 +430,9 @@
               <div class="card-body">
                 <div class="drop-zone" id="dropZone">
                   <i data-lucide="upload-cloud" class="drop-icon"></i>
-                  <h4>Excel (.xlsx, .xls) yoki JSON faylni shu yerga tashlang</h4>
-                  <p>yoki faylni tanlash uchun bosing</p>
-                  <input type="file" id="fileUploadInput" accept=".xlsx, .xls, .json" hidden />
+                  <h4>Didox ZIP (.zip), Excel (.xlsx, .xls) yoki JSON faylni shu yerga tashlang</h4>
+                  <p>yoki faylni tanlash uchun bosing (Didox'dan skachat qilingan 100+ fakturali ZIP faylni ham qabul qiladi)</p>
+                  <input type="file" id="fileUploadInput" accept=".zip, .xlsx, .xls, .json" hidden />
                 </div>
 
                 <div class="quick-sample-box mt-4">

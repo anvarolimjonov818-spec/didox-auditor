@@ -493,7 +493,7 @@ function clearAllData() {
   if (lastSync) lastSync.textContent = "Ma'lumotlar tozalandi (0)";
 
   refreshAllViews();
-  showToast("Barcha ma'lumotlar tozalandi (0 qilindi). Endi o'zingizning Didox Excel reestringizni yuklashingiz mumkin!", "info");
+  showToast("Barcha ma'lumotlar tozalandi (0 qilindi). Endi o'zingizning Didox faylingizni yuklashingiz mumkin!", "info");
 }
 
 function switchTab(tabId) {
@@ -657,7 +657,7 @@ function renderDashboardTab(auditData) {
     tbody.innerHTML = "";
     if (discrepancies.length === 0) {
       const msg = appState.invoices.length === 0 
-        ? "Fakturalar hali yuklanmagan. O'z Didox Excel reestringizni yuklang yoki Didox API orqali sinxronlang."
+        ? "Fakturalar hali yuklanmagan. O'z Didox faylingizni yuklang yoki Didox API orqali sinxronlang."
         : "Tabriklaymiz! Hozirda hech qanday MXIK nomuvofiqligi aniqlanmadi.";
       tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted" style="padding: 24px;">${msg}</td></tr>`;
     } else {
@@ -713,7 +713,7 @@ function renderAuditTab() {
       <div class="card p-6 text-center text-muted" style="padding: 36px;">
         <i data-lucide="${isZeroInvoices ? 'file-question' : 'check-circle'}" style="width: 48px; height: 48px; color: ${isZeroInvoices ? 'var(--text-sub)' : 'var(--success)'}; margin: 0 auto 12px;"></i>
         <h4>${isZeroInvoices ? "Fakturalar mavjud emas" : "Nomuvofiqliklar topilmadi"}</h4>
-        <p>${isZeroInvoices ? "Didox Excel reestrini yuklang yoki Didox API orqali yangilang." : "Qidiruv shartlariga mos keluvchi MXIK xatoliklari mavjud emas."}</p>
+        <p>${isZeroInvoices ? "Didox faylini yuklang yoki Didox API orqali yangilang." : "Qidiruv shartlariga mos keluvchi MXIK xatoliklari mavjud emas."}</p>
       </div>
     `;
     initLucideIcons();
@@ -1194,24 +1194,159 @@ function exportExcelReport() {
   showToast(`Excel hisobot yuklab olindi: ${fileName}`, "success");
 }
 
-function handleFileUpload(file) {
-  const reader = new FileReader();
+/**
+ * Universal Parser for JSON objects from Didox
+ */
+function parseDidoxJson(obj, fallbackName = "Faktura") {
+  if (!obj || typeof obj !== "object") return null;
 
-  if (file.name.endsWith(".json")) {
+  // If array of documents
+  if (Array.isArray(obj)) {
+    return obj.map((d, i) => parseDidoxJson(d, `DOC-${i + 1}`)).filter(Boolean);
+  }
+
+  // Find doc fields with fallbacks
+  const docNo = String(obj.doc_no || obj.number || obj.doc_number || obj.contract_number || obj.id || fallbackName);
+  const date = String(obj.doc_date || obj.date || obj.created_at || "2026-09-07").slice(0, 10);
+  
+  const partnerName = String(
+    obj.seller?.name || obj.supplier?.name || obj.counterparty?.name || obj.partnerName ||
+    obj.seller_name || obj.supplier_name || obj.client?.name || "Kontragent"
+  );
+  const partnerInn = String(
+    obj.seller?.tin || obj.seller?.inn || obj.supplier?.inn || obj.partnerInn ||
+    obj.seller_inn || obj.client?.inn || "300000000"
+  );
+
+  const type = String(obj.type || obj.direction || "inbound").toLowerCase().includes("out") ? "outbound" : "inbound";
+
+  const rawItems = obj.items || obj.products || obj.productList || obj.rows || obj.goods || [];
+  const parsedItems = [];
+
+  rawItems.forEach(it => {
+    const name = String(it.name || it.product_name || it.title || it.catalog_name || "Noma'lum tovar");
+    const mxik = String(it.catalog_code || it.catalogcode || it.mxik || it.ikpu || it.spic || "00000000000000000");
+    const tasnif = String(it.catalog_name || it.tasnif || it.spic_name || "Tasnif kodi");
+    const qty = parseFloat(it.count || it.qty || it.quantity || it.amount || 1);
+    const price = parseFloat(it.price || it.cost || 0);
+    const total = parseFloat(it.sum || it.total || it.delivery_sum_with_vat || (qty * price));
+
+    parsedItems.push({
+      name,
+      mxik,
+      tasnif,
+      unit: it.unit || "dona",
+      qty,
+      price,
+      total
+    });
+  });
+
+  if (parsedItems.length === 0) return null;
+
+  return {
+    id: `DOC-${docNo}-${Math.random().toString(36).slice(2, 6)}`,
+    docNo,
+    date,
+    type,
+    partnerName,
+    partnerInn,
+    status: obj.status || "Qabul qilingan",
+    items: parsedItems
+  };
+}
+
+/**
+ * Universal File Upload Handler (ZIP, Excel, JSON)
+ */
+async function handleFileUpload(file) {
+  showToast("Fayl tahlil qilinmoqda...", "info");
+
+  // 1. ZIP ARCHIVE (Extracted via JSZip)
+  if (file.name.toLowerCase().endsWith(".zip")) {
+    if (typeof JSZip === "undefined") {
+      showToast("JSZip kutubxonasi yuklanmadi. Brauzerni qayta yuklang.", "danger");
+      return;
+    }
+
+    try {
+      const zip = new JSZip();
+      const zipData = await zip.loadAsync(file);
+      const importedInvoices = [];
+
+      const fileEntries = Object.keys(zipData.files).filter(fname => !zipData.files[fname].dir);
+
+      for (const fname of fileEntries) {
+        const zipFile = zipData.files[fname];
+
+        // Process JSON inside ZIP
+        if (fname.toLowerCase().endsWith(".json")) {
+          try {
+            const text = await zipFile.async("string");
+            const json = JSON.parse(text);
+            const parsed = parseDidoxJson(json, fname.replace(".json", ""));
+            if (Array.isArray(parsed)) {
+              importedInvoices.push(...parsed);
+            } else if (parsed) {
+              importedInvoices.push(parsed);
+            }
+          } catch (e) {
+            console.warn("Could not parse JSON in ZIP:", fname, e);
+          }
+        }
+        
+        // Process Excel inside ZIP
+        else if (fname.toLowerCase().endsWith(".xlsx") || fname.toLowerCase().endsWith(".xls")) {
+          try {
+            const arrBuff = await zipFile.async("arraybuffer");
+            const workbook = XLSX.read(new Uint8Array(arrBuff), { type: "array" });
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const jsonRows = XLSX.utils.sheet_to_json(firstSheet);
+            parseExcelRowsToInvoices(jsonRows, importedInvoices);
+          } catch (e) {
+            console.warn("Could not parse Excel in ZIP:", fname, e);
+          }
+        }
+      }
+
+      if (importedInvoices.length > 0) {
+        appState.invoices = importedInvoices;
+        appState.isDemo = false;
+        document.getElementById("demoBanner")?.classList.add("hidden");
+        document.getElementById("connectionStatus").textContent = "ZIP orqali yuklangan";
+        document.getElementById("lastSyncTime").textContent = `ZIP: ${file.name} (${importedInvoices.length} ta faktura)`;
+        refreshAllViews();
+        showToast(`ZIP arxiv muvaffaqiyatli ochildi: ${importedInvoices.length} ta hisob-faktura va tovarlar yuklandi!`, "success");
+        switchTab("dashboard");
+      } else {
+        showToast("ZIP arxiv ichida hisob-faktura fayllari (JSON yoki Excel) topilmadi.", "warning");
+      }
+
+    } catch (err) {
+      console.error(err);
+      showToast("ZIP arxivni ochishda xatolik yuz berdi.", "danger");
+    }
+    return;
+  }
+
+  // 2. SINGLE JSON FILE
+  if (file.name.toLowerCase().endsWith(".json")) {
+    const reader = new FileReader();
     reader.onload = function(e) {
       try {
         const json = JSON.parse(e.target.result);
-        if (Array.isArray(json)) {
-          appState.invoices = json;
+        const parsed = parseDidoxJson(json, file.name);
+        if (parsed) {
+          appState.invoices = Array.isArray(parsed) ? parsed : [parsed];
           appState.isDemo = false;
           document.getElementById("demoBanner")?.classList.add("hidden");
           document.getElementById("connectionStatus").textContent = "Fayl orqali yuklangan";
           document.getElementById("lastSyncTime").textContent = `Fayl: ${file.name}`;
           refreshAllViews();
-          showToast(`JSON yuklandi: ${json.length} ta faktura qabul qilindi!`, "success");
+          showToast(`JSON yuklandi: ${appState.invoices.length} ta faktura qabul qilindi!`, "success");
           switchTab("dashboard");
         } else {
-          showToast("JSON formati noto'g'ri (massiv bo'lishi kerak)", "danger");
+          showToast("JSON formati mos kelmadi", "danger");
         }
       } catch (err) {
         showToast("JSON faylni o'qishda xatolik yuz berdi", "danger");
@@ -1221,6 +1356,8 @@ function handleFileUpload(file) {
     return;
   }
 
+  // 3. SINGLE EXCEL FILE (.xlsx, .xls)
+  const reader = new FileReader();
   reader.onload = function(e) {
     try {
       const data = new Uint8Array(e.target.result);
@@ -1235,55 +1372,20 @@ function handleFileUpload(file) {
       }
 
       const importedInvoices = [];
-      const invoiceGroup = {};
+      parseExcelRowsToInvoices(jsonRows, importedInvoices);
 
-      jsonRows.forEach((row, idx) => {
-        const docNo = String(row["Faktura №"] || row["Faktura"] || row["docNo"] || row["Номер"] || `IMP-${idx + 1}`);
-        const typeStr = String(row["Turi"] || row["type"] || "inbound").toLowerCase();
-        const type = typeStr.includes("chiq") || typeStr.includes("out") ? "outbound" : "inbound";
-        const partnerName = String(row["Kontragent"] || row["partnerName"] || row["Поставщик"] || row["Покупатель"] || "Kontragent");
-        const partnerInn = String(row["STIR"] || row["partnerInn"] || row["ИНН"] || "300000000");
-        const date = String(row["Sana"] || row["date"] || "2026-09-07");
-
-        const name = String(row["Tovar Nomi"] || row["name"] || row["Товар"] || "Noma'lum tovar");
-        const mxik = String(row["MXIK Kodi"] || row["mxik"] || row["МХИК"] || "00000000000000000");
-        const tasnif = String(row["Tasnif Nomi"] || row["tasnif"] || "Tasnif kodi");
-        const qty = parseFloat(row["Miqdori"] || row["qty"] || row["Количество"] || 1);
-        const price = parseFloat(row["Narxi"] || row["price"] || row["Цена"] || 0);
-
-        if (!invoiceGroup[docNo]) {
-          invoiceGroup[docNo] = {
-            id: `DOC-${docNo}`,
-            docNo: docNo,
-            date: date,
-            type: type,
-            partnerName: partnerName,
-            partnerInn: partnerInn,
-            status: "Qabul qilingan",
-            items: []
-          };
-          importedInvoices.push(invoiceGroup[docNo]);
-        }
-
-        invoiceGroup[docNo].items.push({
-          name,
-          mxik,
-          tasnif,
-          unit: "dona",
-          qty,
-          price,
-          total: qty * price
-        });
-      });
-
-      appState.invoices = importedInvoices;
-      appState.isDemo = false;
-      document.getElementById("demoBanner")?.classList.add("hidden");
-      document.getElementById("connectionStatus").textContent = "Fayl orqali yuklangan";
-      document.getElementById("lastSyncTime").textContent = `Fayl: ${file.name}`;
-      refreshAllViews();
-      showToast(`Excel muvaffaqiyatli yuklandi: ${importedInvoices.length} ta faktura o'qildi!`, "success");
-      switchTab("dashboard");
+      if (importedInvoices.length > 0) {
+        appState.invoices = importedInvoices;
+        appState.isDemo = false;
+        document.getElementById("demoBanner")?.classList.add("hidden");
+        document.getElementById("connectionStatus").textContent = "Excel orqali yuklangan";
+        document.getElementById("lastSyncTime").textContent = `Fayl: ${file.name}`;
+        refreshAllViews();
+        showToast(`Excel muvaffaqiyatli yuklandi: ${importedInvoices.length} ta faktura o'qildi!`, "success");
+        switchTab("dashboard");
+      } else {
+        showToast("Excel jadvalida fakturalar formati aniqlanmadi.", "warning");
+      }
 
     } catch (err) {
       console.error(err);
@@ -1291,6 +1393,49 @@ function handleFileUpload(file) {
     }
   };
   reader.readAsArrayBuffer(file);
+}
+
+function parseExcelRowsToInvoices(jsonRows, targetArray) {
+  const invoiceGroup = {};
+
+  jsonRows.forEach((row, idx) => {
+    const docNo = String(row["Faktura №"] || row["Faktura"] || row["docNo"] || row["Номер"] || row["Hujjat"] || `IMP-${idx + 1}`);
+    const typeStr = String(row["Turi"] || row["type"] || "inbound").toLowerCase();
+    const type = typeStr.includes("chiq") || typeStr.includes("out") ? "outbound" : "inbound";
+    const partnerName = String(row["Kontragent"] || row["partnerName"] || row["Hamkor"] || row["Поставщик"] || row["Покупатель"] || "Kontragent");
+    const partnerInn = String(row["STIR"] || row["partnerInn"] || row["ИНН"] || "300000000");
+    const date = String(row["Sana"] || row["date"] || "2026-09-07");
+
+    const name = String(row["Tovar Nomi"] || row["name"] || row["Tovar"] || row["Товар"] || "Noma'lum tovar");
+    const mxik = String(row["MXIK Kodi"] || row["mxik"] || row["МХИК"] || row["IKPU"] || "00000000000000000");
+    const tasnif = String(row["Tasnif Nomi"] || row["tasnif"] || "Tasnif kodi");
+    const qty = parseFloat(row["Miqdori"] || row["qty"] || row["Количество"] || 1);
+    const price = parseFloat(row["Narxi"] || row["price"] || row["Цена"] || 0);
+
+    if (!invoiceGroup[docNo]) {
+      invoiceGroup[docNo] = {
+        id: `DOC-${docNo}`,
+        docNo: docNo,
+        date: date,
+        type: type,
+        partnerName: partnerName,
+        partnerInn: partnerInn,
+        status: "Qabul qilingan",
+        items: []
+      };
+      targetArray.push(invoiceGroup[docNo]);
+    }
+
+    invoiceGroup[docNo].items.push({
+      name,
+      mxik,
+      tasnif,
+      unit: "dona",
+      qty,
+      price,
+      total: qty * price
+    });
+  });
 }
 
 function handleDidoxSync() {
