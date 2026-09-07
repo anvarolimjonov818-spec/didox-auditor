@@ -1194,18 +1194,113 @@ function exportExcelReport() {
   showToast(`Excel hisobot yuklab olindi: ${fileName}`, "success");
 }
 
+// ==========================================
+// 5. PARSERS: XML, JSON, EXCEL, HTML
+// ==========================================
+
+/**
+ * Universal Parser for Didox / Soliq E-Invoice XML files
+ */
+function parseDidoxXml(xmlString, filename = "Faktura") {
+  if (!xmlString) return null;
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xmlString, "text/xml");
+    
+    if (doc.querySelector("parsererror")) {
+      return null;
+    }
+
+    const getTag = (parent, ...tags) => {
+      for (const t of tags) {
+        const el = parent.querySelector(t);
+        if (el && el.textContent.trim()) return el.textContent.trim();
+      }
+      return "";
+    };
+
+    const docNo = getTag(doc, "FacturaNo", "DocNo", "DocumentNo", "Number", "ActNo", "WaybillNo", "ContractNo", "FacturaDoc FacturaId") || filename.replace(/\.[^/.]+$/, "");
+    const date = (getTag(doc, "FacturaDate", "DocDate", "DocumentDate", "Date", "ActDate", "WaybillDate") || "2026-09-07").slice(0, 10);
+    
+    const sellerName = getTag(doc, "Seller Name", "Supplier Name", "SellerName", "Provider Name", "Seller Title", "Seller") || "Ta'minotchi";
+    const sellerInn = getTag(doc, "Seller Tin", "Supplier Tin", "SellerTin", "Seller Inn", "Supplier Inn") || "300000000";
+
+    const buyerName = getTag(doc, "Buyer Name", "Customer Name", "BuyerName", "Client Name", "Buyer") || "Xaridor";
+    const buyerInn = getTag(doc, "Buyer Tin", "Customer Tin", "BuyerTin", "Buyer Inn") || "311519913";
+
+    // Determine type: If seller is user's organization (e.g. 311519913 / SINAMED), it is outbound, otherwise inbound
+    let type = "inbound";
+    if (sellerInn.includes("311519913") || sellerName.toLowerCase().includes("sinamed")) {
+      type = "outbound";
+    }
+
+    // Query product rows
+    let productNodes = doc.querySelectorAll("ProductList Products, ProductList Product, Products, Product, ProductList Row, ProductRow, Goods Item, Items Item, ProductTable Row");
+    if (!productNodes || productNodes.length === 0) {
+      productNodes = doc.querySelectorAll("ProductList, ProductsList, ProductTable");
+    }
+
+    const items = [];
+
+    productNodes.forEach(node => {
+      const name = getTag(node, "Name", "ProductName", "GoodsName", "Title", "CatalogName");
+      let mxik = getTag(node, "CatalogCode", "Catalogcode", "Mxik", "Ikpu", "Spic", "Code") || "00000000000000000";
+      const tasnif = getTag(node, "CatalogName", "Catalogname", "Tasnif", "SpicName") || "Tasnif kodi";
+      const unit = getTag(node, "MeasureName", "UnitName", "MeasureId", "Unit") || "dona";
+      
+      const qtyStr = getTag(node, "Count", "Qty", "Quantity", "Amount") || "1";
+      const priceStr = getTag(node, "Summa", "Price", "Cost", "Rate") || "0";
+      const totalStr = getTag(node, "DeliverySumWithVat", "DeliverySum", "TotalSum", "Sum", "Total") || "0";
+
+      const qty = parseFloat(qtyStr.replace(/[^0-9.-]+/g, "")) || 1;
+      const price = parseFloat(priceStr.replace(/[^0-9.-]+/g, "")) || 0;
+      const total = parseFloat(totalStr.replace(/[^0-9.-]+/g, "")) || (qty * price);
+
+      if (mxik.length < 17 && mxik.length > 5) {
+        mxik = (mxik + "00000000000000000").slice(0, 17);
+      }
+
+      if (name || mxik !== "00000000000000000") {
+        items.push({
+          name: name || "Mahsulot",
+          mxik: mxik,
+          tasnif: tasnif,
+          unit: unit,
+          qty: qty,
+          price: price,
+          total: total
+        });
+      }
+    });
+
+    if (items.length === 0) return null;
+
+    return {
+      id: `DOC-${docNo}-${Math.random().toString(36).slice(2, 6)}`,
+      docNo,
+      date,
+      type,
+      partnerName: type === "inbound" ? sellerName : buyerName,
+      partnerInn: type === "inbound" ? sellerInn : buyerInn,
+      status: "Qabul qilingan",
+      items
+    };
+  } catch (err) {
+    console.warn("XML parse error for", filename, err);
+    return null;
+  }
+}
+
 /**
  * Universal Parser for JSON objects from Didox
  */
 function parseDidoxJson(obj, fallbackName = "Faktura") {
   if (!obj || typeof obj !== "object") return null;
 
-  // If array of documents
   if (Array.isArray(obj)) {
     return obj.map((d, i) => parseDidoxJson(d, `DOC-${i + 1}`)).filter(Boolean);
   }
 
-  // Find doc fields with fallbacks
   const docNo = String(obj.doc_no || obj.number || obj.doc_number || obj.contract_number || obj.id || fallbackName);
   const date = String(obj.doc_date || obj.date || obj.created_at || "2026-09-07").slice(0, 10);
   
@@ -1218,18 +1313,25 @@ function parseDidoxJson(obj, fallbackName = "Faktura") {
     obj.seller_inn || obj.client?.inn || "300000000"
   );
 
-  const type = String(obj.type || obj.direction || "inbound").toLowerCase().includes("out") ? "outbound" : "inbound";
+  let type = "inbound";
+  if (partnerInn.includes("311519913") || partnerName.toLowerCase().includes("sinamed") || String(obj.type || "").toLowerCase().includes("out")) {
+    type = "outbound";
+  }
 
   const rawItems = obj.items || obj.products || obj.productList || obj.rows || obj.goods || [];
   const parsedItems = [];
 
   rawItems.forEach(it => {
     const name = String(it.name || it.product_name || it.title || it.catalog_name || "Noma'lum tovar");
-    const mxik = String(it.catalog_code || it.catalogcode || it.mxik || it.ikpu || it.spic || "00000000000000000");
+    let mxik = String(it.catalog_code || it.catalogcode || it.mxik || it.ikpu || it.spic || "00000000000000000");
     const tasnif = String(it.catalog_name || it.tasnif || it.spic_name || "Tasnif kodi");
     const qty = parseFloat(it.count || it.qty || it.quantity || it.amount || 1);
     const price = parseFloat(it.price || it.cost || 0);
     const total = parseFloat(it.sum || it.total || it.delivery_sum_with_vat || (qty * price));
+
+    if (mxik.length < 17 && mxik.length > 5) {
+      mxik = (mxik + "00000000000000000").slice(0, 17);
+    }
 
     parsedItems.push({
       name,
@@ -1257,7 +1359,7 @@ function parseDidoxJson(obj, fallbackName = "Faktura") {
 }
 
 /**
- * Universal File Upload Handler (ZIP, Excel, JSON)
+ * Universal File Upload Handler (ZIP, XML, Excel, JSON)
  */
 async function handleFileUpload(file) {
   showToast("Fayl tahlil qilinmoqda...", "info");
@@ -1273,14 +1375,27 @@ async function handleFileUpload(file) {
       const zip = new JSZip();
       const zipData = await zip.loadAsync(file);
       const importedInvoices = [];
+      const fileNamesFound = [];
 
-      const fileEntries = Object.keys(zipData.files).filter(fname => !zipData.files[fname].dir);
+      const fileEntries = Object.keys(zipData.files).filter(fname => !zipData.files[fname].dir && !fname.includes("__MACOSX") && !fname.startsWith("."));
 
       for (const fname of fileEntries) {
+        fileNamesFound.push(fname);
         const zipFile = zipData.files[fname];
 
-        // Process JSON inside ZIP
-        if (fname.toLowerCase().endsWith(".json")) {
+        // A. XML Files (Didox standard format)
+        if (fname.toLowerCase().endsWith(".xml") || fname.toLowerCase().endsWith(".p7s") || fname.toLowerCase().endsWith(".sign")) {
+          try {
+            const text = await zipFile.async("string");
+            const parsed = parseDidoxXml(text, fname);
+            if (parsed) importedInvoices.push(parsed);
+          } catch (e) {
+            console.warn("Could not parse XML in ZIP:", fname, e);
+          }
+        }
+
+        // B. JSON Files
+        else if (fname.toLowerCase().endsWith(".json")) {
           try {
             const text = await zipFile.async("string");
             const json = JSON.parse(text);
@@ -1295,7 +1410,7 @@ async function handleFileUpload(file) {
           }
         }
         
-        // Process Excel inside ZIP
+        // C. Excel Files
         else if (fname.toLowerCase().endsWith(".xlsx") || fname.toLowerCase().endsWith(".xls")) {
           try {
             const arrBuff = await zipFile.async("arraybuffer");
@@ -1305,6 +1420,23 @@ async function handleFileUpload(file) {
             parseExcelRowsToInvoices(jsonRows, importedInvoices);
           } catch (e) {
             console.warn("Could not parse Excel in ZIP:", fname, e);
+          }
+        }
+
+        // D. Fallback for any text / html file
+        else {
+          try {
+            const text = await zipFile.async("string");
+            if (text.includes("<?xml") || text.includes("<FacturaDoc") || text.includes("<ProductList") || text.includes("<CatalogCode>")) {
+              const parsed = parseDidoxXml(text, fname);
+              if (parsed) importedInvoices.push(parsed);
+            } else if (text.trim().startsWith("{") || text.trim().startsWith("[")) {
+              const json = JSON.parse(text);
+              const parsed = parseDidoxJson(json, fname);
+              if (parsed) importedInvoices.push(...(Array.isArray(parsed) ? parsed : [parsed]));
+            }
+          } catch (e) {
+            // Ignore non-document assets like pdfs/images
           }
         }
       }
@@ -1319,7 +1451,7 @@ async function handleFileUpload(file) {
         showToast(`ZIP arxiv muvaffaqiyatli ochildi: ${importedInvoices.length} ta hisob-faktura va tovarlar yuklandi!`, "success");
         switchTab("dashboard");
       } else {
-        showToast("ZIP arxiv ichida hisob-faktura fayllari (JSON yoki Excel) topilmadi.", "warning");
+        showToast(`ZIP arxiv ochildi (${fileEntries.length} ta fayl topildi), lekin faktura XML/JSON fayllari aniqlanmadi.`, "warning");
       }
 
     } catch (err) {
@@ -1329,7 +1461,29 @@ async function handleFileUpload(file) {
     return;
   }
 
-  // 2. SINGLE JSON FILE
+  // 2. SINGLE XML FILE
+  if (file.name.toLowerCase().endsWith(".xml")) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const parsed = parseDidoxXml(e.target.result, file.name);
+      if (parsed) {
+        appState.invoices = [parsed];
+        appState.isDemo = false;
+        document.getElementById("demoBanner")?.classList.add("hidden");
+        document.getElementById("connectionStatus").textContent = "XML orqali yuklangan";
+        document.getElementById("lastSyncTime").textContent = `Fayl: ${file.name}`;
+        refreshAllViews();
+        showToast(`XML faktura muvaffaqiyatli yuklandi!`, "success");
+        switchTab("dashboard");
+      } else {
+        showToast("XML formati mos kelmadi", "danger");
+      }
+    };
+    reader.readAsText(file);
+    return;
+  }
+
+  // 3. SINGLE JSON FILE
   if (file.name.toLowerCase().endsWith(".json")) {
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -1356,7 +1510,7 @@ async function handleFileUpload(file) {
     return;
   }
 
-  // 3. SINGLE EXCEL FILE (.xlsx, .xls)
+  // 4. SINGLE EXCEL FILE (.xlsx, .xls)
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
@@ -1407,10 +1561,14 @@ function parseExcelRowsToInvoices(jsonRows, targetArray) {
     const date = String(row["Sana"] || row["date"] || "2026-09-07");
 
     const name = String(row["Tovar Nomi"] || row["name"] || row["Tovar"] || row["Товар"] || "Noma'lum tovar");
-    const mxik = String(row["MXIK Kodi"] || row["mxik"] || row["МХИК"] || row["IKPU"] || "00000000000000000");
+    let mxik = String(row["MXIK Kodi"] || row["mxik"] || row["МХИК"] || row["IKPU"] || "00000000000000000");
     const tasnif = String(row["Tasnif Nomi"] || row["tasnif"] || "Tasnif kodi");
     const qty = parseFloat(row["Miqdori"] || row["qty"] || row["Количество"] || 1);
     const price = parseFloat(row["Narxi"] || row["price"] || row["Цена"] || 0);
+
+    if (mxik.length < 17 && mxik.length > 5) {
+      mxik = (mxik + "00000000000000000").slice(0, 17);
+    }
 
     if (!invoiceGroup[docNo]) {
       invoiceGroup[docNo] = {
@@ -1496,5 +1654,5 @@ function escapeHtml(str) {
 
 function escapeJsString(str) {
   if (!str) return "";
-  return String(str).replace(/'/g, "\'").replace(/"/g, '\"');
+  return String(str).replace(/'/g, "\\\'").replace(/"/g, '\\"');
 }
