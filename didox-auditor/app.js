@@ -213,6 +213,7 @@ const INITIAL_INVOICES = [
 
 let appState = {
   invoices: JSON.parse(JSON.stringify(INITIAL_INVOICES)),
+  isDemo: true,
   activeTab: "dashboard",
   turnoverChart: null,
   discrepancyChart: null
@@ -470,6 +471,29 @@ function setupNavigation() {
 
   document.getElementById("goToAuditBtn")?.addEventListener("click", () => switchTab("audit"));
   document.getElementById("viewAllAuditBtn")?.addEventListener("click", () => switchTab("audit"));
+  document.getElementById("bannerImportBtn")?.addEventListener("click", () => {
+    switchTab("didox-sync");
+    document.getElementById("fileUploadInput")?.click();
+  });
+  document.getElementById("bannerClearBtn")?.addEventListener("click", clearAllData);
+  document.getElementById("clearDataBtn")?.addEventListener("click", clearAllData);
+}
+
+function clearAllData() {
+  appState.invoices = [];
+  appState.isDemo = false;
+  
+  const banner = document.getElementById("demoBanner");
+  if (banner) banner.classList.add("hidden");
+
+  const connStatus = document.getElementById("connectionStatus");
+  if (connStatus) connStatus.textContent = "Fakturalar Kutilmoqda";
+
+  const lastSync = document.getElementById("lastSyncTime");
+  if (lastSync) lastSync.textContent = "Ma'lumotlar tozalandi (0)";
+
+  refreshAllViews();
+  showToast("Barcha ma'lumotlar tozalandi (0 qilindi). Endi o'zingizning Didox Excel reestringizni yuklashingiz mumkin!", "info");
 }
 
 function switchTab(tabId) {
@@ -521,6 +545,9 @@ function setupEventListeners() {
   document.getElementById("exportReportBtn")?.addEventListener("click", exportExcelReport);
   document.getElementById("loadDemoDataBtn")?.addEventListener("click", () => {
     appState.invoices = JSON.parse(JSON.stringify(INITIAL_INVOICES));
+    appState.isDemo = true;
+    const banner = document.getElementById("demoBanner");
+    if (banner) banner.classList.remove("hidden");
     refreshAllViews();
     showToast("Namunaviy ma'lumotlar qayta yuklandi!", "success");
   });
@@ -598,6 +625,15 @@ function refreshAllViews() {
     discrepancyBadge.textContent = auditData.kpis.discrepancyCount;
   }
 
+  const alertBanner = document.getElementById("criticalAlertBanner");
+  if (alertBanner) {
+    if (auditData.discrepancies.length > 0) {
+      alertBanner.style.display = "flex";
+    } else {
+      alertBanner.style.display = "none";
+    }
+  }
+
   initLucideIcons();
 }
 
@@ -620,7 +656,10 @@ function renderDashboardTab(auditData) {
   if (tbody) {
     tbody.innerHTML = "";
     if (discrepancies.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted" style="padding: 24px;">Tabriklaymiz! Hozirda hech qanday MXIK nomuvofiqligi mavjud emas.</td></tr>`;
+      const msg = appState.invoices.length === 0 
+        ? "Fakturalar hali yuklanmagan. O'z Didox Excel reestringizni yuklang yoki Didox API orqali sinxronlang."
+        : "Tabriklaymiz! Hozirda hech qanday MXIK nomuvofiqligi aniqlanmadi.";
+      tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted" style="padding: 24px;">${msg}</td></tr>`;
     } else {
       discrepancies.slice(0, 5).forEach(disc => {
         const mxikBadges = disc.variants.map(v => `<span class="mxik-tag">${v.mxik}</span>`).join(" ");
@@ -669,11 +708,12 @@ function renderAuditTab() {
   });
 
   if (filtered.length === 0) {
+    const isZeroInvoices = appState.invoices.length === 0;
     container.innerHTML = `
       <div class="card p-6 text-center text-muted" style="padding: 36px;">
-        <i data-lucide="check-circle" style="width: 48px; height: 48px; color: var(--success); margin: 0 auto 12px;"></i>
-        <h4>Nomuvofiqliklar topilmadi</h4>
-        <p>Qidiruv shartlariga mos keluvchi MXIK xatoliklari mavjud emas.</p>
+        <i data-lucide="${isZeroInvoices ? 'file-question' : 'check-circle'}" style="width: 48px; height: 48px; color: ${isZeroInvoices ? 'var(--text-sub)' : 'var(--success)'}; margin: 0 auto 12px;"></i>
+        <h4>${isZeroInvoices ? "Fakturalar mavjud emas" : "Nomuvofiqliklar topilmadi"}</h4>
+        <p>${isZeroInvoices ? "Didox Excel reestrini yuklang yoki Didox API orqali yangilang." : "Qidiruv shartlariga mos keluvchi MXIK xatoliklari mavjud emas."}</p>
       </div>
     `;
     initLucideIcons();
@@ -784,7 +824,10 @@ function renderInventoryTab() {
   });
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="9" class="text-center text-muted" style="padding: 24px;">Qidiruvga mos tovar balansi topilmadi.</td></tr>`;
+    const msg = appState.invoices.length === 0 
+      ? "Fakturalar hali yuklanmagan. E-Ombor balansi hisoblanishi uchun Didox faylingizni yuklang."
+      : "Qidiruvga mos tovar balansi topilmadi.";
+    tbody.innerHTML = `<tr><td colspan="9" class="text-center text-muted" style="padding: 24px;">${msg}</td></tr>`;
     return;
   }
 
@@ -847,7 +890,10 @@ function renderInvoicesTab() {
   });
 
   if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted" style="padding: 24px;">Fakturalar topilmadi.</td></tr>`;
+    const msg = appState.invoices.length === 0 
+      ? "Hisob-fakturalar hali yuklanmagan."
+      : "Fakturalar topilmadi.";
+    tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted" style="padding: 24px;">${msg}</td></tr>`;
     return;
   }
 
@@ -890,13 +936,23 @@ function updateCharts(auditData) {
   if (turnoverCtx) {
     if (appState.turnoverChart) appState.turnoverChart.destroy();
 
+    const dataVals = (kpis.totalInboundSum === 0 && kpis.totalOutboundSum === 0) 
+      ? [1] 
+      : [kpis.totalInboundSum, kpis.totalOutboundSum, kpis.totalBalanceSum];
+    const bgColors = (kpis.totalInboundSum === 0 && kpis.totalOutboundSum === 0)
+      ? ["#E2E8F0"]
+      : ["#3B82F6", "#8B5CF6", "#10B981"];
+    const labels = (kpis.totalInboundSum === 0 && kpis.totalOutboundSum === 0)
+      ? ["Ma'lumot yo'q (0 UZS)"]
+      : ["Kirim (Kiruvchi)", "Chiqim (Chiquvchi)", "Hozirgi Qoldiq"];
+
     appState.turnoverChart = new Chart(turnoverCtx, {
       type: "doughnut",
       data: {
-        labels: ["Kirim (Kiruvchi)", "Chiqim (Chiquvchi)", "Hozirgi Qoldiq"],
+        labels: labels,
         datasets: [{
-          data: [kpis.totalInboundSum, kpis.totalOutboundSum, kpis.totalBalanceSum],
-          backgroundColor: ["#3B82F6", "#8B5CF6", "#10B981"],
+          data: dataVals,
+          backgroundColor: bgColors,
           borderWidth: 2,
           borderColor: "#FFFFFF"
         }]
@@ -1147,6 +1203,10 @@ function handleFileUpload(file) {
         const json = JSON.parse(e.target.result);
         if (Array.isArray(json)) {
           appState.invoices = json;
+          appState.isDemo = false;
+          document.getElementById("demoBanner")?.classList.add("hidden");
+          document.getElementById("connectionStatus").textContent = "Fayl orqali yuklangan";
+          document.getElementById("lastSyncTime").textContent = `Fayl: ${file.name}`;
           refreshAllViews();
           showToast(`JSON yuklandi: ${json.length} ta faktura qabul qilindi!`, "success");
           switchTab("dashboard");
@@ -1217,6 +1277,10 @@ function handleFileUpload(file) {
       });
 
       appState.invoices = importedInvoices;
+      appState.isDemo = false;
+      document.getElementById("demoBanner")?.classList.add("hidden");
+      document.getElementById("connectionStatus").textContent = "Fayl orqali yuklangan";
+      document.getElementById("lastSyncTime").textContent = `Fayl: ${file.name}`;
       refreshAllViews();
       showToast(`Excel muvaffaqiyatli yuklandi: ${importedInvoices.length} ta faktura o'qildi!`, "success");
       switchTab("dashboard");

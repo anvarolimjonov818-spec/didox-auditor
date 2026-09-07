@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    DIDOX MXIK AUDITOR & E-OMBOR DASHBOARD — STYLES
    ========================================================================== */
 
@@ -584,6 +584,59 @@ html, body {
   font-size: 0.84rem;
   color: #7F1D1D;
   line-height: 1.45;
+}
+
+/* Demo Mode Banner */
+.demo-info-banner {
+  background: linear-gradient(90deg, #EEF2FF, #F0FDF4);
+  border: 1px solid #C7D2FE;
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.demo-banner-content {
+  flex: 1;
+}
+
+.demo-badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #4F46E5;
+  color: #FFFFFF;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+}
+
+.demo-badge-tag svg {
+  width: 14px;
+  height: 14px;
+}
+
+.demo-banner-content p {
+  font-size: 0.86rem;
+  color: #1E293B;
+  line-height: 1.45;
+}
+
+.demo-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.demo-info-banner.hidden {
+  display: none;
 }
 
 /* Charts Grid */

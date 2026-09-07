@@ -88,6 +88,10 @@
         </div>
 
         <div class="topbar-actions">
+          <button class="btn btn-outline" id="clearDataBtn" title="Namunaviy ma'lumotlarni tozalash">
+            <i data-lucide="trash-2"></i>
+            <span>Tozalash (0 Qilish)</span>
+          </button>
           <button class="btn btn-outline" id="importExcelBtn">
             <i data-lucide="upload"></i>
             <span>Excel Yuklash</span>
@@ -109,6 +113,18 @@
         <!-- ==================== TAB 1: DASHBOARD ==================== -->
         <section class="tab-pane active" id="tab-dashboard">
           
+          <!-- Demo Mode Alert Banner -->
+          <div class="demo-info-banner" id="demoBanner">
+            <div class="demo-banner-content">
+              <div class="demo-badge-tag"><i data-lucide="info"></i> DEMO / NAMUNAVIY REJIM</div>
+              <p>Dastur qanday ishlashini ko'rishingiz uchun <strong>misol tariqasida namunaviy tovarlar</strong> yuklangan. O'zingizning haqiqiy Didox fakturalaringizni tekshirish uchun Excel faylingizni yuklang yoki ma'lumotlarni tozalab noldan boshlang.</p>
+            </div>
+            <div class="demo-banner-actions">
+              <button class="btn btn-sm btn-primary" id="bannerImportBtn"><i data-lucide="upload"></i> O'z Fakturamni Yuklash</button>
+              <button class="btn btn-sm btn-outline" id="bannerClearBtn"><i data-lucide="trash-2"></i> Tozalash (0 Qilish)</button>
+            </div>
+          </div>
+
           <!-- KPI Stats Grid -->
           <div class="stats-grid">
             
