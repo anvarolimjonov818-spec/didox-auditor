@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Didox MXIK Auditor & E-Ombor Balansi — Soliq & Faktura Nazorati</title>
+  <meta name="description" content="Didox.uz elektron hisob-fakturalaridagi MXIK nomuvofiqliklarini aniqlash, kiruvchi va chiquvchi tovarlar balansi hamda ombor qoldig'ini nazorat qilish dasturi." />
+  
+  <!-- Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- SheetJS (xlsx) CDN for Excel Import/Export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  
+  <!-- Chart.js for Visual Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ==================== APP CONTAINER ==================== -->
+  <div class="app-layout">
+    
+    <!-- Left Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-badge">
+          <i data-lucide="shield-check"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">DIDOX <span class="highlight">AUDIT</span></span>
+          <span class="brand-sub">MXIK &amp; E-Ombor Nazorati</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-tab="dashboard">
+          <i data-lucide="layout-dashboard"></i>
+          <span>Asosiy Panel</span>
+        </button>
+        <button class="nav-btn" data-tab="audit">
+          <i data-lucide="alert-triangle"></i>
+          <span>MXIK Xatoliklar</span>
+          <span class="badge-count" id="discrepancyBadge">0</span>
+        </button>
+        <button class="nav-btn" data-tab="inventory">
+          <i data-lucide="boxes"></i>
+          <span>MXIK Qoldiq Balansi</span>
+        </button>
+        <button class="nav-btn" data-tab="invoices">
+          <i data-lucide="file-spreadsheet"></i>
+          <span>Fakturalar Reestri</span>
+        </button>
+        <button class="nav-btn" data-tab="didox-sync">
+          <i data-lucide="cloud-sync"></i>
+          <span>Didox API &amp; Import</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-status-box">
+        <div class="status-indicator online"></div>
+        <div class="status-info">
+          <span class="status-title" id="connectionStatus">Didox Ulanishi Faol</span>
+          <span class="status-meta" id="lastSyncTime">So'nggi audit: Bugun</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Navigation Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i data-lucide="menu"></i>
+          </button>
+          <div class="page-title-wrap">
+            <h1 class="page-title" id="pageTitle">Asosiy Ko'rsatkichlar &amp; Audit</h1>
+            <p class="page-sub" id="pageSubtitle">Didox kiruvchi va chiquvchi fakturalaridagi MXIK tahlili</p>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="btn btn-outline" id="importExcelBtn">
+            <i data-lucide="upload"></i>
+            <span>Excel Yuklash</span>
+          </button>
+          <button class="btn btn-primary" id="syncDidoxBtn">
+            <i data-lucide="refresh-cw" id="syncIcon"></i>
+            <span>Didox'dan Yangilash</span>
+          </button>
+          <button class="btn btn-success" id="exportReportBtn">
+            <i data-lucide="download"></i>
+            <span>Hisobot (.xlsx)</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Tab Views -->
+      <div class="tab-content-area">
+
+        <!-- ==================== TAB 1: DASHBOARD ==================== -->
+        <section class="tab-pane active" id="tab-dashboard">
+          
+          <!-- KPI Stats Grid -->
+          <div class="stats-grid">
+            
+            <div class="stat-card stat-alert">
+              <div class="stat-header">
+                <span class="stat-label">MXIK Nomuvofiqliklar</span>
+                <div class="stat-icon-wrap alert-bg"><i data-lucide="alert-triangle"></i></div>
+              </div>
+              <div class="stat-body">
+                <h3 class="stat-number" id="kpiDiscrepancies">0 ta tovar</h3>
+                <p class="stat-desc">Bir xil tovarga turli MXIK kodlari ishlatilgan</p>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <span class="stat-label">Qabul Qilingan (Kiruvchi)</span>
+                <div class="stat-icon-wrap in-bg"><i data-lucide="arrow-down-left"></i></div>
+              </div>
+              <div class="stat-body">
+                <h3 class="stat-number text-blue" id="kpiInboundTotal">0 UZS</h3>
+                <p class="stat-desc" id="kpiInboundCount">0 ta faktura, 0 dona tovar</p>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <span class="stat-label">Chiqib Ketgan (Chiquvchi)</span>
+                <div class="stat-icon-wrap out-bg"><i data-lucide="arrow-up-right"></i></div>
+              </div>
+              <div class="stat-body">
+                <h3 class="stat-number text-purple" id="kpiOutboundTotal">0 UZS</h3>
+                <p class="stat-desc" id="kpiOutboundCount">0 ta faktura, 0 dona tovar</p>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-header">
+                <span class="stat-label">Hozirgi Ombor Qoldig'i</span>
+                <div class="stat-icon-wrap success-bg"><i data-lucide="boxes"></i></div>
+              </div>
+              <div class="stat-body">
+                <h3 class="stat-number text-green" id="kpiCurrentBalance">0 UZS</h3>
+                <p class="stat-desc" id="kpiBalanceItems">0 dona mahsulot qoldiqda</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Alert Banner for Urgent Discrepancies -->
+          <div class="critical-alert-card" id="criticalAlertBanner">
+            <div class="alert-icon-left">
+              <i data-lucide="shield-alert"></i>
+            </div>
+            <div class="alert-content-mid">
+              <h4>🚨 Diqqat: Soliq (E-Ombor) xavfi bo'yicha nomuvofiqliklar aniqlandi!</h4>
+              <p>Ta'minotchilar tomonidan bir xil nomdagi tovarlarga (masalan: <em>"Детские соски"</em>) har xil MXIK kodlari yozilgan. Bu tovarlarni sotganda soliq tizimida minus qoldiq va jarima xavfi tug'iladi.</p>
+            </div>
+            <button class="btn btn-warning" id="goToAuditBtn">
+              Xatoliklarni Ko'rish
+            </button>
+          </div>
+
+          <!-- Charts and Summary Grid -->
+          <div class="dashboard-charts-grid">
+            <div class="card chart-card">
+              <div class="card-header">
+                <h3 class="card-title">Kirim va Chiqim Nisbati (Summada)</h3>
+              </div>
+              <div class="card-body">
+                <canvas id="turnoverChart" height="230"></canvas>
+              </div>
+            </div>
+
+            <div class="card chart-card">
+              <div class="card-header">
+                <h3 class="card-title">Eng Ko'p Nomuvofiqlik Aniqlangan Tovarlar</h3>
+              </div>
+              <div class="card-body">
+                <canvas id="discrepancyChart" height="230"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Recent Conflict Table -->
+          <div class="card mt-6">
+            <div class="card-header flex-between">
+              <div>
+                <h3 class="card-title">Tezkor MXIK Xatoliklari (Top-5)</h3>
+                <p class="card-subtitle">Darhol tuzatish yoki qayta rasmiylashtirish talab qilinadigan tovarlar</p>
+              </div>
+              <button class="btn btn-sm btn-outline" id="viewAllAuditBtn">Barchasini ko'rish →</button>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="data-table" id="recentConflictsTable">
+                  <thead>
+                    <tr>
+                      <th>Tovar Nomi</th>
+                      <th>Aniqlangan MXIK Kodlari</th>
+                      <th>Kirim Miqdori</th>
+                      <th>Ta'minotchilar</th>
+                      <th>Xavf Darajasi</th>
+                      <th class="text-right">Amal</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 2: MXIK AUDIT & DISCREPANCIES ==================== -->
+        <section class="tab-pane" id="tab-audit">
+          
+          <div class="card mb-6">
+            <div class="card-body search-filter-bar">
+              <div class="search-input-wrap flex-1">
+                <i data-lucide="search"></i>
+                <input type="text" id="auditSearchInput" placeholder="Tovar nomi, MXIK kodi yoki faktura raqami bo'yicha qidirish..." />
+              </div>
+              <div class="filter-group">
+                <select id="auditRiskFilter" class="select-input">
+                  <option value="all">Barcha xavf darajalari</option>
+                  <option value="high">Yuqori xavf (2+ xil MXIK)</option>
+                  <option value="negative">Minusga ketgan qoldiq</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="discrepancy-cards-list" id="discrepancyCardsList">
+            <!-- Dynamically populated via JS -->
+          </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 3: MXIK INVENTORY & BALANCE ==================== -->
+        <section class="tab-pane" id="tab-inventory">
+          
+          <div class="card mb-6">
+            <div class="card-body search-filter-bar">
+              <div class="search-input-wrap flex-1">
+                <i data-lucide="search"></i>
+                <input type="text" id="inventorySearchInput" placeholder="MXIK kodi yoki mahsulot nomi bo'yicha qidirish..." />
+              </div>
+              <div class="filter-group">
+                <select id="inventoryStockFilter" class="select-input">
+                  <option value="all">Barcha tovarlar</option>
+                  <option value="positive">Omborda mavjud (Qoldiq > 0)</option>
+                  <option value="negative">Xavfli (Minus qoldiq < 0)</option>
+                  <option value="zero">Tugagan (Qoldiq = 0)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header flex-between">
+              <div>
+                <h3 class="card-title">MXIK Kodlari Kesimida E-Ombor Balansi</h3>
+                <p class="card-subtitle">Didox kiruvchi va chiquvchi hisob-fakturalari asosida hisoblangan aniq qoldiq</p>
+              </div>
+              <div class="table-legend">
+                <span class="legend-item"><span class="dot in-dot"></span> Qabul qilingan</span>
+                <span class="legend-item"><span class="dot out-dot"></span> Chiqib ketgan</span>
+                <span class="legend-item"><span class="dot bal-dot"></span> Hozirgi qoldiq</span>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="data-table" id="inventoryBalanceTable">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px;">№</th>
+                      <th>MXIK Kodi &amp; Tasnif Nomi</th>
+                      <th>Tovar Nomi</th>
+                      <th>O'lchov</th>
+                      <th class="text-right">📥 Kiruvchi (Jami)</th>
+                      <th class="text-right">📤 Chiqib ketgan (Jami)</th>
+                      <th class="text-right">📊 Hisobdagi Qoldiq</th>
+                      <th class="text-right">Qoldiq Summasi</th>
+                      <th class="text-center">Holati</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 4: ALL INVOICES (Fakturalar) ==================== -->
+        <section class="tab-pane" id="tab-invoices">
+          
+          <div class="card mb-6">
+            <div class="card-body search-filter-bar">
+              <div class="search-input-wrap flex-1">
+                <i data-lucide="search"></i>
+                <input type="text" id="invoiceSearchInput" placeholder="Faktura raqami, kontragent nomi yoki STIR..." />
+              </div>
+              <div class="filter-group">
+                <select id="invoiceTypeFilter" class="select-input">
+                  <option value="all">Barcha fakturalar (Kiruvchi va Chiquvchi)</option>
+                  <option value="inbound">Faqat Kiruvchi (Ta'minotchilardan)</option>
+                  <option value="outbound">Faqat Chiquvchi (Bizdan ketgan)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Hisob-Fakturalar Reestri</h3>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="data-table" id="invoicesTable">
+                  <thead>
+                    <tr>
+                      <th>Turi</th>
+                      <th>Faktura №</th>
+                      <th>Sana</th>
+                      <th>Kontragent (Nomi / STIR)</th>
+                      <th>Pozitsiyalar Soni</th>
+                      <th class="text-right">Jami Summa</th>
+                      <th>Status</th>
+                      <th class="text-right">Amal</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 5: DIDOX API & SETTINGS ==================== -->
+        <section class="tab-pane" id="tab-didox-sync">
+          
+          <div class="settings-grid">
+            
+            <!-- Direct Didox API Card -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-header-icon"><i data-lucide="cloud"></i></div>
+                <div>
+                  <h3 class="card-title">Didox.uz API Integratsiyasi</h3>
+                  <p class="card-subtitle">Didox serveriga to'g'ridan-to'g'ri ulanish va fakturalarni yuklab olish</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <form id="didoxApiForm" class="settings-form">
+                  <div class="form-group">
+                    <label>Didox API Server Manzili</label>
+                    <input type="text" id="didoxApiUrl" class="input-field" value="https://api.didox.uz/v1" />
+                  </div>
+                  <div class="form-group">
+                    <label>Tashkilot STIR (INN)</label>
+                    <input type="text" id="didoxInn" class="input-field" placeholder="308123456" value="308945612" />
+                  </div>
+                  <div class="form-group">
+                    <label>Didox API Token / E-IMZO Kalit</label>
+                    <input type="password" id="didoxToken" class="input-field" placeholder="didox_sec_token_..." value="didox_demo_token_89f41b2" />
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group flex-1">
+                      <label>Sana oralig'i (Boshlanish)</label>
+                      <input type="date" id="syncStartDate" class="input-field" value="2026-01-01" />
+                    </div>
+                    <div class="form-group flex-1">
+                      <label>Sana oralig'i (Tugash)</label>
+                      <input type="date" id="syncEndDate" class="input-field" value="2026-09-07" />
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary w-full mt-2">
+                    <i data-lucide="refresh-cw"></i> Didox bilan Sinxronlash
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Drag and Drop Excel Upload Card -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-header-icon"><i data-lucide="file-up"></i></div>
+                <div>
+                  <h3 class="card-title">Didox Excel / JSON Reestrini Yuklash</h3>
+                  <p class="card-subtitle">Didox kabinetingizdan eksport qilingan reestr faylini tashlang</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="drop-zone" id="dropZone">
+                  <i data-lucide="upload-cloud" class="drop-icon"></i>
+                  <h4>Excel (.xlsx, .xls) yoki JSON faylni shu yerga tashlang</h4>
+                  <p>yoki faylni tanlash uchun bosing</p>
+                  <input type="file" id="fileUploadInput" accept=".xlsx, .xls, .json" hidden />
+                </div>
+
+                <div class="quick-sample-box mt-4">
+                  <p>Hozirgi yuklangan namunaviy ma'lumotlar:</p>
+                  <div class="sample-info-row">
+                    <span>• "Детские соски" 2 xil MXIK kodi bilan</span>
+                    <span>• "Aogu Shampun", "Lazurde Dezodorant"</span>
+                  </div>
+                  <button class="btn btn-sm btn-outline mt-3 w-full" id="loadDemoDataBtn">
+                    <i data-lucide="rotate-ccw"></i> Namunaviy Ma'lumotlarni Qayta Yuklash
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== MODAL: INVOICE DETAILS ==================== -->
+  <div class="modal-backdrop" id="invoiceModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h3 class="modal-title" id="modalInvoiceTitle">Faktura Tafsilotlari</h3>
+          <span class="badge" id="modalInvoiceBadge">Kiruvchi</span>
+        </div>
+        <button class="close-modal-btn" id="closeInvoiceModalBtn"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body" id="modalInvoiceBody">
+        <!-- Dynamically rendered -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="closeInvoiceModalBtn2">Yopish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: DISPUTE LETTER GENERATOR ==================== -->
+  <div class="modal-backdrop" id="disputeModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Ta'minotchiga MXIK Tuzatish Talabnomasi</h3>
+        <button class="close-modal-btn" id="closeDisputeModalBtn"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-3 text-muted">Ushbu matnni nusxalab, ta'minotchiga (Didox yoki Telegram orqali) xatolikni tuzatish va to'g'ri MXIK bilan tuzatuvchi faktura yuborishni talab qilish uchun foydalaning:</p>
+        <textarea id="disputeLetterText" class="letter-textarea" rows="8" readonly></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="copyDisputeTextBtn"><i data-lucide="copy"></i> Nusxa Olish</button>
+        <button class="btn btn-primary" id="closeDisputeModalBtn2">Tushunarli</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-wrapper" id="toastWrapper"></div>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
