@@ -3,6 +3,11 @@
  * Soliq va Hisob-fakturalardagi MXIK nomuvofiqliklari va ombor balansi nazorati
  */
 
+// Configure PDF.js worker
+if (typeof pdfjsLib !== "undefined") {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+}
+
 // ==========================================
 // 1. STATE & SAMPLE DATA
 // ==========================================
@@ -1195,8 +1200,83 @@ function exportExcelReport() {
 }
 
 // ==========================================
-// 5. PARSERS: XML, JSON, EXCEL, HTML
+// 5. PARSERS: PDF, XML, JSON, EXCEL
 // ==========================================
+
+/**
+ * Universal Parser for Didox / Soliq E-Invoice PDF files
+ */
+async function parseDidoxPdf(arrayBuffer, filename = "Faktura.pdf") {
+  if (typeof pdfjsLib === "undefined") return null;
+  try {
+    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+    const pdfDoc = await loadingTask.promise;
+    let fullText = "";
+
+    for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+      const page = await pdfDoc.getPage(pageNum);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items.map(item => item.str).join(" ");
+      fullText += " " + pageText;
+    }
+
+    if (!fullText.trim()) return null;
+
+    // Search 17-digit MXIK codes
+    const mxikMatches = fullText.match(/\b\d{17}\b/g) || [];
+    const uniqueMxiks = Array.from(new Set(mxikMatches));
+
+    // Search STIR (9 digits)
+    const innMatches = fullText.match(/\b(3\d{8}|2\d{8})\b/g) || [];
+    const sellerInn = innMatches[0] || "300000000";
+    const buyerInn = innMatches[1] || "311519913";
+
+    // Search Doc No
+    const docNoMatch = fullText.match(/(?:№|номер|raqam|faktura)\s*[:№]?\s*([A-Za-z0-9\/_-]+)/i);
+    const docNo = docNoMatch ? docNoMatch[1] : filename.replace(/\.pdf$/i, "");
+
+    // Search Date
+    const dateMatch = fullText.match(/\b(\d{2}[.-]\d{2}[.-]\d{4}|\d{4}[.-]\d{2}[.-]\d{2})\b/);
+    const date = dateMatch ? dateMatch[1].replace(/\./g, "-") : "2026-09-07";
+
+    // Determine type
+    let type = "inbound";
+    if (sellerInn.includes("311519913") || fullText.toLowerCase().includes('"sinamed"')) {
+      type = "outbound";
+    }
+
+    const items = [];
+    if (uniqueMxiks.length > 0) {
+      uniqueMxiks.forEach((mxik, i) => {
+        items.push({
+          name: `Tovar #${i + 1} (PDF dan olingan)`,
+          mxik: mxik,
+          tasnif: "Tasnif kodi: " + mxik,
+          unit: "dona",
+          qty: 1,
+          price: 0,
+          total: 0
+        });
+      });
+    }
+
+    if (items.length === 0) return null;
+
+    return {
+      id: `DOC-PDF-${docNo}-${Math.random().toString(36).slice(2, 6)}`,
+      docNo,
+      date,
+      type,
+      partnerName: type === "inbound" ? `Ta'minotchi (STIR ${sellerInn})` : `Xaridor (STIR ${buyerInn})`,
+      partnerInn: type === "inbound" ? sellerInn : buyerInn,
+      status: "Qabul qilingan",
+      items
+    };
+  } catch (err) {
+    console.warn("Could not parse PDF:", filename, err);
+    return null;
+  }
+}
 
 /**
  * Universal Parser for Didox / Soliq E-Invoice XML files
@@ -1228,13 +1308,11 @@ function parseDidoxXml(xmlString, filename = "Faktura") {
     const buyerName = getTag(doc, "Buyer Name", "Customer Name", "BuyerName", "Client Name", "Buyer") || "Xaridor";
     const buyerInn = getTag(doc, "Buyer Tin", "Customer Tin", "BuyerTin", "Buyer Inn") || "311519913";
 
-    // Determine type: If seller is user's organization (e.g. 311519913 / SINAMED), it is outbound, otherwise inbound
     let type = "inbound";
     if (sellerInn.includes("311519913") || sellerName.toLowerCase().includes("sinamed")) {
       type = "outbound";
     }
 
-    // Query product rows
     let productNodes = doc.querySelectorAll("ProductList Products, ProductList Product, Products, Product, ProductList Row, ProductRow, Goods Item, Items Item, ProductTable Row");
     if (!productNodes || productNodes.length === 0) {
       productNodes = doc.querySelectorAll("ProductList, ProductsList, ProductTable");
@@ -1359,7 +1437,7 @@ function parseDidoxJson(obj, fallbackName = "Faktura") {
 }
 
 /**
- * Universal File Upload Handler (ZIP, XML, Excel, JSON)
+ * Universal File Upload Handler (ZIP, PDF, XML, Excel, JSON)
  */
 async function handleFileUpload(file) {
   showToast("Fayl tahlil qilinmoqda...", "info");
@@ -1376,11 +1454,15 @@ async function handleFileUpload(file) {
       const zipData = await zip.loadAsync(file);
       const importedInvoices = [];
       const fileNamesFound = [];
+      const extStats = {};
 
       const fileEntries = Object.keys(zipData.files).filter(fname => !zipData.files[fname].dir && !fname.includes("__MACOSX") && !fname.startsWith("."));
 
       for (const fname of fileEntries) {
         fileNamesFound.push(fname);
+        const ext = (fname.split('.').pop() || "fayl").toLowerCase();
+        extStats[ext] = (extStats[ext] || 0) + 1;
+
         const zipFile = zipData.files[fname];
 
         // A. XML Files (Didox standard format)
@@ -1394,7 +1476,18 @@ async function handleFileUpload(file) {
           }
         }
 
-        // B. JSON Files
+        // B. PDF Files (Extracted via PDF.js)
+        else if (fname.toLowerCase().endsWith(".pdf")) {
+          try {
+            const arrBuff = await zipFile.async("arraybuffer");
+            const parsed = await parseDidoxPdf(arrBuff, fname);
+            if (parsed) importedInvoices.push(parsed);
+          } catch (e) {
+            console.warn("Could not parse PDF in ZIP:", fname, e);
+          }
+        }
+
+        // C. JSON Files
         else if (fname.toLowerCase().endsWith(".json")) {
           try {
             const text = await zipFile.async("string");
@@ -1410,7 +1503,7 @@ async function handleFileUpload(file) {
           }
         }
         
-        // C. Excel Files
+        // D. Excel Files
         else if (fname.toLowerCase().endsWith(".xlsx") || fname.toLowerCase().endsWith(".xls")) {
           try {
             const arrBuff = await zipFile.async("arraybuffer");
@@ -1423,7 +1516,7 @@ async function handleFileUpload(file) {
           }
         }
 
-        // D. Fallback for any text / html file
+        // E. Fallback for any text / html file
         else {
           try {
             const text = await zipFile.async("string");
@@ -1436,7 +1529,7 @@ async function handleFileUpload(file) {
               if (parsed) importedInvoices.push(...(Array.isArray(parsed) ? parsed : [parsed]));
             }
           } catch (e) {
-            // Ignore non-document assets like pdfs/images
+            // Ignore other binary files
           }
         }
       }
@@ -1448,10 +1541,11 @@ async function handleFileUpload(file) {
         document.getElementById("connectionStatus").textContent = "ZIP orqali yuklangan";
         document.getElementById("lastSyncTime").textContent = `ZIP: ${file.name} (${importedInvoices.length} ta faktura)`;
         refreshAllViews();
-        showToast(`ZIP arxiv muvaffaqiyatli ochildi: ${importedInvoices.length} ta hisob-faktura va tovarlar yuklandi!`, "success");
+        showToast(`ZIP arxiv ochildi: ${importedInvoices.length} ta faktura va barcha MXIKlar muvaffaqiyatli yuklandi!`, "success");
         switchTab("dashboard");
       } else {
-        showToast(`ZIP arxiv ochildi (${fileEntries.length} ta fayl topildi), lekin faktura XML/JSON fayllari aniqlanmadi.`, "warning");
+        const statsStr = Object.entries(extStats).map(([k, v]) => `${v} ta .${k}`).join(", ");
+        showToast(`ZIP ichida topilgan fayllar: ${statsStr}. Fakturalar jadvalini to'liq olish uchun Didox'dan "Ro'yxatga olish kitobi" orqali Excel yuklang.`, "warning");
       }
 
     } catch (err) {
@@ -1461,7 +1555,29 @@ async function handleFileUpload(file) {
     return;
   }
 
-  // 2. SINGLE XML FILE
+  // 2. SINGLE PDF FILE
+  if (file.name.toLowerCase().endsWith(".pdf")) {
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+      const parsed = await parseDidoxPdf(e.target.result, file.name);
+      if (parsed) {
+        appState.invoices = [parsed];
+        appState.isDemo = false;
+        document.getElementById("demoBanner")?.classList.add("hidden");
+        document.getElementById("connectionStatus").textContent = "PDF orqali yuklangan";
+        document.getElementById("lastSyncTime").textContent = `Fayl: ${file.name}`;
+        refreshAllViews();
+        showToast(`PDF faktura muvaffaqiyatli yuklandi!`, "success");
+        switchTab("dashboard");
+      } else {
+        showToast("PDF ichida MXIK kodlari topilmadi", "warning");
+      }
+    };
+    reader.readAsArrayBuffer(file);
+    return;
+  }
+
+  // 3. SINGLE XML FILE
   if (file.name.toLowerCase().endsWith(".xml")) {
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -1483,7 +1599,7 @@ async function handleFileUpload(file) {
     return;
   }
 
-  // 3. SINGLE JSON FILE
+  // 4. SINGLE JSON FILE
   if (file.name.toLowerCase().endsWith(".json")) {
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -1510,7 +1626,7 @@ async function handleFileUpload(file) {
     return;
   }
 
-  // 4. SINGLE EXCEL FILE (.xlsx, .xls)
+  // 5. SINGLE EXCEL FILE (.xlsx, .xls)
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
@@ -1639,7 +1755,7 @@ function showToast(message, type = "info") {
     toast.style.transform = "translateX(50px)";
     toast.style.transition = "all 0.3s ease";
     setTimeout(() => toast.remove(), 300);
-  }, 3500);
+  }, 4000);
 }
 
 function escapeHtml(str) {
