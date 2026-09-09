@@ -1667,24 +1667,103 @@ async function handleFileUpload(file) {
 
 function parseExcelRowsToInvoices(jsonRows, targetArray) {
   const invoiceGroup = {};
+  let lastDocNo = "IMP-1";
+  let lastPartner = "Kontragent";
+  let lastInn = "300000000";
+  let lastDate = "2026-09-07";
+  let lastType = "inbound";
 
   jsonRows.forEach((row, idx) => {
-    const docNo = String(row["Faktura №"] || row["Faktura"] || row["docNo"] || row["Номер"] || row["Hujjat"] || `IMP-${idx + 1}`);
-    const typeStr = String(row["Turi"] || row["type"] || "inbound").toLowerCase();
-    const type = typeStr.includes("chiq") || typeStr.includes("out") ? "outbound" : "inbound";
-    const partnerName = String(row["Kontragent"] || row["partnerName"] || row["Hamkor"] || row["Поставщик"] || row["Покупатель"] || "Kontragent");
-    const partnerInn = String(row["STIR"] || row["partnerInn"] || row["ИНН"] || "300000000");
-    const date = String(row["Sana"] || row["date"] || "2026-09-07");
+    // Helper to find field value across flexible keys
+    const findVal = (...patterns) => {
+      const keys = Object.keys(row);
+      for (const p of patterns) {
+        const pLower = p.toLowerCase();
+        // Exact match first
+        const exact = keys.find(k => k.trim().toLowerCase() === pLower);
+        if (exact && row[exact] !== undefined && row[exact] !== null && String(row[exact]).trim() !== "") {
+          return String(row[exact]).trim();
+        }
+      }
+      for (const p of patterns) {
+        const pLower = p.toLowerCase();
+        // Substring match
+        const match = keys.find(k => k.toLowerCase().includes(pLower));
+        if (match && row[match] !== undefined && row[match] !== null && String(row[match]).trim() !== "") {
+          return String(row[match]).trim();
+        }
+      }
+      return "";
+    };
 
-    const name = String(row["Tovar Nomi"] || row["name"] || row["Tovar"] || row["Товар"] || "Noma'lum tovar");
-    let mxik = String(row["MXIK Kodi"] || row["mxik"] || row["МХИК"] || row["IKPU"] || "00000000000000000");
-    const tasnif = String(row["Tasnif Nomi"] || row["tasnif"] || "Tasnif kodi");
-    const qty = parseFloat(row["Miqdori"] || row["qty"] || row["Количество"] || 1);
-    const price = parseFloat(row["Narxi"] || row["price"] || row["Цена"] || 0);
+    // Extract docNo or forward-fill
+    let docNo = findVal("ҳужжат рақами", "hujjat raqami", "faktura №", "faktura", "docno", "номер", "raqam", "hujjat");
+    if (docNo) {
+      lastDocNo = docNo;
+    } else {
+      docNo = lastDocNo;
+    }
 
-    if (mxik.length < 17 && mxik.length > 5) {
+    // Extract type (kiruvchi / chiquvchi)
+    const rawType = findVal("кирувчи / чиқувчи", "кирувчи", "чиқувчи", "turi", "type", "тип");
+    let type = lastType;
+    if (rawType) {
+      const tLower = rawType.toLowerCase();
+      if (tLower.includes("чиқ") || tLower.includes("out") || tLower.includes("исход")) {
+        type = "outbound";
+      } else {
+        type = "inbound";
+      }
+      lastType = type;
+    }
+
+    // Extract partner
+    const partnerName = findVal("ҳамкор номи", "hamkor nomi", "kontragent", "partnername", "hamkor", "поставщик", "покупатель") || lastPartner;
+    if (partnerName) lastPartner = partnerName;
+
+    // Extract INN
+    const partnerInn = findVal("ҳамкор стири/жшшир", "ҳамкор стири", "stir", "партнер стир", "инн", "жшшир", "tin", "inn") || lastInn;
+    if (partnerInn) lastInn = partnerInn;
+
+    // Extract date
+    const date = findVal("ҳужжат санаси", "hujjat sanasi", "sana", "date", "дата") || lastDate;
+    if (date) lastDate = date;
+
+    // Extract item name
+    const name = findVal("товар (хизмат)лар номи", "товар номи", "маҳсулотлар рўйхати", "tovar nomi", "name", "tovar", "товар", "наименование");
+    
+    // Extract MXIK
+    let mxik = findVal("мхик коди", "мхик", "икпу", "mxik kodi", "mxik", "ikpu", "идентификация коди", "идентификация", "catalogcode");
+    
+    // If neither name nor MXIK exists, skip this row (header/footer/empty row)
+    if (!name && !mxik) {
+      return;
+    }
+
+    // Find any 17-digit number in row if mxik is not found yet
+    if (!mxik || mxik.length < 5) {
+      for (const val of Object.values(row)) {
+        const s = String(val).trim();
+        if (/^\d{17}$/.test(s)) {
+          mxik = s;
+          break;
+        }
+      }
+    }
+
+    const tasnif = findVal("тасниф", "tasnif", "catalogname") || (mxik ? `MXIK: ${mxik}` : "Tasnif kodi");
+    const unit = findVal("ўлчов бирлиги", "o'lchov birligi", "birlik", "unit", "ед.изм.") || "dona";
+
+    const qtyStr = findVal("миқдори", "miqdori", "qty", "сони", "кол-во", "количество", "миқдор");
+    const priceStr = findVal("етказиб бериш нархи", "нархи", "narxi", "price", "цена", "қиймати");
+    
+    const qty = parseFloat(qtyStr.replace(/[^0-9.-]+/g, "")) || 1;
+    const price = parseFloat(priceStr.replace(/[^0-9.-]+/g, "")) || 0;
+
+    if (mxik && mxik.length < 17 && mxik.length > 5) {
       mxik = (mxik + "00000000000000000").slice(0, 17);
     }
+    if (!mxik) mxik = "00000000000000000";
 
     if (!invoiceGroup[docNo]) {
       invoiceGroup[docNo] = {
@@ -1701,12 +1780,12 @@ function parseExcelRowsToInvoices(jsonRows, targetArray) {
     }
 
     invoiceGroup[docNo].items.push({
-      name,
-      mxik,
-      tasnif,
-      unit: "dona",
-      qty,
-      price,
+      name: name || "Tovar",
+      mxik: mxik,
+      tasnif: tasnif,
+      unit: unit,
+      qty: qty,
+      price: price,
       total: qty * price
     });
   });
