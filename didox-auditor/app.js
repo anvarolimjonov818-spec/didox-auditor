@@ -1203,12 +1203,21 @@ function exportExcelReport() {
 // 5. PARSERS: PDF, XML, JSON, EXCEL
 // ==========================================
 
+// Configure PDF.js worker if available
+if (typeof pdfjsLib !== "undefined" && !pdfjsLib.GlobalWorkerOptions.workerSrc) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+}
+
 /**
  * Universal Parser for Didox / Soliq E-Invoice PDF files
  */
 async function parseDidoxPdf(arrayBuffer, filename = "Faktura.pdf") {
   if (typeof pdfjsLib === "undefined") return null;
   try {
+    if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    }
+
     const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
     const pdfDoc = await loadingTask.promise;
     let fullText = "";
@@ -1222,9 +1231,9 @@ async function parseDidoxPdf(arrayBuffer, filename = "Faktura.pdf") {
 
     if (!fullText.trim()) return null;
 
-    // Search 17-digit MXIK codes
-    const mxikMatches = fullText.match(/\b\d{17}\b/g) || [];
-    const uniqueMxiks = Array.from(new Set(mxikMatches));
+    // Clean text and search 17-digit MXIK codes
+    const rawMxiks = fullText.match(/\b\d{17}\b/g) || [];
+    const uniqueMxiks = Array.from(new Set(rawMxiks));
 
     // Search STIR (9 digits)
     const innMatches = fullText.match(/\b(3\d{8}|2\d{8})\b/g) || [];
@@ -1248,8 +1257,20 @@ async function parseDidoxPdf(arrayBuffer, filename = "Faktura.pdf") {
     const items = [];
     if (uniqueMxiks.length > 0) {
       uniqueMxiks.forEach((mxik, i) => {
+        // Try to extract product name preceding or following the MXIK code in text
+        let foundName = `Mahsulot #${i + 1} (${mxik.slice(0, 5)})`;
+        const mxikIdx = fullText.indexOf(mxik);
+        if (mxikIdx > 0) {
+          const beforeSnippet = fullText.substring(Math.max(0, mxikIdx - 120), mxikIdx);
+          // Look for text between previous numbers or punctuation
+          const words = beforeSnippet.split(/[\r\n\t;|]+/).pop().trim();
+          if (words.length > 3 && !/^\d+$/.test(words)) {
+            foundName = words.slice(-50).trim();
+          }
+        }
+
         items.push({
-          name: `Tovar #${i + 1} (PDF dan olingan)`,
+          name: foundName,
           mxik: mxik,
           tasnif: "Tasnif kodi: " + mxik,
           unit: "dona",
