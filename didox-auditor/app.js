@@ -216,9 +216,11 @@ const INITIAL_INVOICES = [
   }
 ];
 
+const HAS_REAL_DATA = (typeof window !== "undefined" && Array.isArray(window.DIDOX_REAL_INVOICES) && window.DIDOX_REAL_INVOICES.length > 0);
+
 let appState = {
-  invoices: JSON.parse(JSON.stringify(INITIAL_INVOICES)),
-  isDemo: true,
+  invoices: HAS_REAL_DATA ? window.DIDOX_REAL_INVOICES : JSON.parse(JSON.stringify(INITIAL_INVOICES)),
+  isDemo: !HAS_REAL_DATA,
   activeTab: "dashboard",
   turnoverChart: null,
   discrepancyChart: null
@@ -449,21 +451,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupNavigation();
   setupEventListeners();
 
-  // Auto-load live Didox data if available
-  try {
-    const res = await fetch("./live_didox_data.json");
-    if (res.ok) {
-      const realData = await res.json();
-      if (Array.isArray(realData) && realData.length > 0) {
-        appState.invoices = realData;
-        appState.isDemo = false;
-        document.getElementById("demoBanner")?.classList.add("hidden");
-        document.getElementById("connectionStatus").textContent = "Didox: Jonli Ma'lumotlar";
-        document.getElementById("lastSyncTime").textContent = `Jami: ${realData.length} ta real faktura`;
-      }
-    }
-  } catch (err) {
-    console.log("No live_didox_data.json found, using demo/stored data.");
+  if (HAS_REAL_DATA) {
+    document.getElementById("demoBanner")?.classList.add("hidden");
+    document.getElementById("connectionStatus").textContent = "Didox: Jonli Ma'lumotlar";
+    document.getElementById("lastSyncTime").textContent = `Jami: ${appState.invoices.length} ta real faktura`;
   }
 
   refreshAllViews();
