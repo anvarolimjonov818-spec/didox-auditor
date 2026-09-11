@@ -248,6 +248,7 @@ function formatNumber(num) {
 function calculateAuditAndBalance() {
   const productMap = {}; // Grouped by normalized product name
   const balanceMap = {}; // Grouped by MXIK code + name
+  const mxikAggregatedMap = {}; // Grouped strictly by 17-digit MXIK code
 
   let totalInboundSum = 0;
   let totalInboundItems = 0;
@@ -326,7 +327,7 @@ function calculateAuditAndBalance() {
         total: lineTotal
       });
 
-      // 2. Group for E-Ombor MXIK Balance Table
+      // 2. Group for E-Ombor Item-Level Balance Table
       const balKey = `${item.mxik}_${normName}`;
       if (!balanceMap[balKey]) {
         balanceMap[balKey] = {
@@ -353,6 +354,51 @@ function calculateAuditAndBalance() {
         totalOutboundSum += lineTotal;
         totalOutboundItems += item.qty;
       }
+
+      // 3. Group strictly by 17-digit MXIK code (Bir xil MXIK, xar xil mahsulot nomlari)
+      if (!mxikAggregatedMap[item.mxik]) {
+        mxikAggregatedMap[item.mxik] = {
+          mxik: item.mxik,
+          tasnif: item.tasnif || "Tasnif kodi",
+          unit: item.unit || "dona",
+          productNamesMap: {},
+          inboundQty: 0,
+          inboundSum: 0,
+          outboundQty: 0,
+          outboundSum: 0,
+          subProducts: {}
+        };
+      }
+
+      const mEntry = mxikAggregatedMap[item.mxik];
+      if ((!mEntry.tasnif || mEntry.tasnif === "Tasnif kodi") && item.tasnif) {
+        mEntry.tasnif = item.tasnif;
+      }
+      mEntry.productNamesMap[normName] = item.name;
+
+      if (!mEntry.subProducts[normName]) {
+        mEntry.subProducts[normName] = {
+          name: item.name,
+          unit: item.unit || "dona",
+          inboundQty: 0,
+          inboundSum: 0,
+          outboundQty: 0,
+          outboundSum: 0
+        };
+      }
+      const sp = mEntry.subProducts[normName];
+
+      if (inv.type === "inbound") {
+        mEntry.inboundQty += item.qty;
+        mEntry.inboundSum += lineTotal;
+        sp.inboundQty += item.qty;
+        sp.inboundSum += lineTotal;
+      } else {
+        mEntry.outboundQty += item.qty;
+        mEntry.outboundSum += lineTotal;
+        sp.outboundQty += item.qty;
+        sp.outboundSum += lineTotal;
+      }
     });
 
     inv.calculatedTotal = invoiceSum;
@@ -377,7 +423,7 @@ function calculateAuditAndBalance() {
     }
   });
 
-  // Balance table array calculation
+  // Item-level Balance table array calculation
   const balances = Object.values(balanceMap).map((b, index) => {
     const balanceQty = b.inboundQty - b.outboundQty;
     const avgPrice = b.inboundQty > 0 ? (b.inboundSum / b.inboundQty) : (b.outboundSum / (b.outboundQty || 1));
@@ -415,6 +461,62 @@ function calculateAuditAndBalance() {
     };
   });
 
+  // Aggregated MXIK Balance calculation (Grouped strictly by 17-digit MXIK)
+  const mxikBalances = Object.values(mxikAggregatedMap).map((m, index) => {
+    const balanceQty = m.inboundQty - m.outboundQty;
+    const avgPrice = m.inboundQty > 0 ? (m.inboundSum / m.inboundQty) : (m.outboundSum / (m.outboundQty || 1));
+    const balanceSum = balanceQty * avgPrice;
+    const productNames = Object.values(m.productNamesMap);
+    const subProducts = Object.values(m.subProducts).map(sp => ({
+      name: sp.name,
+      unit: sp.unit,
+      inboundQty: sp.inboundQty,
+      inboundSum: sp.inboundSum,
+      outboundQty: sp.outboundQty,
+      outboundSum: sp.outboundSum,
+      balanceQty: sp.inboundQty - sp.outboundQty
+    })).sort((a, b) => b.balanceQty - a.balanceQty);
+
+    let status = "positive";
+    let statusLabel = "Omborda bor";
+    let badgeClass = "badge-success";
+
+    if (balanceQty < 0) {
+      status = "negative";
+      statusLabel = "Minus Qoldiq (Xavf!)";
+      badgeClass = "badge-danger";
+    } else if (balanceQty === 0) {
+      status = "zero";
+      statusLabel = "Tugagan (0)";
+      badgeClass = "badge-warning";
+    }
+
+    return {
+      index: index + 1,
+      mxik: m.mxik,
+      tasnif: m.tasnif,
+      productNames: productNames,
+      productCount: productNames.length,
+      subProducts: subProducts,
+      unit: m.unit,
+      inboundQty: m.inboundQty,
+      inboundSum: m.inboundSum,
+      outboundQty: m.outboundQty,
+      outboundSum: m.outboundSum,
+      balanceQty: balanceQty,
+      balanceSum: balanceSum,
+      status: status,
+      statusLabel: statusLabel,
+      badgeClass: badgeClass
+    };
+  }).sort((a, b) => {
+    if (b.productCount !== a.productCount) return b.productCount - a.productCount;
+    return b.inboundQty - a.inboundQty;
+  }).map((m, idx) => {
+    m.index = idx + 1;
+    return m;
+  });
+
   // Total current balance calculation
   let totalBalanceSum = 0;
   let totalBalanceItems = 0;
@@ -428,6 +530,7 @@ function calculateAuditAndBalance() {
   return {
     discrepancies,
     balances,
+    mxikBalances,
     kpis: {
       discrepancyCount: discrepancies.length,
       totalInboundSum,
@@ -571,6 +674,7 @@ function setupEventListeners() {
 
   document.getElementById("inventorySearchInput")?.addEventListener("input", renderInventoryTab);
   document.getElementById("inventoryStockFilter")?.addEventListener("change", renderInventoryTab);
+  document.getElementById("inventoryGroupMode")?.addEventListener("change", renderInventoryTab);
 
   document.getElementById("invoiceSearchInput")?.addEventListener("input", renderInvoicesTab);
   document.getElementById("invoiceTypeFilter")?.addEventListener("change", renderInvoicesTab);
@@ -818,17 +922,28 @@ function renderInventoryTab() {
   const auditData = calculateAuditAndBalance();
   const search = (document.getElementById("inventorySearchInput")?.value || "").toLowerCase().trim();
   const filterStock = document.getElementById("inventoryStockFilter")?.value || "all";
+  const groupMode = document.getElementById("inventoryGroupMode")?.value || "aggregated";
 
   const tbody = document.querySelector("#inventoryBalanceTable tbody");
   if (!tbody) return;
 
   tbody.innerHTML = "";
 
-  let filtered = auditData.balances.filter(item => {
-    const matchesSearch = !search || 
-      item.name.toLowerCase().includes(search) || 
-      item.mxik.includes(search) ||
-      item.tasnif.toLowerCase().includes(search);
+  const listToRender = groupMode === "aggregated" ? auditData.mxikBalances : auditData.balances;
+
+  let filtered = listToRender.filter(item => {
+    let matchesSearch = false;
+    if (groupMode === "aggregated") {
+      matchesSearch = !search || 
+        item.mxik.includes(search) || 
+        item.tasnif.toLowerCase().includes(search) ||
+        item.productNames.some(p => p.toLowerCase().includes(search));
+    } else {
+      matchesSearch = !search || 
+        item.name.toLowerCase().includes(search) || 
+        item.mxik.includes(search) || 
+        item.tasnif.toLowerCase().includes(search);
+    }
     
     if (filterStock === "positive") return matchesSearch && item.balanceQty > 0;
     if (filterStock === "negative") return matchesSearch && item.balanceQty < 0;
@@ -852,35 +967,122 @@ function renderInventoryTab() {
     if (b.balanceQty < 0) balQtyClass = "qty-bal-neg";
     else if (b.balanceQty === 0) balQtyClass = "qty-bal-zero";
 
-    tr.innerHTML = `
-      <td class="text-sub">${idx + 1}</td>
-      <td>
-        <span class="mxik-tag">${b.mxik}</span>
-        <div class="text-sub" style="font-size: 0.75rem; margin-top: 2px;">${escapeHtml(b.tasnif)}</div>
-      </td>
-      <td><strong>${escapeHtml(b.name)}</strong></td>
-      <td class="text-muted">${escapeHtml(b.unit)}</td>
-      <td class="text-right">
-        <span class="qty-val qty-in">+${formatNumber(b.inboundQty)}</span>
-        <div class="text-sub" style="font-size: 0.74rem;">${formatUZS(b.inboundSum)}</div>
-      </td>
-      <td class="text-right">
-        <span class="qty-val qty-out">-${formatNumber(b.outboundQty)}</span>
-        <div class="text-sub" style="font-size: 0.74rem;">${formatUZS(b.outboundSum)}</div>
-      </td>
-      <td class="text-right">
-        <span class="qty-val ${balQtyClass}">${formatNumber(b.balanceQty)}</span>
-      </td>
-      <td class="text-right">
-        <span class="price-sum">${formatUZS(b.balanceSum)}</span>
-      </td>
-      <td class="text-center">
-        <span class="badge ${b.badgeClass}">${b.statusLabel}</span>
-      </td>
-    `;
+    if (groupMode === "aggregated") {
+      const isMulti = b.productCount > 1;
+      const namesPreview = b.productNames.slice(0, 3).map(n => escapeHtml(n)).join(" • ");
+      const moreCount = b.productCount - 3;
+
+      let subListHtml = "";
+      if (isMulti) {
+        subListHtml = `
+          <div id="mxik-details-${b.mxik}" class="hidden" style="margin-top: 10px; padding: 10px 12px; background: var(--bg-card-alt); border-radius: var(--radius-sm); border: 1px dashed var(--border-color); font-size: 0.78rem;">
+            <div style="font-weight: 700; margin-bottom: 6px; color: var(--text-muted); display: flex; justify-content: space-between;">
+              <span>Ushbu MXIKga tegishli ${b.productCount} ta mahsulot:</span>
+              <span style="font-family: var(--font-mono); font-size: 0.72rem;">Kirim / Chiqim / Qoldiq</span>
+            </div>
+            ${b.subProducts.map(sp => {
+              const spBal = sp.balanceQty;
+              const spColor = spBal > 0 ? "var(--success)" : (spBal < 0 ? "var(--danger)" : "var(--text-muted)");
+              return `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.05); gap: 10px;">
+                  <span style="font-weight: 500; color: var(--text-main);">• ${escapeHtml(sp.name)}</span>
+                  <span style="font-family: var(--font-mono); font-size: 0.75rem; white-space: nowrap;">
+                    <span style="color: var(--info);">+${formatNumber(sp.inboundQty)}</span> / 
+                    <span style="color: var(--purple);">-${formatNumber(sp.outboundQty)}</span> / 
+                    <strong style="color: ${spColor};">${formatNumber(spBal)}</strong> ${escapeHtml(sp.unit || b.unit)}
+                  </span>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        `;
+      }
+
+      tr.innerHTML = `
+        <td class="text-sub">${idx + 1}</td>
+        <td>
+          <span class="mxik-tag">${b.mxik}</span>
+          <div class="text-sub" style="font-size: 0.75rem; margin-top: 2px;">${escapeHtml(b.tasnif)}</div>
+        </td>
+        <td style="max-width: 320px;">
+          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+            ${isMulti 
+              ? `<span class="badge badge-purple" style="font-size: 0.75rem; padding: 2px 8px;">🏷️ ${b.productCount} xil tovar</span>
+                 <button type="button" class="btn btn-xs btn-outline" style="padding: 2px 6px; font-size: 0.7rem;" onclick="toggleMxikDetails('${b.mxik}')" id="btn-toggle-${b.mxik}">
+                   Barchasini ko'rish ▼
+                 </button>` 
+              : `<span class="badge badge-info" style="font-size: 0.72rem; padding: 1px 6px;">1 xil tovar</span>`
+            }
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-main); font-weight: 500; line-height: 1.4;">
+            ${namesPreview}${moreCount > 0 ? ` <span class="text-sub" style="font-size: 0.78rem;">va yana ${moreCount} ta...</span>` : ""}
+          </div>
+          ${subListHtml}
+        </td>
+        <td class="text-muted">${escapeHtml(b.unit)}</td>
+        <td class="text-right">
+          <span class="qty-val qty-in">+${formatNumber(b.inboundQty)}</span>
+          <div class="text-sub" style="font-size: 0.74rem;">${formatUZS(b.inboundSum)}</div>
+        </td>
+        <td class="text-right">
+          <span class="qty-val qty-out">-${formatNumber(b.outboundQty)}</span>
+          <div class="text-sub" style="font-size: 0.74rem;">${formatUZS(b.outboundSum)}</div>
+        </td>
+        <td class="text-right">
+          <span class="qty-val ${balQtyClass}">${formatNumber(b.balanceQty)}</span>
+        </td>
+        <td class="text-right">
+          <span class="price-sum">${formatUZS(b.balanceSum)}</span>
+        </td>
+        <td class="text-center">
+          <span class="badge ${b.badgeClass}">${b.statusLabel}</span>
+        </td>
+      `;
+    } else {
+      // Detailed row
+      tr.innerHTML = `
+        <td class="text-sub">${idx + 1}</td>
+        <td>
+          <span class="mxik-tag">${b.mxik}</span>
+          <div class="text-sub" style="font-size: 0.75rem; margin-top: 2px;">${escapeHtml(b.tasnif)}</div>
+        </td>
+        <td><strong>${escapeHtml(b.name)}</strong></td>
+        <td class="text-muted">${escapeHtml(b.unit)}</td>
+        <td class="text-right">
+          <span class="qty-val qty-in">+${formatNumber(b.inboundQty)}</span>
+          <div class="text-sub" style="font-size: 0.74rem;">${formatUZS(b.inboundSum)}</div>
+        </td>
+        <td class="text-right">
+          <span class="qty-val qty-out">-${formatNumber(b.outboundQty)}</span>
+          <div class="text-sub" style="font-size: 0.74rem;">${formatUZS(b.outboundSum)}</div>
+        </td>
+        <td class="text-right">
+          <span class="qty-val ${balQtyClass}">${formatNumber(b.balanceQty)}</span>
+        </td>
+        <td class="text-right">
+          <span class="price-sum">${formatUZS(b.balanceSum)}</span>
+        </td>
+        <td class="text-center">
+          <span class="badge ${b.badgeClass}">${b.statusLabel}</span>
+        </td>
+      `;
+    }
+
     tbody.appendChild(tr);
   });
 }
+
+window.toggleMxikDetails = function(mxik) {
+  const el = document.getElementById(`mxik-details-${mxik}`);
+  const btn = document.getElementById(`btn-toggle-${mxik}`);
+  if (el) {
+    const isNowHidden = !el.classList.contains("hidden");
+    el.classList.toggle("hidden");
+    if (btn) {
+      btn.textContent = isNowHidden ? "Barchasini ko'rish ▼" : "Yopish ▲";
+    }
+  }
+};
 
 function renderInvoicesTab() {
   const search = (document.getElementById("invoiceSearchInput")?.value || "").toLowerCase().trim();
@@ -1151,7 +1353,26 @@ function exportExcelReport() {
   const auditData = calculateAuditAndBalance();
   const wb = XLSX.utils.book_new();
 
-  // 1. Balance Sheet
+  // 1. Aggregated MXIK Sheet (Bir xil MXIK kodi bo'yicha jamlangan)
+  const mxikAggRows = auditData.mxikBalances.map(m => ({
+    "№": m.index,
+    "MXIK Kodi": m.mxik,
+    "Tasnif Nomi": m.tasnif,
+    "Jamlangan Tovar Xillari Soni": m.productCount,
+    "Barcha Tovar Nomlari": m.productNames.join(" | "),
+    "O'lchov Birligi": m.unit,
+    "Kirim Miqdori (Jami)": m.inboundQty,
+    "Kirim Summasi (UZS)": m.inboundSum,
+    "Chiqim Miqdori (Jami)": m.outboundQty,
+    "Chiqim Summasi (UZS)": m.outboundSum,
+    "Hisobdagi Qoldiq (Kirim - Chiqim)": m.balanceQty,
+    "Qoldiq Summasi (UZS)": m.balanceSum,
+    "Holati": m.statusLabel
+  }));
+  const wsMxikAgg = XLSX.utils.json_to_sheet(mxikAggRows);
+  XLSX.utils.book_append_sheet(wb, wsMxikAgg, "MXIK Jamlangan Balans");
+
+  // 2. Detailed Balance Sheet (Har bir tovar nomi bo'yicha)
   const balanceRows = auditData.balances.map(b => ({
     "№": b.index,
     "MXIK Kodi": b.mxik,
@@ -1167,7 +1388,7 @@ function exportExcelReport() {
     "Holati": b.statusLabel
   }));
   const wsBalance = XLSX.utils.json_to_sheet(balanceRows);
-  XLSX.utils.book_append_sheet(wb, wsBalance, "MXIK Qoldiq Balansi");
+  XLSX.utils.book_append_sheet(wb, wsBalance, "Har Bir Tovar Balansi");
 
   // 2. Discrepancies Sheet
   const discRows = auditData.discrepancies.map(d => ({

@@ -281,7 +281,11 @@
                 <i data-lucide="search"></i>
                 <input type="text" id="inventorySearchInput" placeholder="MXIK kodi yoki mahsulot nomi bo'yicha qidirish..." />
               </div>
-              <div class="filter-group">
+              <div class="filter-group" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <select id="inventoryGroupMode" class="select-input" style="font-weight: 600; background: var(--bg-surface); border-color: var(--primary);">
+                  <option value="aggregated" selected>🎯 Bir xil MXIK bo'yicha jamlangan</option>
+                  <option value="detailed">📋 Har bir tovar nomi bo'yicha alohida</option>
+                </select>
                 <select id="inventoryStockFilter" class="select-input">
                   <option value="all">Barcha tovarlar</option>
                   <option value="positive">Omborda mavjud (Qoldiq > 0)</option>

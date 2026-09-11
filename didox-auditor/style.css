@@ -382,6 +382,17 @@ html, body {
   border-radius: var(--radius-sm);
 }
 
+.btn-xs {
+  padding: 3px 8px;
+  font-size: 0.72rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.hidden {
+  display: none !important;
+}
+
 .w-full {
   width: 100%;
 }
