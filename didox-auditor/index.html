@@ -59,6 +59,11 @@
           <i data-lucide="boxes"></i>
           <span>MXIK Qoldiq Balansi</span>
         </button>
+        <button class="nav-btn" data-tab="pre-check">
+          <i data-lucide="shield-check"></i>
+          <span>Fakturani Tekshirish</span>
+          <span class="badge badge-success" style="font-size: 0.65rem; padding: 2px 6px; margin-left: auto;">Yangi</span>
+        </button>
         <button class="nav-btn" data-tab="invoices">
           <i data-lucide="file-spreadsheet"></i>
           <span>Fakturalar Reestri</span>
@@ -333,7 +338,136 @@
         </section>
 
 
-        <!-- ==================== TAB 4: ALL INVOICES (Fakturalar) ==================== -->
+
+        <!-- ==================== TAB: PRE-CHECK AUDITOR (Fakturani Tekshirish) ==================== -->
+        <section class="tab-pane" id="tab-pre-check">
+          
+          <!-- Top Informational Banner -->
+          <div class="card mb-6" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-left: 4px solid var(--primary);">
+            <div class="card-body" style="display: flex; align-items: flex-start; gap: 16px; padding: 18px 20px;">
+              <div style="font-size: 1.8rem; line-height: 1;">🛡️</div>
+              <div>
+                <h4 style="margin: 0 0 6px; font-weight: 700; color: #1e3a8a;">Didox Fakturasini Imzolashdan Oldin Tekshirish</h4>
+                <p style="margin: 0; font-size: 0.86rem; color: #1e40af; line-height: 1.5;">
+                  Schot-fakturani Didoxda <strong>"Qoralama" (Черновик)</strong> qilib saqlang va bu yerga kiriting. Tizim E-Ombor balansi, to'g'ri MXIK kodi va kirim narxlarini tekshirib beradi. <strong>Faqat yashil chiqqandan so'ng E-IMZO bilan tasdiqlang!</strong>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Grid: Smart Search & Draft Builder -->
+          <div class="settings-grid mb-6">
+            
+            <!-- Widget 1: Aqlli MXIK va Qoldiq Qidiruvchi -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-header-icon"><i data-lucide="search"></i></div>
+                <div>
+                  <h3 class="card-title">🔎 Tezkor MXIK &amp; Qoldiq Qidiruvchi</h3>
+                  <p class="card-subtitle">Didoxda qaysi MXIKni tanlashni bilmayapsizmi? Tovar nomini yozing:</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="search-input-wrap mb-4">
+                  <i data-lucide="search"></i>
+                  <input type="text" id="preCheckSmartSearchInput" placeholder="Masalan: Smart XL, Panda, Teddy, RBT-130, Upasi..." oninput="handleSmartSearch(this.value)" />
+                </div>
+                <div id="smartSearchResults" style="max-height: 320px; overflow-y: auto;">
+                  <div class="text-sub text-center" style="padding: 24px;">
+                    Tovarning nomini kiriting — ombordagi barcha mos MXIK kodlari va mavjud qoldiqlari chiqadi.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Widget 2: Tezkor Qoralama Yuklash / Matn kiritish -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-header-icon"><i data-lucide="file-code"></i></div>
+                <div>
+                  <h3 class="card-title">⚡ Qoralamani Yuklash / Joylashtirish</h3>
+                  <p class="card-subtitle">Didox JSON faylini yuklang yoki tovarlar ro'yxatini matn sifatida tashlang</p>
+                </div>
+              </div>
+              <div class="card-body">
+                <p class="text-sub mb-3" style="font-size: 0.8rem;">
+                  Didoxdan eksport qilingan JSON yoki faktura matnini joylashtiring, yoxud test namunaviy fakturasini yuklab sinab ko'ring:
+                </p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
+                  <button type="button" class="btn btn-sm btn-outline" onclick="loadSampleProblematicInvoice()">
+                    <i data-lucide="alert-circle"></i> Test Qoralama (Muammoli)
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline" onclick="loadSampleSafeInvoice()">
+                    <i data-lucide="check-circle-2"></i> Test Qoralama (Xavfsiz)
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline" onclick="openPasteDraftModal()">
+                    <i data-lucide="clipboard"></i> Matn / JSON joylash
+                  </button>
+                </div>
+                <div style="background: var(--bg-card-alt); padding: 12px; border-radius: var(--radius-sm); font-size: 0.78rem; color: var(--text-muted); border: 1px dashed var(--border-color);">
+                  💡 <strong>Maslahat:</strong> Pastdagi jadvalga tovarlarni qo'lda ham qo'shishingiz mumkin. "Tovar qo'shish" tugmasini bosing va tovar nomini yozing.
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Main Draft Invoice Table Card -->
+          <div class="card mb-6">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <h3 class="card-title">📝 Qoralama Faktura Tovarlari Ro'yxati</h3>
+                <p class="card-subtitle">Didoxda yaratilayotgan faktura tovarlari va ularning MXIK kodlari</p>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn btn-sm btn-primary" onclick="addEmptyDraftRow()">
+                  <i data-lucide="plus"></i> Tovar Qo'shish
+                </button>
+                <button type="button" class="btn btn-sm btn-outline" onclick="clearDraftRows()" style="color: var(--danger);">
+                  <i data-lucide="trash-2"></i> Tozalash
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="data-table" id="draftInvoiceTable">
+                  <thead>
+                    <tr>
+                      <th style="width: 40px;">№</th>
+                      <th style="min-width: 260px;">Tovar Nomi</th>
+                      <th style="width: 200px;">MXIK Kodi</th>
+                      <th style="width: 130px; text-align: right;">Miqdor (dona)</th>
+                      <th style="width: 150px; text-align: right;">Sotish Narxi (so'm)</th>
+                      <th style="width: 70px; text-align: center;">Amal</th>
+                    </tr>
+                  </thead>
+                  <tbody id="draftInvoiceTableBody">
+                    <!-- Dynamic draft rows -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card-footer" style="padding: 16px 20px; background: #fafafa; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+              <div id="draftSummaryInfo" class="text-sub" style="font-size: 0.85rem; font-weight: 500;">
+                0 ta tovar kiritildi
+              </div>
+              <button type="button" class="btn btn-lg btn-success" id="btnRunAuditPreCheck" onclick="runDraftAudit()" style="padding: 10px 24px; font-weight: 700; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 8px;">
+                <i data-lucide="shield-check"></i> Fakturani Imzolashdan Oldin Audit Qilish (Tekshirish)
+              </button>
+            </div>
+          </div>
+
+          <!-- Audit Results Area -->
+          <div id="preCheckResultsArea" class="hidden mb-6">
+            <!-- Results injected dynamically -->
+          </div>
+
+        </section>
+
+
+                <!-- ==================== TAB 4: ALL INVOICES (Fakturalar) ==================== -->
         <section class="tab-pane" id="tab-invoices">
           
           <div class="card mb-6">
@@ -500,7 +634,31 @@
     </div>
   </div>
 
-  <!-- Toast Notification Container -->
+
+  <!-- ==================== MODAL: PASTE DRAFT INVOICE ==================== -->
+  <div class="modal-backdrop" id="pasteDraftModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Didox Qoralama Faktura Matnini Joylashtirish</h3>
+        <button class="close-modal-btn" onclick="closePasteDraftModal()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-3 text-muted" style="font-size: 0.85rem;">
+          Didoxdagi fakturadan tovarlar ro'yxatini (JSON formati yoki matn ko'rinishida) shu yerga nusxalab qo'ying:
+        </p>
+        <textarea id="pasteDraftTextarea" class="letter-textarea" rows="10" placeholder='[
+  { "name": "Держатель для сосок (JK BABY)", "mxik": "03926001020000000", "qty": 50, "price": 8000 },
+  { "name": "Пластмассовый цепочка держатель для соски (RBT-130)", "mxik": "03926001020000000", "qty": 10, "price": 10500 }
+]'></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closePasteDraftModal()">Bekor qilish</button>
+        <button class="btn btn-primary" onclick="parseAndApplyPastedDraft()"><i data-lucide="check"></i> Fakturaga Yuklash</button>
+      </div>
+    </div>
+  </div>
+
+    <!-- Toast Notification Container -->
   <div class="toast-wrapper" id="toastWrapper"></div>
 
   <!-- Preloaded Real Didox Invoices Data (Cleaned V2) -->

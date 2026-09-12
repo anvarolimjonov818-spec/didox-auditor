@@ -1277,3 +1277,104 @@ html, body {
     align-items: flex-start;
   }
 }
+
+/* ==================== PRE-CHECK AUDITOR STYLES ==================== */
+.smart-search-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  gap: 12px;
+  transition: var(--transition);
+}
+
+.smart-search-item:hover {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.02);
+}
+
+.draft-table-input {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 0.84rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  outline: none;
+  transition: var(--transition);
+}
+
+.draft-table-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+}
+
+.audit-verdict-box {
+  padding: 18px 22px;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.audit-verdict-safe {
+  background: #ecfdf5;
+  border: 2px solid #a7f3d0;
+  color: #065f46;
+}
+
+.audit-verdict-danger {
+  background: #fef2f2;
+  border: 2px solid #fecaca;
+  color: #991b1b;
+}
+
+.audit-verdict-warning {
+  background: #fffbeb;
+  border: 2px solid #fde68a;
+  color: #92400e;
+}
+
+.precheck-item-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  transition: var(--transition);
+}
+
+.precheck-item-card.has-error {
+  border-left: 4px solid var(--danger);
+  background: #fffafa;
+}
+
+.precheck-item-card.is-safe {
+  border-left: 4px solid var(--success);
+}
+
+.precheck-item-card.has-warning {
+  border-left: 4px solid var(--warning);
+}
+
+.recommendation-box {
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: #f0fdf4;
+  border: 1px dashed #86efac;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  color: #166534;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}

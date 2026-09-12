@@ -670,6 +670,13 @@ function switchTab(tabId) {
     pane.classList.remove("active");
   });
   const activePane = document.getElementById(`tab-${tabId}`);
+  if (tabId === "pre-check") {
+    if (draftInvoiceRows.length === 0) {
+      window.addEmptyDraftRow();
+    } else {
+      renderDraftRows();
+    }
+  }
   if (activePane) {
     activePane.classList.add("active");
   }
@@ -678,6 +685,7 @@ function switchTab(tabId) {
     "dashboard": { title: "Asosiy Ko'rsatkichlar & Audit", sub: "Didox kiruvchi va chiquvchi fakturalaridagi MXIK tahlili" },
     "audit": { title: "MXIK Nomuvofiqliklari & Xatoliklar", sub: "Bir xil tovarga turli MXIK kodlari yozilgan fakturalar audit ro'yxati" },
     "inventory": { title: "MXIK Qoldiq Balansi (E-Ombor)", sub: "Qabul qilingan, chiqib ketgan tovarlar va hozirgi ombor qoldig'i" },
+    "pre-check": { title: "Fakturani Tekshirish (Pre-Check Auditor)", sub: "E-IMZO bilan imzolashdan oldin qoralama fakturalarni ombor qoldig'i va MXIK bo'yicha tekshirish" },
     "invoices": { title: "Hisob-Fakturalar Reestri", sub: "Didox orqali kelgan va jo'natilgan barcha elektron hisob-fakturalar" },
     "didox-sync": { title: "Didox API & Import Sozlamalari", sub: "Didox bilan to'g'ridan-to'g'ri bog'lanish va fayllar orqali yangilash" }
   };
@@ -2224,3 +2232,638 @@ function escapeJsString(str) {
   if (!str) return "";
   return String(str).replace(/'/g, "\\\'").replace(/"/g, '\\"');
 }
+
+
+
+/* ==================== PRE-CHECK AUDITOR & SMART SEARCH MODULE ==================== */
+
+let draftInvoiceRows = [];
+
+// Initialize or add empty draft row
+window.addEmptyDraftRow = function(defaultData = null) {
+  const newRow = {
+    id: "row_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+    name: defaultData?.name || "",
+    mxik: defaultData?.mxik || "",
+    qty: defaultData?.qty !== undefined ? defaultData.qty : 1,
+    price: defaultData?.price !== undefined ? defaultData.price : 0
+  };
+  draftInvoiceRows.push(newRow);
+  renderDraftRows();
+};
+
+window.removeDraftRow = function(rowId) {
+  draftInvoiceRows = draftInvoiceRows.filter(r => r.id !== rowId);
+  if (draftInvoiceRows.length === 0) {
+    window.addEmptyDraftRow();
+    return;
+  }
+  renderDraftRows();
+};
+
+window.clearDraftRows = function() {
+  draftInvoiceRows = [];
+  const resultsArea = document.getElementById("preCheckResultsArea");
+  if (resultsArea) resultsArea.classList.add("hidden");
+  window.addEmptyDraftRow();
+  showToast("Qoralama faktura tozalandi", "info");
+};
+
+window.updateDraftRow = function(rowId, field, value) {
+  const row = draftInvoiceRows.find(r => r.id === rowId);
+  if (!row) return;
+  row[field] = value;
+
+  // If name changed and mxik is empty, try to auto-fill matching MXIK from inventory
+  if (field === "name" && value && value.trim().length > 2 && !row.mxik) {
+    const auditData = calculateAuditAndBalance();
+    const cleanVal = value.toLowerCase().trim();
+    for (const b of auditData.balances) {
+      if (b.productNames.some(p => p.toLowerCase().includes(cleanVal)) && b.balanceQty > 0) {
+        row.mxik = b.mxik;
+        const mxikInput = document.getElementById(`draft-mxik-${rowId}`);
+        if (mxikInput) mxikInput.value = b.mxik;
+        break;
+      }
+    }
+  }
+
+  updateDraftSummary();
+};
+
+function updateDraftSummary() {
+  const summaryEl = document.getElementById("draftSummaryInfo");
+  if (!summaryEl) return;
+  const totalItems = draftInvoiceRows.reduce((sum, r) => sum + (parseFloat(r.qty) || 0), 0);
+  const totalSum = draftInvoiceRows.reduce((sum, r) => sum + ((parseFloat(r.qty) || 0) * (parseFloat(r.price) || 0)), 0);
+  summaryEl.innerHTML = `<strong>${draftInvoiceRows.length} xil tovar</strong> (${formatNumber(totalItems)} dona), Jami: <strong>${formatUZS(totalSum)}</strong>`;
+}
+
+function renderDraftRows() {
+  const tbody = document.getElementById("draftInvoiceTableBody");
+  if (!tbody) return;
+
+  // Build datalist of in-stock items for autocomplete
+  const auditData = calculateAuditAndBalance();
+  const inStockNames = new Set();
+  auditData.balances.forEach(b => {
+    if (b.balanceQty > 0) {
+      b.productNames.forEach(n => inStockNames.add(n));
+    }
+  });
+
+  let datalistHtml = `<datalist id="inStockProductSuggestions">`;
+  inStockNames.forEach(n => {
+    datalistHtml += `<option value="${escapeHtml(n)}"></option>`;
+  });
+  datalistHtml += `</datalist>`;
+
+  tbody.innerHTML = draftInvoiceRows.map((r, idx) => `
+    <tr>
+      <td class="text-sub text-center" style="font-weight: 500;">${idx + 1}</td>
+      <td>
+        <input type="text" class="draft-table-input" id="draft-name-${r.id}" 
+          value="${escapeHtml(r.name)}" 
+          placeholder="Tovar nomini kiriting yoki tanlang..." 
+          list="inStockProductSuggestions"
+          oninput="updateDraftRow('${r.id}', 'name', this.value)" />
+      </td>
+      <td>
+        <input type="text" class="draft-table-input" id="draft-mxik-${r.id}" 
+          value="${escapeHtml(r.mxik)}" 
+          placeholder="17 xonali MXIK..." 
+          style="font-family: var(--font-mono); font-size: 0.8rem;" 
+          oninput="updateDraftRow('${r.id}', 'mxik', this.value)" />
+      </td>
+      <td>
+        <input type="number" class="draft-table-input text-right" id="draft-qty-${r.id}" 
+          value="${r.qty}" min="1" step="any"
+          oninput="updateDraftRow('${r.id}', 'qty', parseFloat(this.value) || 0)" />
+      </td>
+      <td>
+        <input type="number" class="draft-table-input text-right" id="draft-price-${r.id}" 
+          value="${r.price}" min="0" step="any"
+          oninput="updateDraftRow('${r.id}', 'price', parseFloat(this.value) || 0)" />
+      </td>
+      <td class="text-center">
+        <button type="button" class="btn btn-xs btn-outline" onclick="removeDraftRow('${r.id}')" title="O'chirish" style="color: var(--danger); padding: 4px 8px;">
+          <i data-lucide="trash-2"></i>
+        </button>
+      </td>
+    </tr>
+  `).join("") + datalistHtml;
+
+  updateDraftSummary();
+  initLucideIcons();
+}
+
+// Smart Real-time Search Handler
+window.handleSmartSearch = function(query) {
+  const container = document.getElementById("smartSearchResults");
+  if (!container) return;
+
+  const q = (query || "").toLowerCase().trim();
+  if (!q || q.length < 2) {
+    container.innerHTML = `
+      <div class="text-sub text-center" style="padding: 24px;">
+        Tovarning nomini kiriting — ombordagi barcha mos MXIK kodlari va mavjud qoldiqlari chiqadi.
+      </div>
+    `;
+    return;
+  }
+
+  const auditData = calculateAuditAndBalance();
+  const matched = [];
+
+  auditData.balances.forEach(b => {
+    const mxikMatch = b.mxik.includes(q) || b.tasnif.toLowerCase().includes(q);
+    const matchedProducts = b.subProducts ? b.subProducts.filter(sp => sp.name.toLowerCase().includes(q)) : [];
+    const nameMatch = b.productNames.some(p => p.toLowerCase().includes(q));
+
+    if (mxikMatch || nameMatch || matchedProducts.length > 0) {
+      matched.push({
+        mxik: b.mxik,
+        tasnif: b.tasnif,
+        balanceQty: b.balanceQty,
+        balanceSum: b.balanceSum,
+        unit: b.unit,
+        matchedProducts: matchedProducts.length > 0 ? matchedProducts : (b.subProducts || []),
+        productNames: b.productNames
+      });
+    }
+  });
+
+  if (matched.length === 0) {
+    container.innerHTML = `
+      <div class="text-sub text-center" style="padding: 24px; color: var(--danger);">
+        "<strong>${escapeHtml(query)}</strong>" bo'yicha omborda tovar topilmadi.
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = matched.map(m => {
+    const isPos = m.balanceQty > 0;
+    const badgeClass = isPos ? "badge-success" : (m.balanceQty < 0 ? "badge-danger" : "badge-warning");
+    const statusText = isPos ? `Omborda bor: +${formatNumber(m.balanceQty)} ${m.unit}` : (m.balanceQty < 0 ? `Minus: ${formatNumber(m.balanceQty)}` : "Tugagan (0)");
+
+    const subListHtml = m.matchedProducts.slice(0, 3).map(sp => `
+      <div style="font-size: 0.78rem; color: var(--text-main); margin-top: 2px;">
+        • <strong>${escapeHtml(sp.name)}</strong>: 
+        <span style="color: ${sp.balanceQty > 0 ? 'var(--success)' : (sp.balanceQty < 0 ? 'var(--danger)' : 'var(--text-muted)')}; font-weight: 600;">
+          ${sp.balanceQty > 0 ? '+' : ''}${formatNumber(sp.balanceQty)} ${sp.unit || m.unit}
+        </span>
+      </div>
+    `).join("");
+
+    const firstName = m.matchedProducts[0]?.name || m.productNames[0] || m.tasnif;
+
+    return `
+      <div class="smart-search-item">
+        <div style="flex: 1; min-width: 0;">
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <span class="mxik-tag" style="font-size: 0.78rem;">
+              ${m.mxik}
+              <i data-lucide="copy" class="copy-icon" onclick="copyText('${m.mxik}')" title="MXIKdan nusxa olish"></i>
+            </span>
+            <span class="badge ${badgeClass}" style="font-size: 0.72rem;">${statusText}</span>
+          </div>
+          <div class="text-sub" style="font-size: 0.75rem; margin-top: 4px;">
+            Tasnif: <strong>${escapeHtml(m.tasnif)}</strong>
+          </div>
+          ${subListHtml}
+        </div>
+        <div>
+          <button type="button" class="btn btn-xs btn-primary" onclick="addFoundItemToDraft('${escapeJsString(firstName)}', '${m.mxik}')" style="white-space: nowrap;">
+            ➕ Fakturaga qo'shish
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  initLucideIcons();
+};
+
+window.addFoundItemToDraft = function(name, mxik) {
+  if (draftInvoiceRows.length === 1 && !draftInvoiceRows[0].name && !draftInvoiceRows[0].mxik) {
+    draftInvoiceRows[0].name = name;
+    draftInvoiceRows[0].mxik = mxik;
+  } else {
+    draftInvoiceRows.push({
+      id: "row_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+      name: name,
+      mxik: mxik,
+      qty: 1,
+      price: 0
+    });
+  }
+  renderDraftRows();
+  showToast(`"${name}" faktura qoralamasiga qo'shildi!`, "success");
+};
+
+// Sample loading
+window.loadSampleProblematicInvoice = function() {
+  draftInvoiceRows = [
+    {
+      id: "row_1",
+      name: "Пластмассовый цепочка держатель для соски (RBT-130) 7,30,003",
+      mxik: "03926001020000000",
+      qty: 10,
+      price: 10500
+    },
+    {
+      id: "row_2",
+      name: "Держатель для сосок (JK BABY модел с колокльчика )",
+      mxik: "03926001020000000",
+      qty: 150,
+      price: 8000
+    },
+    {
+      id: "row_3",
+      name: "Bolalar upasi \"TEDDY\" 50 gr",
+      mxik: "03304999015000000",
+      qty: 25,
+      price: 6000
+    }
+  ];
+  renderDraftRows();
+  showToast("Muammoli namunaviy qoralama yuklandi!", "info");
+  window.runDraftAudit();
+};
+
+window.loadSampleSafeInvoice = function() {
+  draftInvoiceRows = [
+    {
+      id: "row_s1",
+      name: "Smart Adult Diapers L (Kattalar tagligi)",
+      mxik: "09619001001000000",
+      qty: 20,
+      price: 125000
+    },
+    {
+      id: "row_s2",
+      name: "Bolalar upasi \"TEDDY\" 50 gr",
+      mxik: "03304999015000000",
+      qty: 30,
+      price: 6000
+    },
+    {
+      id: "row_s3",
+      name: "Детские соски (LOT-10)",
+      mxik: "04016001083000000",
+      qty: 15,
+      price: 12000
+    }
+  ];
+  renderDraftRows();
+  showToast("100% Xavfsiz namunaviy qoralama yuklandi!", "success");
+  window.runDraftAudit();
+};
+
+// Paste Modal handling
+window.openPasteDraftModal = function() {
+  const modal = document.getElementById("pasteDraftModal");
+  if (modal) modal.classList.add("active");
+};
+
+window.closePasteDraftModal = function() {
+  const modal = document.getElementById("pasteDraftModal");
+  if (modal) modal.classList.remove("active");
+};
+
+window.parseAndApplyPastedDraft = function() {
+  const textarea = document.getElementById("pasteDraftTextarea");
+  const val = (textarea?.value || "").trim();
+  if (!val) {
+    showToast("Iltimos, faktura matnini kiriting", "warning");
+    return;
+  }
+
+  let items = [];
+  try {
+    const parsed = JSON.parse(val);
+    if (Array.isArray(parsed)) {
+      items = parsed;
+    } else if (parsed.items && Array.isArray(parsed.items)) {
+      items = parsed.items;
+    }
+  } catch (e) {
+    const lines = val.split("\n").map(l => l.trim()).filter(Boolean);
+    lines.forEach(l => {
+      const parts = l.split(/[\t,|;]/);
+      if (parts.length >= 2) {
+        items.push({
+          name: parts[0].trim(),
+          mxik: parts[1].replace(/[^0-9]/g, "").trim(),
+          qty: parseFloat(parts[2]) || 1,
+          price: parseFloat(parts[3]) || 0
+        });
+      }
+    });
+  }
+
+  if (items.length === 0) {
+    showToast("Format aniqlanmadi. Iltimos, JSON yoki matn shaklida kiriting.", "danger");
+    return;
+  }
+
+  draftInvoiceRows = items.map((it, idx) => ({
+    id: "row_" + Date.now() + "_" + idx,
+    name: it.name || it.productName || it.title || "Tovar",
+    mxik: it.mxik || it.catalogCode || "",
+    qty: parseFloat(it.qty || it.count || it.quantity) || 1,
+    price: parseFloat(it.price || it.sum) || 0
+  }));
+
+  renderDraftRows();
+  closePasteDraftModal();
+  showToast(`${draftInvoiceRows.length} ta tovar qoralamaga yuklandi!`, "success");
+  window.runDraftAudit();
+};
+
+// Alternative MXIK applier
+window.applyAlternativeMxik = function(rowId, newMxik, newName = null) {
+  const row = draftInvoiceRows.find(r => r.id === rowId);
+  if (!row) return;
+  row.mxik = newMxik;
+  if (newName) row.name = newName;
+  renderDraftRows();
+  showToast(`MXIK muvaffaqiyatli o'zgartirildi: ${newMxik}`, "success");
+  window.runDraftAudit();
+};
+
+// Copy corrected draft JSON
+window.copyCorrectedDraftJson = function() {
+  const cleanData = draftInvoiceRows.map(r => ({
+    name: r.name,
+    mxik: r.mxik,
+    qty: r.qty,
+    price: r.price,
+    total: r.qty * r.price
+  }));
+  copyText(JSON.stringify(cleanData, null, 2));
+  showToast("To'g'rilangan faktura ma'lumotlari nusxalandi!", "success");
+};
+
+// The Master Pre-Check Audit Engine
+window.runDraftAudit = function() {
+  const resultsArea = document.getElementById("preCheckResultsArea");
+  if (!resultsArea) return;
+
+  const validRows = draftInvoiceRows.filter(r => r.name.trim() || r.mxik.trim());
+  if (validRows.length === 0) {
+    showToast("Iltimos, avval fakturaga tovarlarni kiriting!", "warning");
+    return;
+  }
+
+  const auditData = calculateAuditAndBalance();
+  const balances = auditData.balances;
+
+  let totalErrors = 0;
+  let totalWarnings = 0;
+
+  const analyzedItems = validRows.map((row, idx) => {
+    const cleanName = (row.name || "").trim();
+    const cleanMxik = (row.mxik || "").replace(/[^0-9]/g, "");
+    const qty = parseFloat(row.qty) || 0;
+    const price = parseFloat(row.price) || 0;
+
+    let isSafe = true;
+    let hasError = false;
+    let hasWarning = false;
+    let errorMsg = "";
+    let warningMsg = "";
+    let recommendation = null;
+
+    // 1. Find matching MXIK balance
+    const mxikEntry = balances.find(b => b.mxik === cleanMxik);
+    let availableInMxik = 0;
+    let avgCost = 0;
+    let tasnif = "";
+
+    if (mxikEntry) {
+      availableInMxik = mxikEntry.balanceQty;
+      tasnif = mxikEntry.tasnif;
+      avgCost = mxikEntry.inboundQty > 0 ? (mxikEntry.inboundSum / mxikEntry.inboundQty) : 0;
+    }
+
+    // 2. Check stock
+    if (!mxikEntry) {
+      isSafe = false;
+      hasError = true;
+      errorMsg = `Ushbu MXIK kodi (${cleanMxik || 'Kiritilmagan'}) bo'yicha omborda kirim mavjud emas! Qoldiq: 0 dona.`;
+    } else if (availableInMxik < qty) {
+      isSafe = false;
+      hasError = true;
+      const deficit = qty - availableInMxik;
+      errorMsg = `Omborda bu MXIK bo'yicha jami ${formatNumber(availableInMxik)} dona bor. Siz ${formatNumber(qty)} dona yozyapsiz. Imzolasangiz omborda -${formatNumber(deficit)} dona MINUS hosil bo'ladi!`;
+    }
+
+    // 3. Alternative MXIK Search if error
+    if (hasError && cleanName.length > 2) {
+      const searchTerms = cleanName.toLowerCase().split(/[\s,()"/]+/).filter(w => w.length > 2);
+      
+      let bestAlt = null;
+      for (const b of balances) {
+        if (b.mxik === cleanMxik || b.balanceQty <= 0) continue;
+        
+        for (const p of b.productNames) {
+          const pLower = p.toLowerCase();
+          const matchScore = searchTerms.filter(term => pLower.includes(term)).length;
+          if (matchScore >= Math.min(2, searchTerms.length)) {
+            bestAlt = {
+              mxik: b.mxik,
+              tasnif: b.tasnif,
+              matchedName: p,
+              available: b.balanceQty,
+              unit: b.unit
+            };
+            break;
+          }
+        }
+        if (bestAlt) break;
+      }
+
+      if (bestAlt) {
+        recommendation = {
+          type: "ALT_MXIK",
+          title: `To'g'ri MXIK topildi!`,
+          desc: `Ushbu tovar aslida <strong>${bestAlt.mxik}</strong> (${escapeHtml(bestAlt.tasnif)}) MXIK kodi orqali kirgan va omborda <strong>+${formatNumber(bestAlt.available)} ${bestAlt.unit}</strong> bo'sh qoldiq bor!`,
+          targetMxik: bestAlt.mxik,
+          targetName: bestAlt.matchedName
+        };
+      }
+    }
+
+    // 4. Same MXIK sub-product surplus check
+    if (!recommendation && mxikEntry && mxikEntry.subProducts && mxikEntry.subProducts.length > 1) {
+      const surplusSub = mxikEntry.subProducts.find(sp => sp.balanceQty >= qty && !sp.name.toLowerCase().includes(cleanName.toLowerCase()));
+      if (surplusSub) {
+        recommendation = {
+          type: "SURPLUS_SUB",
+          title: `Xuddi shu MXIK ostidagi zaxira tovar:`,
+          desc: `Ushbu MXIK ostida <strong>"${escapeHtml(surplusSub.name)}"</strong> tovaridan omborda <strong>+${formatNumber(surplusSub.balanceQty)} dona</strong> mavjud. Agar imkoni bo'lsa, tovar nomini shunga almashtiring.`,
+          targetMxik: cleanMxik,
+          targetName: surplusSub.name
+        };
+      }
+    }
+
+    // 5. Pricing & Profit check
+    if (avgCost > 0 && price > 0 && price < avgCost * 0.98) {
+      hasWarning = true;
+      warningMsg = `Diqqat: Sotish narxi (${formatUZS(price)}) o'rtacha kirim tannarxidan (${formatUZS(avgCost)}) arzonroq ko'rsatilgan! Soliq tekshiruvida zarar/rentabellik xavfi.`;
+    } else if (price === 0) {
+      hasWarning = true;
+      warningMsg = `Tovar narxi 0 so'm qilib kiritilgan. Agar bu tekin berilmagan bo'lsa, narxini tekshiring.`;
+    }
+
+    if (hasError) totalErrors++;
+    if (hasWarning) totalWarnings++;
+
+    return {
+      rowId: row.id,
+      index: idx + 1,
+      name: cleanName,
+      mxik: cleanMxik,
+      tasnif: tasnif,
+      qty: qty,
+      price: price,
+      totalSum: qty * price,
+      availableStock: availableInMxik,
+      avgCost: avgCost,
+      isSafe: !hasError,
+      hasError: hasError,
+      hasWarning: hasWarning,
+      errorMsg: errorMsg,
+      warningMsg: warningMsg,
+      recommendation: recommendation
+    };
+  });
+
+  // Render verdict banner
+  let verdictClass = "audit-verdict-safe";
+  let verdictIcon = "check-circle";
+  let verdictTitle = "🟢 100% XAVFSIZ: Fakturani E-IMZO bilan imzolashingiz mumkin!";
+  let verdictDesc = "Barcha kiritilgan tovarlar bo'yicha omborda qoldiq to'liq yetarli va MXIK kodlari to'g'ri. Minus qoldiq xavfi 0%!";
+
+  if (totalErrors > 0) {
+    verdictClass = "audit-verdict-danger";
+    verdictIcon = "alert-octagon";
+    verdictTitle = `🔴 TO'XTATING! Fakturada ${totalErrors} ta jiddiy xatolik aniqlandi!`;
+    verdictDesc = `Agar ushbu fakturani hozir Didoxda imzolab yuborsangiz, E-Omboringizda <strong>MINUS QOLDIQ</strong> paydo bo'ladi va soliq xavfi yuzaga keladi. Iltimos, pastdagi tavsiyalar asosida to'g'irlang!`;
+  } else if (totalWarnings > 0) {
+    verdictClass = "audit-verdict-warning";
+    verdictIcon = "alert-triangle";
+    verdictTitle = `🟡 DIQQAT: Qoldiq yetarli, lekin ${totalWarnings} ta narx ogohlantirishi bor!`;
+    verdictDesc = "Tovarlar omborda mavjud va minusga tushmaysiz, biroq tovar sotish narxlarini yana bir bor tekshirib olish tavsiya etiladi.";
+  }
+
+  const itemsHtml = analyzedItems.map(item => {
+    let cardClass = item.hasError ? "has-error" : (item.hasWarning ? "has-warning" : "is-safe");
+    let statusBadge = item.isSafe 
+      ? `<span class="badge badge-success" style="font-size: 0.8rem;">🟢 Qoldiq Yetarli (+${formatNumber(item.availableStock)})</span>`
+      : `<span class="badge badge-danger" style="font-size: 0.8rem;">🔴 Qoldiq Yetmaydi (Xavf!)</span>`;
+
+    let recommendationHtml = "";
+    if (item.recommendation) {
+      recommendationHtml = `
+        <div class="recommendation-box">
+          <div>
+            <strong>💡 ${item.recommendation.title}</strong>
+            <div>${item.recommendation.desc}</div>
+          </div>
+          <button type="button" class="btn btn-sm btn-primary" onclick="applyAlternativeMxik('${item.rowId}', '${item.recommendation.targetMxik}', '${escapeJsString(item.recommendation.targetName)}')">
+            <i data-lucide="check"></i> Ushbu MXIKni qo'llash
+          </button>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="precheck-item-card ${cardClass}">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="badge badge-purple" style="font-size: 0.72rem;">№ ${item.index}</span>
+              <strong style="font-size: 0.95rem; color: var(--text-main);">${escapeHtml(item.name)}</strong>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+              <span class="mxik-tag" style="font-size: 0.76rem;">${item.mxik || 'Kiritilmagan'}</span>
+              ${item.tasnif ? `<span class="text-sub" style="font-size: 0.74rem;">${escapeHtml(item.tasnif)}</span>` : ''}
+            </div>
+          </div>
+          <div>
+            ${statusBadge}
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 12px; padding: 10px 14px; background: #fafafa; border-radius: var(--radius-sm); font-size: 0.82rem;">
+          <div>
+            <span class="text-sub">Fakturada miqdor:</span><br>
+            <strong>${formatNumber(item.qty)} dona</strong>
+          </div>
+          <div>
+            <span class="text-sub">Ombordagi qoldiq:</span><br>
+            <strong style="color: ${item.availableStock >= item.qty ? 'var(--success)' : 'var(--danger)'};">
+              ${formatNumber(item.availableStock)} dona
+            </strong>
+          </div>
+          <div>
+            <span class="text-sub">Sotish narxi:</span><br>
+            <strong>${formatUZS(item.price)}</strong>
+          </div>
+          <div>
+            <span class="text-sub">Kirim tannarxi:</span><br>
+            <span class="text-muted">${item.avgCost > 0 ? formatUZS(item.avgCost) : "Noma'lum"}</span>
+          </div>
+        </div>
+
+        ${item.errorMsg ? `
+          <div style="margin-top: 10px; padding: 8px 12px; background: #fef2f2; border-radius: var(--radius-sm); color: #b91c1c; font-size: 0.82rem; font-weight: 500;">
+            ⚠️ ${item.errorMsg}
+          </div>
+        ` : ''}
+
+        ${item.warningMsg ? `
+          <div style="margin-top: 10px; padding: 8px 12px; background: #fffbeb; border-radius: var(--radius-sm); color: #b45309; font-size: 0.82rem; font-weight: 500;">
+            ℹ️ ${item.warningMsg}
+          </div>
+        ` : ''}
+
+        ${recommendationHtml}
+      </div>
+    `;
+  }).join("");
+
+  resultsArea.innerHTML = `
+    <div class="card">
+      <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <h3 class="card-title">🔍 Faktura Audit Xulosasi</h3>
+        <button type="button" class="btn btn-sm btn-outline" onclick="copyCorrectedDraftJson()">
+          <i data-lucide="copy"></i> To'g'rilangan Fakturani Nusxalash (JSON)
+        </button>
+      </div>
+      <div class="card-body">
+        
+        <div class="audit-verdict-box ${verdictClass}">
+          <i data-lucide="${verdictIcon}" style="width: 38px; height: 38px; flex-shrink: 0;"></i>
+          <div>
+            <h4 style="margin: 0 0 4px; font-weight: 800; font-size: 1.05rem;">${verdictTitle}</h4>
+            <div style="font-size: 0.88rem; line-height: 1.4;">${verdictDesc}</div>
+          </div>
+        </div>
+
+        <div class="precheck-items-list">
+          ${itemsHtml}
+        </div>
+
+      </div>
+    </div>
+  `;
+
+  resultsArea.classList.remove("hidden");
+  resultsArea.scrollIntoView({ behavior: "smooth", block: "start" });
+  initLucideIcons();
+};
