@@ -702,6 +702,46 @@ html, body {
   background-color: #F8FAFC;
 }
 
+/* Sub-table styling for aggregated MXIK details */
+.data-table tbody tr.mxik-detail-row {
+  background-color: #F8FAFC !important;
+}
+
+.data-table tbody tr.mxik-detail-row:hover {
+  background-color: #F8FAFC !important;
+}
+
+.data-table tbody tr.mxik-row-expanded {
+  background-color: rgba(99, 102, 241, 0.05) !important;
+}
+
+.sub-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #FFFFFF;
+}
+
+.sub-data-table th {
+  background-color: #F1F5F9 !important;
+  color: #475569 !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 8px 12px !important;
+  border-bottom: 2px solid var(--border-color) !important;
+}
+
+.sub-data-table td {
+  padding: 8px 12px !important;
+  font-size: 0.82rem !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+}
+
+.sub-data-table tbody tr:hover {
+  background-color: #F1F5F9 !important;
+}
+
 .text-right { text-align: right; }
 .text-center { text-align: center; }
 

@@ -1013,45 +1013,21 @@ function renderInventoryTab() {
       const isMulti = b.productCount > 1;
       const namesPreview = b.productNames.slice(0, 3).map(n => escapeHtml(n)).join(" • ");
       const moreCount = b.productCount - 3;
+      const safeMxikId = String(b.mxik).replace(/[^a-zA-Z0-9_-]/g, '_');
 
-      let subListHtml = "";
-      if (isMulti) {
-        subListHtml = `
-          <div id="mxik-details-${b.mxik}" class="hidden" style="margin-top: 10px; padding: 10px 12px; background: var(--bg-card-alt); border-radius: var(--radius-sm); border: 1px dashed var(--border-color); font-size: 0.78rem;">
-            <div style="font-weight: 700; margin-bottom: 6px; color: var(--text-muted); display: flex; justify-content: space-between;">
-              <span>Ushbu MXIKga tegishli ${b.productCount} ta mahsulot:</span>
-              <span style="font-family: var(--font-mono); font-size: 0.72rem;">Kirim / Chiqim / Qoldiq</span>
-            </div>
-            ${b.subProducts.map(sp => {
-              const spBal = sp.balanceQty;
-              const spColor = spBal > 0 ? "var(--success)" : (spBal < 0 ? "var(--danger)" : "var(--text-muted)");
-              return `
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.05); gap: 10px;">
-                  <span style="font-weight: 500; color: var(--text-main);">• ${escapeHtml(sp.name)}</span>
-                  <span style="font-family: var(--font-mono); font-size: 0.75rem; white-space: nowrap;">
-                    <span style="color: var(--info);">+${formatNumber(sp.inboundQty)}</span> / 
-                    <span style="color: var(--purple);">-${formatNumber(sp.outboundQty)}</span> / 
-                    <strong style="color: ${spColor};">${formatNumber(spBal)}</strong> ${escapeHtml(sp.unit || b.unit)}
-                  </span>
-                </div>
-              `;
-            }).join("")}
-          </div>
-        `;
-      }
-
+      tr.id = `mxik-row-${safeMxikId}`;
       tr.innerHTML = `
         <td class="text-sub">${idx + 1}</td>
         <td>
           <span class="mxik-tag">${b.mxik}</span>
           <div class="text-sub" style="font-size: 0.75rem; margin-top: 2px;">${escapeHtml(b.tasnif)}</div>
         </td>
-        <td style="max-width: 320px;">
-          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+        <td style="min-width: 250px; max-width: 380px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px;">
             ${isMulti 
               ? `<span class="badge badge-purple" style="font-size: 0.75rem; padding: 2px 8px;">🏷️ ${b.productCount} xil tovar</span>
-                 <button type="button" class="btn btn-xs btn-outline" style="padding: 2px 6px; font-size: 0.7rem;" onclick="toggleMxikDetails('${b.mxik}')" id="btn-toggle-${b.mxik}">
-                   Barchasini ko'rish ▼
+                 <button type="button" class="btn btn-xs btn-outline" style="padding: 3px 8px; font-size: 0.72rem; font-weight: 600;" onclick="toggleMxikDetails('${safeMxikId}')" id="btn-toggle-${safeMxikId}">
+                   Jadvalni ko'rish ▼
                  </button>` 
               : `<span class="badge badge-info" style="font-size: 0.72rem; padding: 1px 6px;">1 xil tovar</span>`
             }
@@ -1059,7 +1035,6 @@ function renderInventoryTab() {
           <div style="font-size: 0.85rem; color: var(--text-main); font-weight: 500; line-height: 1.4;">
             ${namesPreview}${moreCount > 0 ? ` <span class="text-sub" style="font-size: 0.78rem;">va yana ${moreCount} ta...</span>` : ""}
           </div>
-          ${subListHtml}
         </td>
         <td class="text-muted">${escapeHtml(b.unit)}</td>
         <td class="text-right">
@@ -1080,6 +1055,108 @@ function renderInventoryTab() {
           <span class="badge ${b.badgeClass}">${b.statusLabel}</span>
         </td>
       `;
+
+      tbody.appendChild(tr);
+
+      if (isMulti) {
+        const detailTr = document.createElement("tr");
+        detailTr.id = `mxik-details-${safeMxikId}`;
+        detailTr.className = "mxik-detail-row hidden";
+        detailTr.innerHTML = `
+          <td colspan="9" style="padding: 16px 20px; border-bottom: 2px solid var(--border-color); box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);">
+            <div style="background: #ffffff; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+              <div style="padding: 10px 16px; background: #f1f5f9; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 1.1rem;">📦</span>
+                  <span style="font-weight: 700; color: var(--text-main); font-size: 0.88rem;">
+                    MXIK: <code style="color: var(--primary); font-family: var(--font-mono);">${b.mxik}</code> bo'yicha tovarlar harakati (${b.productCount} xil tovar)
+                  </span>
+                </div>
+                <div class="text-sub" style="font-size: 0.76rem;">
+                  Tasnif: <strong>${escapeHtml(b.tasnif)}</strong>
+                </div>
+              </div>
+              
+              <div class="table-responsive" style="margin: 0; max-height: 480px; overflow-y: auto;">
+                <table class="sub-data-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 40px; text-align: center;">№</th>
+                      <th style="min-width: 280px; text-align: left;">Fakturalardagi tovar nomi</th>
+                      <th style="width: 80px; text-align: center;">O'lchov</th>
+                      <th style="width: 140px; text-align: right;">📥 Kirim (Olingan)</th>
+                      <th style="width: 140px; text-align: right;">📤 Chiqim (Sotilgan)</th>
+                      <th style="width: 130px; text-align: right;">📊 Qoldiq</th>
+                      <th style="width: 140px; text-align: center;">Holati</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${b.subProducts.map((sp, sIdx) => {
+                      const spBal = sp.balanceQty;
+                      let spBalClass = "qty-bal-pos";
+                      let spBadge = `<span class="badge badge-success" style="font-size: 0.72rem;">Omborda bor</span>`;
+                      let rowBg = sIdx % 2 === 0 ? "#ffffff" : "#fcfcfd";
+                      
+                      if (spBal < 0) {
+                        spBalClass = "qty-bal-neg";
+                        spBadge = `<span class="badge badge-danger" style="font-size: 0.72rem;">Minus (${formatNumber(spBal)})</span>`;
+                        rowBg = "rgba(239, 68, 68, 0.05)";
+                      } else if (spBal === 0) {
+                        spBalClass = "qty-bal-zero";
+                        spBadge = `<span class="badge badge-warning" style="font-size: 0.72rem;">Tugagan (0)</span>`;
+                      }
+                      
+                      return `
+                        <tr style="background: ${rowBg};">
+                          <td class="text-sub text-center" style="font-size: 0.75rem;">${sIdx + 1}</td>
+                          <td style="font-weight: 600; color: var(--text-main);">
+                            ${escapeHtml(sp.name)}
+                          </td>
+                          <td class="text-center text-muted">${escapeHtml(sp.unit || b.unit)}</td>
+                          <td class="text-right">
+                            <span class="qty-val qty-in" style="font-size: 0.84rem;">+${formatNumber(sp.inboundQty)}</span>
+                            ${sp.inboundSum > 0 ? `<div class="text-sub" style="font-size: 0.7rem;">${formatUZS(sp.inboundSum)}</div>` : ''}
+                          </td>
+                          <td class="text-right">
+                            <span class="qty-val qty-out" style="font-size: 0.84rem;">-${formatNumber(sp.outboundQty)}</span>
+                            ${sp.outboundSum > 0 ? `<div class="text-sub" style="font-size: 0.7rem;">${formatUZS(sp.outboundSum)}</div>` : ''}
+                          </td>
+                          <td class="text-right">
+                            <span class="qty-val ${spBalClass}" style="font-size: 0.88rem; font-weight: 700;">${formatNumber(spBal)}</span>
+                          </td>
+                          <td class="text-center">
+                            ${spBadge}
+                          </td>
+                        </tr>
+                      `;
+                    }).join("")}
+                  </tbody>
+                  <tfoot>
+                    <tr style="background: #f1f5f9; font-weight: 700; border-top: 2px solid var(--border-color);">
+                      <td colspan="3" style="text-align: right; font-size: 0.82rem; padding: 10px 14px; color: var(--text-main);">
+                        Ushbu MXIK bo'yicha JAMI qoldiq:
+                      </td>
+                      <td class="text-right" style="padding: 10px 14px;">
+                        <span class="qty-val qty-in">+${formatNumber(b.inboundQty)}</span>
+                      </td>
+                      <td class="text-right" style="padding: 10px 14px;">
+                        <span class="qty-val qty-out">-${formatNumber(b.outboundQty)}</span>
+                      </td>
+                      <td class="text-right" style="padding: 10px 14px;">
+                        <span class="qty-val ${balQtyClass}" style="font-size: 0.92rem;">${formatNumber(b.balanceQty)}</span>
+                      </td>
+                      <td class="text-center" style="padding: 10px 14px;">
+                        <span class="badge ${b.badgeClass}">${b.statusLabel}</span>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(detailTr);
+      }
     } else {
       // Detailed row
       tr.innerHTML = `
@@ -1108,20 +1185,23 @@ function renderInventoryTab() {
           <span class="badge ${b.badgeClass}">${b.statusLabel}</span>
         </td>
       `;
+      tbody.appendChild(tr);
     }
-
-    tbody.appendChild(tr);
   });
 }
 
-window.toggleMxikDetails = function(mxik) {
-  const el = document.getElementById(`mxik-details-${mxik}`);
-  const btn = document.getElementById(`btn-toggle-${mxik}`);
+window.toggleMxikDetails = function(mxikId) {
+  const el = document.getElementById(`mxik-details-${mxikId}`);
+  const btn = document.getElementById(`btn-toggle-${mxikId}`);
+  const parentTr = document.getElementById(`mxik-row-${mxikId}`);
   if (el) {
     const isNowHidden = !el.classList.contains("hidden");
     el.classList.toggle("hidden");
     if (btn) {
-      btn.textContent = isNowHidden ? "Barchasini ko'rish ▼" : "Yopish ▲";
+      btn.textContent = isNowHidden ? "Jadvalni ko'rish ▼" : "Jadvalni yopish ▲";
+    }
+    if (parentTr) {
+      parentTr.classList.toggle("mxik-row-expanded", !isNowHidden);
     }
   }
 };
