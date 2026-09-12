@@ -1,13 +1,14 @@
 {
   "manifest_version": 3,
   "name": "Didox Ombor & MXIK Nazorati",
-  "version": "1.0",
+  "version": "2.1",
   "description": "Didoxda faktura to'ldirish paytida real vaqtda ombor qoldig'i va MXIK kodini tekshiruvchi aqlli yordamchi",
   "permissions": [
     "storage",
     "activeTab"
   ],
   "host_permissions": [
+    "https://didox.uz/*",
     "https://*.didox.uz/*",
     "https://didox-auditor.vercel.app/*"
   ],
@@ -23,6 +24,7 @@
   "content_scripts": [
     {
       "matches": [
+        "https://didox.uz/*",
         "https://*.didox.uz/*"
       ],
       "js": [
