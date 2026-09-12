@@ -537,26 +537,6 @@
     ]
   },
   {
-    "id": "DOC-247-BAA5C6",
-    "docNo": "247",
-    "date": "2026-08-24",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Гигиеник воситалар",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 2349100.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-60-589EB9",
     "docNo": "60",
     "date": "",
@@ -631,26 +611,6 @@
     "partnerInn": "305363716",
     "status": "Qabul qilingan",
     "items": []
-  },
-  {
-    "id": "DOC-2412-F595F8",
-    "docNo": "2412",
-    "date": "2026-08-17",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские гигиенические товары в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 8433500.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
   },
   {
     "id": "DOC-447-DD754E",
@@ -1206,26 +1166,6 @@
         "qty": 200.0,
         "price": 5357.14,
         "total": 1071428.57
-      }
-    ]
-  },
-  {
-    "id": "DOC-210-5AABAF",
-    "docNo": "210",
-    "date": "2026-07-13",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Гигиеник воситалар",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 4425800.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -2850,26 +2790,6 @@
     ]
   },
   {
-    "id": "DOC-2021-3C5ED0",
-    "docNo": "2021",
-    "date": "2026-07-10",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские гигиенические товары в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 11617500.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-43699-41C729",
     "docNo": "43699",
     "date": "2026-06-26",
@@ -3304,26 +3224,6 @@
     ]
   },
   {
-    "id": "DOC-298-E33685",
-    "docNo": "298",
-    "date": "2026-06-22",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские гигиенические товары в  ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 100000000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-1215-0846BE",
     "docNo": "1215",
     "date": "",
@@ -3738,26 +3638,6 @@
     ]
   },
   {
-    "id": "DOC-3-DD0067",
-    "docNo": "3",
-    "date": "2026-06-23",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские гигиенические товары в  ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 3247300.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-344/344-C39640",
     "docNo": "344/344",
     "date": "",
@@ -3870,26 +3750,6 @@
     "partnerInn": "200547405",
     "status": "Qabul qilingan",
     "items": []
-  },
-  {
-    "id": "DOC-168-829367",
-    "docNo": "168",
-    "date": "2026-06-07",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Гигиеник воситалар",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 2175900.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
   },
   {
     "id": "DOC-1169-FDD984",
@@ -4284,26 +4144,6 @@
         "qty": 288.0,
         "price": 7562.5,
         "total": 2178000.0
-      }
-    ]
-  },
-  {
-    "id": "DOC-1668-7CEFD3",
-    "docNo": "1668",
-    "date": "2026-06-11",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские гигиенические товары в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 8719000.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -5371,26 +5211,6 @@
     ]
   },
   {
-    "id": "DOC-150-303330",
-    "docNo": "150",
-    "date": "2026-05-27",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Гигиеник воситаларлар",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 1727800.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-61-058FDA",
     "docNo": "61",
     "date": "2026-05-26",
@@ -5434,26 +5254,6 @@
         "qty": 1000.0,
         "price": 1517.86,
         "total": 1517857.14
-      }
-    ]
-  },
-  {
-    "id": "DOC-1469-0A3EFF",
-    "docNo": "1469",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские гигиенические товары в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 2879400.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -5773,26 +5573,6 @@
     "partnerInn": "306084152",
     "status": "Qabul qilingan",
     "items": []
-  },
-  {
-    "id": "DOC-132-6DAB68",
-    "docNo": "132",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Гигиеник воситаларлар",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 3063200.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
   },
   {
     "id": "DOC-106-C14155",
@@ -6451,26 +6231,6 @@
     ]
   },
   {
-    "id": "DOC-99-B9CC1B",
-    "docNo": "99",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Гигиеник воситаларлар",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 4247100.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-70-8D71AE",
     "docNo": "70",
     "date": "",
@@ -6674,26 +6434,6 @@
     "partnerInn": "307833398",
     "status": "Qabul qilingan",
     "items": []
-  },
-  {
-    "id": "DOC-1094-CE3080",
-    "docNo": "1094",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские гигиенические товары в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 7004800.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
   },
   {
     "id": "DOC-76-E54695",
@@ -7263,26 +7003,6 @@
     "partnerInn": "305492968",
     "status": "Qabul qilingan",
     "items": []
-  },
-  {
-    "id": "DOC-70-107D7C",
-    "docNo": "70",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "дори дармон ва бад махсулотлари учун",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 500000000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
   },
   {
     "id": "DOC-04-86B5F4",
@@ -8052,26 +7772,6 @@
     "items": []
   },
   {
-    "id": "DOC-879 А-AED35E",
-    "docNo": "879 А",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские гигиенические товары в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 5807800.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-Н/0121-20E7F8",
     "docNo": "Н/0121",
     "date": "2026-04-02",
@@ -8112,26 +7812,6 @@
     "items": []
   },
   {
-    "id": "DOC-84-ECD123",
-    "docNo": "84",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Гигиеник воситаларлар",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 2423100.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-103992-C58BB6",
     "docNo": "103992",
     "date": "2026-03-31",
@@ -8148,26 +7828,6 @@
         "qty": 157.0,
         "price": 500.0,
         "total": 78500.0
-      }
-    ]
-  },
-  {
-    "id": "DOC-14-F92319",
-    "docNo": "14",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские гигиенические товары в  ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "1",
-        "qty": 50000000.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -8666,26 +8326,6 @@
     ]
   },
   {
-    "id": "DOC-20-E71DFB",
-    "docNo": "20",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские гигиенические товары в  ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 56000000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-16010-065A1F",
     "docNo": "16010",
     "date": "2026-03-19",
@@ -9177,66 +8817,6 @@
         "qty": 960.0,
         "price": 10178.57,
         "total": 9771427.43
-      }
-    ]
-  },
-  {
-    "id": "DOC-40-42F689",
-    "docNo": "40",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Гигиеник воситаларлар",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 996500.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
-    "id": "DOC-594-36B2BF",
-    "docNo": "594",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские гигиенические товары в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 2874100.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
-    "id": "DOC-52-32BE0C",
-    "docNo": "52",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Гигиеник воситаларлар",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 1696600.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -10151,26 +9731,6 @@
     ]
   },
   {
-    "id": "DOC-34-AC967F",
-    "docNo": "34",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Гигиеник воситаларлар",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 2096500.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-24-DA0D8F",
     "docNo": "24",
     "date": "",
@@ -10453,86 +10013,6 @@
         "qty": 250.0,
         "price": 2500.0,
         "total": 625000.0
-      }
-    ]
-  },
-  {
-    "id": "DOC-157-C9EC78",
-    "docNo": "157",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Тиш пастаси",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 5362300.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
-    "id": "DOC-157-F1885F",
-    "docNo": "157",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские гигиенические товары в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 5362300.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
-    "id": "DOC-4-2F31E7",
-    "docNo": "4",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские гигиенические товары в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 25000000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
-    "id": "DOC-30-BECDEB",
-    "docNo": "30",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские гигиенические товары в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "25",
-        "qty": 20000000.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -11622,26 +11102,6 @@
         "qty": 1200.0,
         "price": 3150.0,
         "total": 3780000.0
-      }
-    ]
-  },
-  {
-    "id": "DOC-2169-11F0C3",
-    "docNo": "2169",
-    "date": "",
-    "type": "inbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Пластмассадан  тайорланган  бутилкалар  флаконлар  ва шунга  ухшаш  идишлар",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "1",
-        "qty": 4759299.99,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -17509,26 +16969,6 @@
     ]
   },
   {
-    "id": "DOC-42-70F9F8",
-    "docNo": "42",
-    "date": "2026-05-13",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские товары в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 600000000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-1029-B9206C",
     "docNo": "1029",
     "date": "2026-09-02",
@@ -19196,26 +18636,6 @@
         "qty": 6.0,
         "price": 22767.86,
         "total": 136607.14
-      }
-    ]
-  },
-  {
-    "id": "DOC-41-2CF12E",
-    "docNo": "41",
-    "date": "2026-08-29",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Парфюмерно-косметическая продукция и влажные гигиенические салфетки в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 19584000.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -27732,26 +27152,6 @@
     ]
   },
   {
-    "id": "DOC-40-E1CC73",
-    "docNo": "40",
-    "date": "2026-08-12",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Зубные щетки в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 3452400.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-936-A1F061",
     "docNo": "936",
     "date": "2026-08-15",
@@ -36111,26 +35511,6 @@
     ]
   },
   {
-    "id": "DOC-39-9D55B7",
-    "docNo": "39",
-    "date": "2026-07-24",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Масло оливковое очищенное",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 3469200.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-866-03B750",
     "docNo": "866",
     "date": "2026-07-28",
@@ -40365,26 +39745,6 @@
     ]
   },
   {
-    "id": "DOC-38-7D69B2",
-    "docNo": "38",
-    "date": "2026-07-20",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Парфюмерно-косметическая продукция и влажные гигиенические салфетки в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 8784000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-831-C60E51",
     "docNo": "831",
     "date": "2026-07-17",
@@ -43883,26 +43243,6 @@
     "partnerInn": "998905700792",
     "status": "Qabul qilingan",
     "items": []
-  },
-  {
-    "id": "DOC-37-442B39",
-    "docNo": "37",
-    "date": "2026-07-01",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Ayollar gigiyenik prokladkasi",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 100000000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
   },
   {
     "id": "DOC-817-41A386",
@@ -49434,26 +48774,6 @@
     ]
   },
   {
-    "id": "DOC-22-C5A6D0",
-    "docNo": "22",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "медицинские изделия",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 32889248.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-767-25B727",
     "docNo": "767",
     "date": "2026-07-06",
@@ -51674,26 +50994,6 @@
     ]
   },
   {
-    "id": "DOC-35-7A2685",
-    "docNo": "35",
-    "date": "2026-06-26",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Товары народного потребления",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 10000000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-725-06A7F7",
     "docNo": "725",
     "date": "2026-07-01",
@@ -52834,26 +52134,6 @@
         "qty": 46.0,
         "price": 4642.86,
         "total": 213571.43
-      }
-    ]
-  },
-  {
-    "id": "DOC-34-56ECC8",
-    "docNo": "34",
-    "date": "2026-07-01",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Парфюмерно-косметическая продукция и влажные гигиенические салфетки в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 6020000.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -54365,26 +53645,6 @@
         "qty": 5.0,
         "price": 45000.0,
         "total": 225000.0
-      }
-    ]
-  },
-  {
-    "id": "DOC-26-5A4C2B",
-    "docNo": "26",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Товары народного потребления",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 10000000.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -57290,26 +56550,6 @@
     ]
   },
   {
-    "id": "DOC-33-E7C5D7",
-    "docNo": "33",
-    "date": "2026-06-12",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Парфюмерно-косметические",
-        "mxik": "03304021006000000",
-        "tasnif": "Масло косметическое",
-        "unit": "73",
-        "qty": 10483200.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-713-E07C9D",
     "docNo": "713",
     "date": "2026-06-20",
@@ -58859,26 +58099,6 @@
         "qty": 10.0,
         "price": 3571.43,
         "total": 35714.29
-      }
-    ]
-  },
-  {
-    "id": "DOC-25-6D0FC0",
-    "docNo": "25",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Gigiyenik mahsulotlar",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 100000000.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -62131,26 +61351,6 @@
     ]
   },
   {
-    "id": "DOC-33-4D7F9F",
-    "docNo": "33",
-    "date": "2026-06-12",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MAS'ULIYATI CHEKLANGAN JAMIYAT",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Косметические изделия в ассортименте",
-        "mxik": "03304021006000000",
-        "tasnif": "Масло косметическое",
-        "unit": "73",
-        "qty": 7673540.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-676-260FAD",
     "docNo": "676",
     "date": "2026-06-12",
@@ -65257,26 +64457,6 @@
     ]
   },
   {
-    "id": "DOC-32-922EAC",
-    "docNo": "32",
-    "date": "2026-06-09",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Зубные щетки в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 5100000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-659-31EBDE",
     "docNo": "659",
     "date": "2026-06-09",
@@ -67121,26 +66301,6 @@
         "qty": 18.0,
         "price": 7589.29,
         "total": 136607.14
-      }
-    ]
-  },
-  {
-    "id": "DOC-31-D3C2BE",
-    "docNo": "31",
-    "date": "2026-06-05",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Парфюмерно-косметическая продукция и влажные гигиенические салфетки в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 6692000.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -77376,26 +76536,6 @@
     ]
   },
   {
-    "id": "DOC-29-D1EFE0",
-    "docNo": "29",
-    "date": "2026-05-08",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Бумагу и изделия бумажные санитарно-гигиенического назначения",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 12000000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-449-A4C9E8",
     "docNo": "449",
     "date": "2026-04-23",
@@ -78640,26 +77780,6 @@
     ]
   },
   {
-    "id": "DOC-29-20EF5F",
-    "docNo": "29",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Tayyor biologik oziq-ovqat qo'shimchalari",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 5310002.88,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-377-D808BE",
     "docNo": "377",
     "date": "2026-04-27",
@@ -78896,26 +78016,6 @@
         "qty": 3.0,
         "price": 7500.0,
         "total": 22500.0
-      }
-    ]
-  },
-  {
-    "id": "DOC-30-5FE4C3",
-    "docNo": "30",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Парфюмерно-косметическая продукция и влажные гигиенические салфетки в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 8276000.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -79394,26 +78494,6 @@
         "qty": 5.0,
         "price": 8482.14,
         "total": 42410.71
-      }
-    ]
-  },
-  {
-    "id": "DOC-28-B50E00",
-    "docNo": "28",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Детские гигиенические товары (бутылки для детского питания, зубогрызки , соски в ассортименте)",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 100000000.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -80368,26 +79448,6 @@
         "qty": 10.0,
         "price": 9821.43,
         "total": 98214.29
-      }
-    ]
-  },
-  {
-    "id": "DOC-27-995B11",
-    "docNo": "27",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Товары народного потребления",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 10000000.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -83443,26 +82503,6 @@
         "qty": 5.0,
         "price": 4196.43,
         "total": 20982.14
-      }
-    ]
-  },
-  {
-    "id": "DOC-23-2B7AF0",
-    "docNo": "23",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "медицинские изделия",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 100000000.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -93025,46 +92065,6 @@
     ]
   },
   {
-    "id": "DOC-24-328335",
-    "docNo": "24",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Бумагу и изделия бумажные санитарно-гигиенического назначения",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 12000000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
-    "id": "DOC-23-0D635C",
-    "docNo": "23",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "kattalar-bolalar tagliklari, (gigeniya va xo’jalik mahsulotlari)",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 500000000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-393-ECF8FB",
     "docNo": "393",
     "date": "2026-04-12",
@@ -98811,26 +97811,6 @@
     ]
   },
   {
-    "id": "DOC-21-730AB6",
-    "docNo": "21",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Парфюмерно-косметическая продукция и влажные гигиенические салфетки в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 7344000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-1-81E107",
     "docNo": "1",
     "date": "",
@@ -100243,26 +99223,6 @@
         "qty": 4.0,
         "price": 45000.0,
         "total": 180000.0
-      }
-    ]
-  },
-  {
-    "id": "DOC-20-E7286A",
-    "docNo": "20",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Подгузники детские упакованные в пакеты из полимерной пленки",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 100000000.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -103474,26 +102434,6 @@
     ]
   },
   {
-    "id": "DOC-19-CEB612",
-    "docNo": "19",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Парфюмерно-косметическая продукция и влажные гигиенические салфетки в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 6552000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-Договор-603159",
     "docNo": "Договор",
     "date": "",
@@ -105436,46 +104376,6 @@
     ]
   },
   {
-    "id": "DOC-15-C1D466",
-    "docNo": "15",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Бумагу и изделия бумажные санитарно-гигиенического назначения",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 6000000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
-    "id": "DOC-18-ED9B5B",
-    "docNo": "18",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Товары народного потребления",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 4105200.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-289-8B094B",
     "docNo": "289",
     "date": "2026-03-18",
@@ -105839,26 +104739,6 @@
         "qty": 12.0,
         "price": 4910.71,
         "total": 58928.57
-      }
-    ]
-  },
-  {
-    "id": "DOC-17-A219E8",
-    "docNo": "17",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Парфюмерно-косметическая продукция и влажные гигиенические салфетки в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 3654000.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -106241,26 +105121,6 @@
         "qty": 5.0,
         "price": 9821.43,
         "total": 49107.14
-      }
-    ]
-  },
-  {
-    "id": "DOC-16-A1C183",
-    "docNo": "16",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Зубные щетки в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 1641600.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -115069,26 +113929,6 @@
     "items": []
   },
   {
-    "id": "DOC-14-102E36",
-    "docNo": "14",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Товары народного потребления",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 897000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-188-0C4D76",
     "docNo": "188",
     "date": "2026-02-25",
@@ -115155,26 +113995,6 @@
     "partnerInn": "998905375232",
     "status": "Qabul qilingan",
     "items": []
-  },
-  {
-    "id": "DOC-13-1086FB",
-    "docNo": "13",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Парфюмерно-косметическая продукция и влажные гигиенические салфетки в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 8022000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
   },
   {
     "id": "DOC-185-3BF26E",
@@ -122828,26 +121648,6 @@
     ]
   },
   {
-    "id": "DOC-12-D0CB58",
-    "docNo": "12",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "кир ювиш парашоги",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 2700000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-Договор-D86A15",
     "docNo": "Договор",
     "date": "",
@@ -124550,26 +123350,6 @@
     ]
   },
   {
-    "id": "DOC-11-2BB8BB",
-    "docNo": "11",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "тиббий буюмлар",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 5081440.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-99-1C67AF",
     "docNo": "99",
     "date": "",
@@ -125384,26 +124164,6 @@
         "qty": 1.0,
         "price": 120000.0,
         "total": 120000.0
-      }
-    ]
-  },
-  {
-    "id": "DOC-10-5CC2C1",
-    "docNo": "10",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Зубные щетки в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 3448800.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -127079,26 +125839,6 @@
     ]
   },
   {
-    "id": "DOC-9-ADBA8F",
-    "docNo": "9",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Подгузники детские упакованные в пакеты из полимерной пленки",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 100000000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-76-ADEC19",
     "docNo": "76",
     "date": "",
@@ -127836,26 +126576,6 @@
     ]
   },
   {
-    "id": "DOC-8-1918B4",
-    "docNo": "8",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Бумагу и изделия бумажные санитарно-гигиенического назначения",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 6000000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-72-1C953A",
     "docNo": "72",
     "date": "",
@@ -128220,26 +126940,6 @@
         "qty": 12.0,
         "price": 44642.86,
         "total": 535714.29
-      }
-    ]
-  },
-  {
-    "id": "DOC-7-17E2EC",
-    "docNo": "7",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Парфюмерно-косметическая продукция и влажные гигиенические салфетки в ассортименте",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 8454000.0,
-        "price": 0.0,
-        "total": 0.0
       }
     ]
   },
@@ -133279,26 +131979,6 @@
     ]
   },
   {
-    "id": "DOC-6-11F0D7",
-    "docNo": "6",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Гигиена ёки душ воситалари",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 5000000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-39-390689",
     "docNo": "39",
     "date": "",
@@ -137581,26 +136261,6 @@
     ]
   },
   {
-    "id": "DOC-5-11F0CB",
-    "docNo": "5",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Пахтали таёкчалар",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 15001000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-12-11F0C9",
     "docNo": "12",
     "date": "",
@@ -138654,26 +137314,6 @@
     "items": []
   },
   {
-    "id": "DOC-3-11F0C5",
-    "docNo": "3",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Аскорбинка Витаминка C",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "73",
-        "qty": 6150000.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC-1-11F0C3",
     "docNo": "1",
     "date": "",
@@ -139130,44 +137770,6 @@
     "items": []
   },
   {
-    "id": "DOC-2-11F0C1",
-    "docNo": "2",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "\"SINAMED\" MCHJ",
-    "partnerInn": "311519913",
-    "status": "Qabul qilingan",
-    "items": [
-      {
-        "name": "Best soft 120-talik",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "1",
-        "qty": 1200.0,
-        "price": 0.0,
-        "total": 0.0
-      },
-      {
-        "name": "Best soft 72-talik",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "1",
-        "qty": 1200.0,
-        "price": 0.0,
-        "total": 0.0
-      },
-      {
-        "name": "Best soft 15-talik",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "1",
-        "qty": 4320.0,
-        "price": 0.0,
-        "total": 0.0
-      }
-    ]
-  },
-  {
     "id": "DOC- Договор-11F0BE",
     "docNo": " Договор",
     "date": "",
@@ -139178,31 +137780,40 @@
     "items": []
   },
   {
-    "id": "DOC-1-11F0A2",
-    "docNo": "1",
-    "date": "",
-    "type": "outbound",
-    "partnerName": "SINAMED MCHJ",
-    "partnerInn": "311519913",
+    "id": "DOC-107-ABINA-20260902",
+    "docNo": "107",
+    "date": "2026-09-02",
+    "type": "inbound",
+    "partnerName": "\"ABINA COSMETIK\" MCHJ",
+    "partnerInn": "301178251",
     "status": "Qabul qilingan",
     "items": [
       {
-        "name": "Diva mamasha",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "1",
-        "qty": 1500.0,
-        "price": 0.0,
-        "total": 0.0
+        "name": "Вазелин косметический 100гр",
+        "mxik": "02712001002000000",
+        "tasnif": "Вазелин косметический",
+        "unit": "dona",
+        "qty": 1440.0,
+        "price": 5446.43,
+        "total": 7842857.14
       },
       {
-        "name": "Amelya oq",
-        "mxik": "00000000000000000",
-        "tasnif": "Tasnif kodi",
-        "unit": "1",
+        "name": "Вазелин косметический 40гр",
+        "mxik": "02712001002000000",
+        "tasnif": "Вазелин косметический",
+        "unit": "dona",
         "qty": 2000.0,
-        "price": 0.0,
-        "total": 0.0
+        "price": 1785.71,
+        "total": 3571428.57
+      },
+      {
+        "name": "Вазелин косметический 20гр",
+        "mxik": "02712001002000000",
+        "tasnif": "Вазелин косметический",
+        "unit": "dona",
+        "qty": 4000.0,
+        "price": 1517.86,
+        "total": 6071428.57
       }
     ]
   }
