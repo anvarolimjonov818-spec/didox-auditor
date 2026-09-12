@@ -78,13 +78,10 @@
 }
 
 .da-title {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
   color: #1e293b;
   margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .da-close-btn {
@@ -99,6 +96,33 @@
 
 .da-close-btn:hover {
   color: #ef4444;
+}
+
+/* Tabs inside Modal */
+.da-tabs-nav {
+  display: flex;
+  background: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0 24px;
+  gap: 8px;
+}
+
+.da-tab-btn {
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.da-tab-btn.active {
+  color: #4f46e5;
+  border-bottom-color: #4f46e5;
+  background: #ffffff;
 }
 
 .da-body {
@@ -140,6 +164,7 @@
   background: #ffffff;
   color: #475569;
   border: 1px solid #cbd5e1;
+  text-decoration: none;
 }
 
 .da-btn-outline:hover {
