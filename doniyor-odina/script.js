@@ -202,14 +202,20 @@ function initEnvelope() {
 
     envelope.classList.add("opened");
 
-    // Burst of hearts around seal
-    createBurst(envelope.getBoundingClientRect().left + 160, envelope.getBoundingClientRect().top + 100, 15);
+    // Dynamic center burst of hearts around seal
+    const rect = envelope.getBoundingClientRect();
+    createBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 15);
 
     setTimeout(() => {
       revealedContent.classList.add("active");
       revealedContent.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 1100);
+    }, 1000);
   }
+
+  waxSeal?.addEventListener("pointerdown", (e) => {
+    e.stopPropagation();
+    openEnvelope();
+  });
 
   waxSeal?.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -295,7 +301,9 @@ function initForgivenessGame() {
   ];
 
   function runAway(e) {
-    if (e) e.preventDefault();
+    if (e && e.type === "touchstart") {
+      e.preventDefault();
+    }
     noHoverCount++;
 
     // Cycle funny text
@@ -303,28 +311,33 @@ function initForgivenessGame() {
     noBtn.textContent = phrase;
     commentEl.textContent = `Odina, axir Doniyor chin dildan kechirim so'rayapti-ku... 🥺 (Urinish: ${noHoverCount})`;
 
-    // Scale up "Yes" button
-    yesScale += 0.15;
+    // Scale up "Yes" button (capped for mobile so it never causes page overflow)
+    const isMobile = window.innerWidth <= 600;
+    const maxScale = isMobile ? 1.25 : 1.5;
+    yesScale = Math.min(maxScale, yesScale + (isMobile ? 0.05 : 0.12));
     yesBtn.style.transform = `scale(${yesScale})`;
     yesBtn.style.boxShadow = `0 15px 40px rgba(16, 185, 129, ${Math.min(0.9, 0.4 + yesScale * 0.1)})`;
 
-    // Move "No" button randomly inside arena
+    // Move "No" button safely within arena bounds
     const arenaRect = arena.getBoundingClientRect();
     const btnRect = noBtn.getBoundingClientRect();
 
-    const maxX = arenaRect.width - btnRect.width - 20;
-    const maxY = arenaRect.height - btnRect.height - 20;
+    const spanX = Math.max(30, (arenaRect.width - btnRect.width) / 2 - 10);
+    const spanY = Math.max(20, (arenaRect.height - btnRect.height) / 2 - 10);
 
-    const randomX = (Math.random() - 0.5) * (arenaRect.width * 0.7);
-    const randomY = (Math.random() - 0.5) * 80;
+    const randomX = (Math.random() - 0.5) * 2 * Math.min(spanX, 90);
+    const randomY = (Math.random() - 0.5) * 2 * Math.min(spanY, 40);
 
-    noBtn.style.transform = `translate(${randomX}px, ${randomY}px) scale(0.9)`;
+    noBtn.style.transform = `translate(${randomX}px, ${randomY}px) scale(0.92)`;
 
     // If 8+ attempts, turn No button into another YES button!
     if (noHoverCount >= 8) {
       noBtn.textContent = "Mayli, kechirdim! ❤️";
       noBtn.style.background = "linear-gradient(135deg, #10b981 0%, #059669 100%)";
       noBtn.style.color = "#fff";
+      noBtn.style.transform = "none";
+      noBtn.removeEventListener("mouseover", runAway);
+      noBtn.removeEventListener("touchstart", runAway);
       noBtn.onclick = celebrateVictory;
     }
   }
@@ -332,7 +345,7 @@ function initForgivenessGame() {
   // Hover on desktop
   noBtn?.addEventListener("mouseover", runAway);
   // Touch on mobile
-  noBtn?.addEventListener("touchstart", runAway);
+  noBtn?.addEventListener("touchstart", runAway, { passive: false });
 
   // Click on Yes
   yesBtn?.addEventListener("click", celebrateVictory);

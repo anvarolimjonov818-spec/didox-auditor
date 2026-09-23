@@ -26,15 +26,25 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  width: 100%;
+}
+
 body {
   font-family: 'Outfit', sans-serif;
   background: var(--bg-dark);
   background-image: var(--bg-gradient);
   color: var(--text-main);
   min-height: 100vh;
+  min-height: 100dvh;
   overflow-x: hidden;
+  width: 100%;
   position: relative;
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: env(safe-area-inset-bottom, 20px);
 }
 
 /* Background Canvas */
@@ -497,7 +507,12 @@ body {
   transform-style: preserve-3d;
 }
 
-.flip-card:hover .flip-card-inner,
+@media (hover: hover) and (pointer: fine) {
+  .flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+}
+
 .flip-card.flipped .flip-card-inner {
   transform: rotateY(180deg);
 }
@@ -868,32 +883,347 @@ body {
   z-index: 10;
 }
 
-/* Mobile Responsive Adjustments */
+/* ========================================================
+   RESPONSIVE DESIGN & MOBILE OPTIMIZATIONS
+   ======================================================== */
+
+@media (max-width: 768px) {
+  .main-wrapper {
+    padding: 55px 16px 70px;
+  }
+  .reasons-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+}
+
 @media (max-width: 600px) {
+  .main-wrapper {
+    padding: 50px 14px 60px;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  /* Music Controller Mobile Adaptation */
+  .music-toggle {
+    top: max(10px, env(safe-area-inset-top, 10px));
+    right: max(10px, env(safe-area-inset-right, 10px));
+    padding: 6px 12px;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+  .music-text {
+    font-size: 11px;
+    letter-spacing: 0;
+  }
+
+  /* Main Title & Subtitle */
+  .envelope-badge {
+    font-size: 12px;
+    padding: 5px 14px;
+    margin-bottom: 12px;
+  }
+  .main-title {
+    font-size: clamp(26px, 7vw, 36px);
+  }
+  .subtitle {
+    font-size: 14px;
+    margin-bottom: 25px;
+    padding: 0 10px;
+  }
+
+  /* 3D Envelope Responsive (Phone width 380px - 600px) */
+  .envelope-container {
+    margin: 15px 0 25px;
+  }
   .envelope {
-    width: 290px;
-    height: 190px;
+    width: 280px;
+    height: 185px;
   }
   .envelope-front {
-    border-left-width: 145px;
-    border-right-width: 145px;
+    border-left-width: 140px;
+    border-right-width: 140px;
     border-top-width: 95px;
-    border-bottom-width: 95px;
+    border-bottom-width: 90px;
   }
   .envelope-flap {
-    border-left-width: 145px;
-    border-right-width: 145px;
+    border-left-width: 140px;
+    border-right-width: 140px;
     border-top-width: 105px;
   }
   .letter-preview {
-    width: 255px;
-    height: 155px;
+    top: 12px;
+    left: 15px;
+    width: 250px;
+    height: 150px;
+    padding: 12px;
   }
-  .buttons-arena {
+  .wax-seal {
+    top: 80px;
+    width: 48px;
+    height: 48px;
+  }
+  .seal-inner {
+    font-size: 20px;
+  }
+  .envelope.opened .letter-preview {
+    transform: translateY(-95px) scale(1.03);
+  }
+  .open-instruction {
+    font-size: 13px;
+    padding: 0 10px;
+  }
+
+  /* Section Titles */
+  .section-title {
+    font-size: clamp(22px, 6vw, 28px);
+  }
+  .section-subtitle {
+    font-size: 13.5px;
+    margin-bottom: 22px;
+    padding: 0 8px;
+  }
+
+  /* 1. Letter Card Mobile Reading */
+  .letter-card-section {
+    margin-bottom: 45px;
+  }
+  .letter-card {
+    padding: 22px 16px;
+    border-radius: 18px;
+  }
+  .letter-decor {
+    font-size: 22px;
+  }
+  .letter-decor.top-left { top: 12px; left: 12px; }
+  .letter-decor.top-right { top: 12px; right: 12px; }
+  .letter-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+  }
+  .greeting-script {
+    font-size: 26px;
+  }
+  .date-badge {
+    font-size: 11.5px;
+    padding: 3px 10px;
+  }
+  .letter-body {
+    font-size: 15px;
+    line-height: 1.75;
+  }
+  .letter-body p {
+    margin-bottom: 14px;
+  }
+  .letter-quote {
+    padding: 12px 14px;
+    margin: 18px 0 !important;
+    font-size: 14.5px;
+    border-left-width: 3px;
+  }
+  .signature-name {
+    font-size: 34px;
+  }
+
+  /* 2. Reasons Flip Cards Mobile */
+  .reasons-section {
+    margin-bottom: 45px;
+  }
+  .reasons-grid {
+    grid-template-columns: 1fr;
     gap: 14px;
   }
+  .flip-card {
+    height: 180px;
+  }
+  .flip-card-front, .flip-card-back {
+    padding: 16px;
+    border-radius: 14px;
+  }
+  .flip-card-front .card-icon {
+    font-size: 30px;
+  }
+  .flip-card-front h3 {
+    font-size: 16.5px;
+  }
+  .flip-card-back {
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+
+  /* 3. Rose Garden Mobile */
+  .rose-garden-section {
+    margin-bottom: 45px;
+  }
+  .garden-box {
+    padding: 20px 14px;
+    border-radius: 16px;
+  }
+  .rose-counter-bar {
+    font-size: 14.5px;
+    margin-bottom: 10px;
+  }
+  .rose-counter-bar strong {
+    font-size: 20px;
+  }
+  .progress-track {
+    height: 8px;
+    margin-bottom: 18px;
+  }
+  .garden-stage {
+    min-height: 100px;
+    max-height: 160px;
+    padding: 12px 8px;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .rose-item {
+    font-size: 22px;
+  }
+  .garden-btn {
+    width: 100%;
+    max-width: 300px;
+    padding: 14px 20px;
+    font-size: 15px;
+    min-height: 48px;
+  }
+
+  /* 4. Forgiveness Game Mobile Arena */
+  .forgiveness-section {
+    margin-bottom: 30px;
+  }
+  .forgiveness-box {
+    padding: 28px 14px;
+    border-radius: 20px;
+  }
+  .game-title {
+    font-size: clamp(24px, 6vw, 32px);
+  }
+  .game-desc {
+    font-size: 14px;
+    margin-bottom: 24px;
+    padding: 0 6px;
+  }
+  .buttons-arena {
+    min-height: 170px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    overflow: hidden;
+    position: relative;
+    padding: 10px 0;
+  }
   .choice-btn {
-    padding: 12px 24px;
+    width: 100%;
+    max-width: 280px;
+    padding: 14px 20px;
     font-size: 16px;
+    min-height: 48px;
+    touch-action: manipulation;
+  }
+  .attempts-comment {
+    font-size: 13.5px;
+    margin-top: 18px;
+    padding: 0 10px;
+  }
+
+  /* 5. Victory Modal Mobile */
+  .victory-modal-overlay {
+    padding: 14px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .victory-card {
+    padding: 24px 16px;
+    border-radius: 20px;
+    max-height: 92dvh;
+    overflow-y: auto;
+  }
+  .victory-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  .victory-text {
+    font-size: 14px;
+    line-height: 1.65;
+    margin-bottom: 18px;
+  }
+  .sweet-promise-box {
+    padding: 10px 12px;
+    font-size: 12.5px;
+    margin-bottom: 20px;
+  }
+  .telegram-send-btn {
+    padding: 14px 18px;
+    font-size: 15px;
+    min-height: 48px;
+  }
+  .close-modal-btn {
+    padding: 12px;
+    font-size: 13.5px;
+    min-height: 44px;
+  }
+}
+
+/* Extra small screens (iPhone SE, Galaxy Fold: <= 380px) */
+@media (max-width: 380px) {
+  .main-wrapper {
+    padding: 44px 10px 50px;
+  }
+  .envelope {
+    width: 250px;
+    height: 165px;
+  }
+  .envelope-front {
+    border-left-width: 125px;
+    border-right-width: 125px;
+    border-top-width: 82px;
+    border-bottom-width: 82px;
+  }
+  .envelope-flap {
+    border-left-width: 125px;
+    border-right-width: 125px;
+    border-top-width: 95px;
+  }
+  .letter-preview {
+    top: 10px;
+    left: 12px;
+    width: 226px;
+    height: 135px;
+    padding: 10px;
+  }
+  .wax-seal {
+    top: 70px;
+    width: 44px;
+    height: 44px;
+  }
+  .seal-inner {
+    font-size: 18px;
+  }
+  .envelope.opened .letter-preview {
+    transform: translateY(-85px) scale(1.02);
+  }
+  .main-title {
+    font-size: 26px;
+  }
+  .greeting-script {
+    font-size: 22px;
+  }
+  .signature-name {
+    font-size: 28px;
+  }
+  .choice-btn {
+    padding: 12px 16px;
+    font-size: 14.5px;
+    max-width: 250px;
+  }
+  .reasons-grid .flip-card {
+    height: 190px;
   }
 }
