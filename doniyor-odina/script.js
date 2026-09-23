@@ -356,6 +356,50 @@ function initForgivenessGame() {
     victoryModal.classList.add("active");
   }
 
+  // Instagram Send Action
+  const igBtn = document.getElementById("instagramSendBtn");
+  const igToast = document.getElementById("igCopyToast");
+
+  igBtn?.addEventListener("click", () => {
+    const message = "Doniyor, saytingni ko'rdim va seni kechirdim ❤️🥰";
+
+    // 1. Copy message to clipboard
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(message).catch(() => {
+        fallbackCopyText(message);
+      });
+    } else {
+      fallbackCopyText(message);
+    }
+
+    // 2. Show toast
+    if (igToast) {
+      igToast.classList.add("visible");
+      setTimeout(() => {
+        igToast.classList.remove("visible");
+      }, 5000);
+    }
+
+    // 3. Open Instagram Direct
+    setTimeout(() => {
+      window.open("https://www.instagram.com/direct/inbox/", "_blank");
+    }, 400);
+  });
+
+  function fallbackCopyText(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-9999px";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand("copy");
+    } catch (err) {}
+    document.body.removeChild(textArea);
+  }
+
   closeVictoryBtn?.addEventListener("click", () => {
     victoryModal.classList.remove("active");
   });

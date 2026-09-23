@@ -838,22 +838,53 @@ body {
   gap: 12px;
 }
 
-.telegram-send-btn {
-  display: block;
-  background: linear-gradient(135deg, #0088cc 0%, #006699 100%);
+.instagram-send-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
   color: #fff;
   text-decoration: none;
-  padding: 14px;
+  padding: 14px 20px;
   border-radius: 30px;
+  border: none;
   font-size: 16px;
   font-weight: 600;
-  box-shadow: 0 8px 24px rgba(0, 136, 204, 0.4);
+  box-shadow: 0 8px 24px rgba(220, 39, 67, 0.45);
+  cursor: pointer;
   transition: all 0.25s ease;
+  width: 100%;
 }
 
-.telegram-send-btn:hover {
+.instagram-send-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(0, 136, 204, 0.6);
+  box-shadow: 0 12px 30px rgba(220, 39, 67, 0.65);
+}
+
+.ig-icon {
+  flex-shrink: 0;
+}
+
+.ig-copy-toast {
+  display: none;
+  font-size: 12.5px;
+  color: #a7f3d0;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 12px;
+  padding: 8px 12px;
+  line-height: 1.5;
+  animation: fadeInToast 0.3s ease;
+}
+
+.ig-copy-toast.visible {
+  display: block;
+}
+
+@keyframes fadeInToast {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .close-modal-btn {
@@ -1159,7 +1190,7 @@ body {
     font-size: 12.5px;
     margin-bottom: 20px;
   }
-  .telegram-send-btn {
+  .instagram-send-btn {
     padding: 14px 18px;
     font-size: 15px;
     min-height: 48px;
