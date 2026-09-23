@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Odina uchun maxsus... 💌 | Doniyor</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌹</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400;1,600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Starry Sky & Floating Hearts Canvas -->
+  <canvas id="starsCanvas"></canvas>
+  <div id="heartsContainer"></div>
+
+  <!-- Music Controller -->
+  <div class="music-toggle" id="musicToggle" title="Musiqani yoqish/o'chirish">
+    <div class="music-bars">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <span class="music-text">Kuy: Mayin Pianino</span>
+  </div>
+
+  <main class="main-wrapper">
+
+    <!-- STEP 1: MYSTERY ENVELOPE -->
+    <section class="envelope-section" id="envelopeSection">
+      <div class="envelope-badge">Faqat Odina uchun maxsus maktub ✨</div>
+      <h1 class="main-title">Kechirasizmi, Odina?</h1>
+      <p class="subtitle">Bu maktubda yuragimdagi eng samimiy so'zlar yashiringan...</p>
+
+      <div class="envelope-container" id="envelopeContainer">
+        <div class="envelope" id="envelope">
+          <div class="envelope-back"></div>
+          <div class="letter-preview">
+            <div class="preview-line"></div>
+            <div class="preview-line short"></div>
+            <div class="heart-stamp">💖</div>
+          </div>
+          <div class="envelope-front"></div>
+          <div class="envelope-flap" id="envelopeFlap"></div>
+          <div class="wax-seal" id="waxSeal">
+            <span class="seal-inner">O &amp; D</span>
+            <div class="seal-ripple"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="open-instruction">
+        <span class="pulse-icon">👆</span> Maktubni ochish uchun <strong>muhr</strong> ustiga bosing
+      </div>
+    </section>
+
+    <!-- STEP 2: REVEALED CONTENT -->
+    <div class="revealed-content" id="revealedContent">
+
+      <!-- THE HEART LETTER -->
+      <section class="letter-card-section">
+        <div class="letter-card">
+          <div class="letter-decor top-left">🌸</div>
+          <div class="letter-decor top-right">🌸</div>
+          <div class="letter-header">
+            <span class="greeting-script">Mehribonim, Odina...</span>
+            <div class="date-badge" id="currentDate"></div>
+          </div>
+
+          <div class="letter-body">
+            <p class="typewriter-text" id="typewriterText">
+              Bilaman, oramizda tushunmovchilik bo'ldi va mening ba'zi noo'rin gaplarim yoki xatolarim sababli seni ranjitib qo'ydim. 
+              Lekin ishon, seni xafa qilish bu dunyoda men eng oxirgi xohlagan narsa edi...
+            </p>
+            <p class="letter-paragraph">
+              Inson o'ziga eng qadrli, eng yaqin bo'lgan inson bilan arazlashganda yuragi qanchalar bo'shab qolishini endi yanada chuqurroq his qilyapman. 
+              Sen mening hayotimdagi eng yorqin quyosh, eng go'zal va beg'ubor mo'jizamsan.
+            </p>
+            <p class="letter-quote">
+              "Kichik arazlar o'tib ketadi, lekin qalbimdagi senga bo'lgan samimiy mehrim har qanday gina-kudurratdan ming chandon kuchliroq..."
+            </p>
+            <p class="letter-paragraph">
+              Seni chin yurakdan yaxshi ko'raman va ranjitgan har bir lahzam uchun ming bor <strong>uzr so'rayman</strong>. Kel, o'rtamizdagi barcha ginani shu yerda unutaylik, maylimi? ❤️
+            </p>
+          </div>
+
+          <div class="letter-signature">
+            <span>Seni juda qadrlaydigan:</span>
+            <strong class="signature-name">Doniyor</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- REASONS WHY SECTION -->
+      <section class="reasons-section">
+        <h2 class="section-title">Nega aynan sen, Odina? ✨</h2>
+        <p class="section-subtitle">Har bir kartochkani bosing va nimalar yozilganini o'qing:</p>
+
+        <div class="reasons-grid">
+          
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <span class="card-icon">✨</span>
+                <h3>Beg'ubor Kulging</h3>
+                <span class="hint-text">Ko'rish uchun bosing 👆</span>
+              </div>
+              <div class="flip-card-back">
+                <p>Sen jilmayganingda butun dunyodagi muammo va tashvishlar bir soniyada yo'qolgandek bo'ladi. Kulging — qalbimning eng sokin qo'shig'i.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <span class="card-icon">🌸</span>
+                <h3>Samimiy Qalbing</h3>
+                <span class="hint-text">Ko'rish uchun bosing 👆</span>
+              </div>
+              <div class="flip-card-back">
+                <p>Sening mehring, soxtaliksiz tabiating va nozik qalbing har qanday insonni maftun etadi. Sen bu dunyoning eng yaxshi insonisan.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <span class="card-icon">⏳</span>
+                <h3>Har Bir Daqiqa</h3>
+                <span class="hint-text">Ko'rish uchun bosing 👆</span>
+              </div>
+              <div class="flip-card-back">
+                <p>Sen bilan o'tgan oddiy suhbatlar ham umrimning eng yorqin, eng qadrli xotirasiga aylanadi. Sen borsanki, hayotim rang-barang.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <span class="card-icon">👑</span>
+                <h3>Yagona Tanlovim</h3>
+                <span class="hint-text">Ko'rish uchun bosing 👆</span>
+              </div>
+              <div class="flip-card-back">
+                <p>Minglab insonlar orasida qalbim faqat seni tanlagan. Sening o'rningni bu dunyoda hech kim va hech narsa bosa olmaydi.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip-card">
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <span class="card-icon">🌟</span>
+                <h3>Go'zal Kelajagimiz</h3>
+                <span class="hint-text">Ko'rish uchun bosing 👆</span>
+              </div>
+              <div class="flip-card-back">
+                <p>Oldimizda hali birgalikda erishadigan qancha orzularimiz, birga kuladigan quvonchli kunlarimiz bor. Sen bilan har bir qadam baxt!</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- VIRTUAL ROSE GARDEN -->
+      <section class="rose-garden-section">
+        <h2 class="section-title">Odina uchun 101 Atirgul Bog'i 🌹</h2>
+        <p class="section-subtitle">Tugmani bosgan sari bog'da siz uchun yangi atirgullar ochiladi:</p>
+
+        <div class="garden-box">
+          <div class="rose-counter-bar">
+            <span>Odinaga atalgan gullar:</span>
+            <strong id="roseCount">0</strong> / 101 ta 🌹
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="roseProgress"></div>
+          </div>
+          <div class="garden-stage" id="gardenStage">
+            <span class="empty-garden-hint">Gul ekish tugmasini bosing... 👇</span>
+          </div>
+          <button class="garden-btn" id="plantRoseBtn">🌹 Atirgul Qo'shish (+1)</button>
+        </div>
+      </section>
+
+      <!-- PLAYFUL FORGIVENESS GAME -->
+      <section class="forgiveness-section" id="forgivenessSection">
+        <div class="forgiveness-box">
+          <div class="game-badge">Eng Muhim Savol 🥺</div>
+          <h2 class="game-title">Doniyorni kechirasizmi? 🥰</h2>
+          <p class="game-desc">Rostini ayting, hali ham arazlab o'tirasizmi yoki yarashamizmi?</p>
+
+          <div class="buttons-arena" id="buttonsArena">
+            <button class="choice-btn yes-btn" id="yesBtn">
+              💚 Ha, kechirdim ❤️
+            </button>
+            <button class="choice-btn no-btn" id="noBtn">
+              💔 Yo'q 😤
+            </button>
+          </div>
+
+          <div class="attempts-comment" id="attemptsComment"></div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- VICTORY MODAL OVERLAY -->
+    <div class="victory-modal-overlay" id="victoryModal">
+      <div class="victory-card">
+        <div class="victory-confetti-badge">🎉 YURAGIM TO'LDI! 💖</div>
+        <h2 class="victory-title">Rahmat, Odina! 🥰</h2>
+        <p class="victory-text">
+          Bilar edim qalbingiz naqadar mehribonligini! <br>
+          Yuzingizda tabassum paydo bo'ldi, to'g'rimi? <br>
+          Doniyor seni juda-juda yaxshi ko'radi va bundan keyin faqat quvontirishga so'z beradi! 🌹
+        </p>
+
+        <div class="sweet-promise-box">
+          ✨ <strong>Kichik va'da:</strong> Endi har safar bahslashmoqchi bo'lsak, avval sizga bir dasta atirgul va shirinlik olib kelaman! 😉
+        </div>
+
+        <div class="modal-actions">
+          <a href="https://t.me/share/url?url=Doniyor,%20saytingni%20ko'rdim%20va%20seni%20kechirdim%20❤️🥰" target="_blank" class="telegram-send-btn">
+            ✈️ Doniyorga xabar jo'natish (Telegram)
+          </a>
+          <button class="close-modal-btn" id="closeVictoryBtn">
+            Sahifaga qaytish 💕
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Doniyor tomonidan cheksiz muhabbat bilan faqat Odina uchun yaratildi ❤️</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
