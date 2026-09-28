@@ -1,31 +1,34 @@
 // ========================================================
-// DONIYOR & ODINA: ULTRA-PREMIUM ROMANTIC ENGINE
+// DONIYOR & ODINA: CINEMATIC ROMANTIC STORY ENGINE
 // ========================================================
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // 1. DATE FORMATTER IN UZBEK
+  // 1. LIVE DATE IN UZBEK
   initLiveDate();
 
-  // 2. AMBIENT CANVAS (STARS, STARDUST & FIREFLIES)
-  initAmbientCanvas();
+  // 2. CINEMATIC BACKGROUND CANVAS (STARS & AURORA DUST)
+  initCinemaCanvas();
 
-  // 3. FLOATING HEARTS GENERATOR
-  initFloatingHearts();
+  // 3. FLOATING SPARKLES GENERATOR
+  initSparkleField();
 
-  // 4. CRYSTALLINE AUDIO ENGINE (MUSIC BOX & CHIMES)
+  // 4. CRYSTALLINE WEB AUDIO API ENGINE
   const audio = initAudioEngine();
 
-  // 5. 3D WAX-SEAL ENVELOPE OPENING
+  // 5. CHAPTER HUD & STORY NAVIGATION
+  initStoryNavigation(audio);
+
+  // 6. 3D WAX-SEAL ENVELOPE (CHAPTER 1 -> 2)
   initEnvelope(audio);
 
-  // 6. 3D FLIP CARDS WITH CHIME EFFECT
+  // 7. 3D FLIP CARDS WITH HARMONIC CHIMES (CHAPTER 3)
   initFlipCards(audio);
 
-  // 7. VIRTUAL 101 ROSE GARDEN WITH MILESTONES
+  // 8. 101 MAGIC ROSES MEADOW WITH MILESTONES (CHAPTER 4)
   initRoseGarden(audio);
 
-  // 8. PLAYFUL FORGIVENESS GAME ARENA
+  // 9. FORGIVENESS ARENA WITH DODGING PHYSICS (CHAPTER 5)
   initForgivenessGame(audio);
 
 });
@@ -43,44 +46,44 @@ function initLiveDate() {
   }
 }
 
-// --- 2. AMBIENT CANVAS (STARS & FIREFLIES) ---
-function initAmbientCanvas() {
-  const canvas = document.getElementById("ambientCanvas");
+// --- 2. CINEMATIC BACKGROUND CANVAS ---
+function initCinemaCanvas() {
+  const canvas = document.getElementById("cinemaCanvas");
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
 
   let width, height;
   let stars = [];
-  let fireflies = [];
+  let cosmicDust = [];
 
   function resize() {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
-    
+
     // Generate Stars
     stars = [];
-    const starCount = Math.floor((width * height) / 3800);
-    for (let i = 0; i < starCount; i++) {
+    const count = Math.floor((width * height) / 3600);
+    for (let i = 0; i < count; i++) {
       stars.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: Math.random() * 1.6 + 0.4,
+        radius: Math.random() * 1.5 + 0.4,
         alpha: Math.random(),
-        speed: Math.random() * 0.018 + 0.006
+        speed: Math.random() * 0.016 + 0.005
       });
     }
 
-    // Generate Fireflies
-    fireflies = [];
-    const fireflyCount = Math.min(25, Math.floor(width / 35));
-    for (let i = 0; i < fireflyCount; i++) {
-      fireflies.push({
+    // Generate Drifting Cosmic Dust
+    cosmicDust = [];
+    const dustCount = Math.min(30, Math.floor(width / 30));
+    for (let i = 0; i < dustCount; i++) {
+      cosmicDust.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: Math.random() * 2.2 + 1.2,
-        vx: (Math.random() - 0.5) * 0.6,
-        vy: (Math.random() - 0.5) * 0.6,
-        alpha: Math.random() * 0.8 + 0.2,
+        radius: Math.random() * 2.5 + 1,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        alpha: Math.random() * 0.7 + 0.2,
         color: Math.random() > 0.5 ? '#f59e0b' : '#ff75a0'
       });
     }
@@ -92,7 +95,7 @@ function initAmbientCanvas() {
   function animate() {
     ctx.clearRect(0, 0, width, height);
 
-    // Render Twinkling Stars
+    // Stars
     stars.forEach(star => {
       star.alpha += star.speed;
       if (star.alpha > 1 || star.alpha < 0) {
@@ -104,22 +107,22 @@ function initAmbientCanvas() {
       ctx.fill();
     });
 
-    // Render Drifting Fireflies
-    fireflies.forEach(f => {
-      f.x += f.vx;
-      f.y += f.vy;
+    // Cosmic Dust
+    cosmicDust.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
 
-      if (f.x < 0) f.x = width;
-      if (f.x > width) f.x = 0;
-      if (f.y < 0) f.y = height;
-      if (f.y > height) f.y = 0;
+      if (p.x < 0) p.x = width;
+      if (p.x > width) p.x = 0;
+      if (p.y < 0) p.y = height;
+      if (p.y > height) p.y = 0;
 
       ctx.beginPath();
-      ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
-      ctx.fillStyle = f.color;
-      ctx.shadowBlur = 12;
-      ctx.shadowColor = f.color;
-      ctx.globalAlpha = f.alpha;
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = p.color;
+      ctx.globalAlpha = p.alpha;
       ctx.fill();
       ctx.shadowBlur = 0;
       ctx.globalAlpha = 1.0;
@@ -131,38 +134,38 @@ function initAmbientCanvas() {
   animate();
 }
 
-// --- 3. FLOATING HEARTS GENERATOR ---
-function initFloatingHearts() {
-  const container = document.getElementById("heartsContainer");
+// --- 3. FLOATING SPARKLES GENERATOR ---
+function initSparkleField() {
+  const container = document.getElementById("particleField");
   if (!container) return;
 
-  const heartIcons = ["❤️", "💖", "🌸", "✨", "💕", "🌹", "💫"];
+  const symbols = ["✨", "💖", "🌸", "🌹", "⭐", "💫", "❤️"];
 
-  function createHeart() {
-    const heart = document.createElement("div");
-    heart.className = "floating-heart";
-    heart.textContent = heartIcons[Math.floor(Math.random() * heartIcons.length)];
-    heart.style.left = Math.random() * 94 + "vw";
-    heart.style.fontSize = Math.floor(Math.random() * 18 + 14) + "px";
-    heart.style.animationDuration = (Math.random() * 3 + 4.5) + "s";
-    container.appendChild(heart);
+  function spawnSparkle() {
+    const el = document.createElement("div");
+    el.className = "floating-sparkle";
+    el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    el.style.left = Math.random() * 94 + "vw";
+    el.style.fontSize = Math.floor(Math.random() * 16 + 14) + "px";
+    el.style.animationDuration = (Math.random() * 3 + 4.5) + "s";
+    container.appendChild(el);
 
     setTimeout(() => {
-      heart.remove();
+      el.remove();
     }, 8000);
   }
 
-  setInterval(createHeart, 900);
+  setInterval(spawnSparkle, 900);
 }
 
-// --- 4. CRYSTALLINE AUDIO ENGINE (Web Audio API) ---
+// --- 4. CRYSTALLINE WEB AUDIO API ENGINE ---
 function initAudioEngine() {
   const toggle = document.getElementById("musicToggle");
   let audioCtx = null;
   let isPlaying = false;
-  let melodyInterval = null;
+  let melodyTimer = null;
 
-  function getContext() {
+  function getCtx() {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
@@ -172,8 +175,8 @@ function initAudioEngine() {
     return audioCtx;
   }
 
-  // Musical notes in Hertz (Romantic pentatonic lullaby in C / Am)
-  const melodyNotes = [
+  // Romantic Pentatonic Music Box Notes in Hertz
+  const notes = [
     523.25, // C5
     659.25, // E5
     783.99, // G5
@@ -188,9 +191,8 @@ function initAudioEngine() {
     523.25  // C5
   ];
 
-  // Play gentle music box tone
-  function playMusicBoxTone(freq, time, duration = 1.8) {
-    const ctx = getContext();
+  function playTone(freq, time, duration = 1.8) {
+    const ctx = getCtx();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
@@ -208,30 +210,27 @@ function initAudioEngine() {
     osc.stop(time + duration);
   }
 
-  // Play soft chime on card flip
-  function playCardChime() {
+  function playChime() {
     try {
-      const ctx = getContext();
+      const ctx = getCtx();
       const now = ctx.currentTime;
-      const chimeNotes = [783.99, 1046.50];
-      chimeNotes.forEach((freq, idx) => {
-        playMusicBoxTone(freq, now + idx * 0.08, 0.8);
+      [783.99, 1046.50].forEach((freq, i) => {
+        playTone(freq, now + i * 0.08, 0.9);
       });
     } catch (e) {}
   }
 
   function startMelody() {
-    const ctx = getContext();
+    const ctx = getCtx();
     let step = 0;
-    
-    melodyInterval = setInterval(() => {
-      const now = ctx.currentTime;
-      const freq = melodyNotes[step % melodyNotes.length];
-      playMusicBoxTone(freq, now, 1.8);
 
-      // Warm octave bass on alternate beats
+    melodyTimer = setInterval(() => {
+      const now = ctx.currentTime;
+      const freq = notes[step % notes.length];
+      playTone(freq, now, 1.8);
+
       if (step % 2 === 0) {
-        playMusicBoxTone(freq / 2, now, 2.4);
+        playTone(freq / 2, now, 2.4);
       }
       step++;
     }, 650);
@@ -241,7 +240,7 @@ function initAudioEngine() {
   }
 
   function stopMelody() {
-    if (melodyInterval) clearInterval(melodyInterval);
+    if (melodyTimer) clearInterval(melodyTimer);
     isPlaying = false;
     toggle?.classList.add("paused");
   }
@@ -254,51 +253,88 @@ function initAudioEngine() {
     }
   });
 
-  // Autoplay on first tap/click anywhere
-  const userGestureHandler = () => {
+  // Autoplay on first user interaction
+  const autoPlayTrigger = () => {
     if (!isPlaying) {
       startMelody();
     }
-    window.removeEventListener("click", userGestureHandler);
-    window.removeEventListener("touchstart", userGestureHandler);
+    window.removeEventListener("click", autoPlayTrigger);
+    window.removeEventListener("touchstart", autoPlayTrigger);
   };
-  window.addEventListener("click", userGestureHandler, { once: true });
-  window.addEventListener("touchstart", userGestureHandler, { once: true });
+  window.addEventListener("click", autoPlayTrigger, { once: true });
+  window.addEventListener("touchstart", autoPlayTrigger, { once: true });
 
   return {
-    playChime: playCardChime,
+    playChime: playChime,
     startMelody: startMelody
   };
 }
 
-// --- 5. 3D WAX-SEAL ENVELOPE OPENING ---
+// --- 5. CHAPTER NAVIGATION & HUD ---
+function initStoryNavigation(audio) {
+  const hudButtons = document.querySelectorAll(".hud-item");
+  const chapters = document.querySelectorAll(".story-chapter");
+  const nextButtons = document.querySelectorAll(".next-chapter-btn");
+
+  function goToChapter(targetId) {
+    const targetChapter = document.getElementById(targetId);
+    if (!targetChapter) return;
+
+    chapters.forEach(ch => ch.classList.remove("active"));
+    targetChapter.classList.add("active");
+
+    hudButtons.forEach(btn => {
+      btn.classList.toggle("active", btn.getAttribute("data-target") === targetId);
+    });
+
+    targetChapter.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (audio) audio.playChime();
+  }
+
+  hudButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.getAttribute("data-target");
+      goToChapter(targetId);
+    });
+  });
+
+  nextButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.getAttribute("data-goto");
+      goToChapter(targetId);
+    });
+  });
+
+  window.goToChapter = goToChapter;
+}
+
+// --- 6. 3D WAX-SEAL ENVELOPE (CHAPTER 1 -> 2) ---
 function initEnvelope(audio) {
-  const envelope = document.getElementById("envelope");
+  const envelope = document.getElementById("envelope3d");
   const waxSeal = document.getElementById("waxSeal");
-  const openCue = document.getElementById("openCue");
-  const revealedContent = document.getElementById("revealedContent");
-  let isOpened = false;
+  const prompt = document.getElementById("envelopePrompt");
+  let opened = false;
 
   function triggerOpen(e) {
     if (e) e.stopPropagation();
-    if (isOpened) return;
-    isOpened = true;
+    if (opened) return;
+    opened = true;
 
     envelope.classList.add("opened");
-    if (openCue) openCue.style.display = "none";
+    if (prompt) prompt.style.display = "none";
 
-    // Play pleasant burst tone
     if (audio) audio.playChime();
 
-    // Spawn golden particles from wax seal center
+    // Burst golden sparkles from seal center
     const rect = waxSeal.getBoundingClientRect();
-    createBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 22);
+    createBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 24);
 
-    // Smooth reveal of main content
+    // Transition smoothly to Chapter 2
     setTimeout(() => {
-      revealedContent.classList.add("active");
-      revealedContent.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 950);
+      if (window.goToChapter) {
+        window.goToChapter("chapter2");
+      }
+    }, 1100);
   }
 
   waxSeal?.addEventListener("click", triggerOpen);
@@ -306,9 +342,9 @@ function initEnvelope(audio) {
   envelope?.addEventListener("click", triggerOpen);
 }
 
-// --- 6. 3D FLIP CARDS WITH CHIME EFFECT ---
+// --- 7. 3D FLIP CARDS (CHAPTER 3) ---
 function initFlipCards(audio) {
-  const cards = document.querySelectorAll(".reason-card");
+  const cards = document.querySelectorAll(".crystal-card");
   cards.forEach(card => {
     card.addEventListener("click", () => {
       card.classList.toggle("flipped");
@@ -319,91 +355,95 @@ function initFlipCards(audio) {
   });
 }
 
-// --- 7. VIRTUAL 101 ROSE GARDEN WITH MILESTONES ---
+// --- 8. 101 MAGIC ROSES MEADOW (CHAPTER 4) ---
 function initRoseGarden(audio) {
   const plantBtn = document.getElementById("plantRoseBtn");
   const autoPlantBtn = document.getElementById("autoPlantBtn");
   const stage = document.getElementById("gardenStage");
   const counterEl = document.getElementById("roseCount");
   const progressEl = document.getElementById("roseProgress");
-  const cue = document.getElementById("emptyStageCue");
+  const prompt = document.getElementById("gardenPrompt");
 
   let currentRoses = 0;
   const maxRoses = 101;
-  const roseEmojis = ["🌹", "🌸", "🌺", "🌷", "💐", "🥀"];
+  const emojis = ["🌹", "🌸", "🌺", "🌷", "💐", "🥀", "💮"];
 
-  function addSingleRose() {
+  function addRose() {
     if (currentRoses >= maxRoses) return;
 
     currentRoses++;
     counterEl.textContent = currentRoses;
     progressEl.style.width = (currentRoses / maxRoses * 100) + "%";
 
-    if (cue) cue.style.display = "none";
+    if (prompt) prompt.style.display = "none";
 
     const rose = document.createElement("span");
-    rose.className = "bloomed-rose";
-    rose.textContent = roseEmojis[Math.floor(Math.random() * roseEmojis.length)];
+    rose.className = "bloomed-rose-item";
+    rose.textContent = emojis[Math.floor(Math.random() * emojis.length)];
     stage.appendChild(rose);
     stage.scrollTop = stage.scrollHeight;
 
-    // Small sparkle burst
+    // Small sparkle on button
     const rect = plantBtn.getBoundingClientRect();
-    createBurst(rect.left + rect.width / 2, rect.top, 6);
+    createBurst(rect.left + rect.width / 2, rect.top, 5);
 
-    // Milestones Check
+    // Milestones feedback
     if (currentRoses === 25) {
-      showMiniPraise("25 ta atirgul ochildi! 🌸 Har bir gul sizning tabassumingiz!");
+      showMiniToast("🌸 25 ta atirgul! Har bir gul sening tabassuming!");
     } else if (currentRoses === 50) {
-      showMiniPraise("50 ta atirgul! 💖 Bog'ingiz yanada go'zallashmoqda!");
+      showMiniToast("💖 50 ta atirgul! Bog'imiz tobora go'zallashmoqda!");
     } else if (currentRoses === 75) {
-      showMiniPraise("75 ta atirgul! ✨ Qalbingiz kabi go'zal bog'!");
+      showMiniToast("✨ 75 ta atirgul! Qalbing kabi chiroyli!");
     } else if (currentRoses === maxRoses) {
-      completeGarden();
+      plantBtn.textContent = "🌹 101 Ta Atirgul To'liq Yig'ildi! 💖";
+      plantBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
+      if (autoPlantBtn) autoPlantBtn.style.display = "none";
+      launchConfetti();
     }
   }
 
-  function completeGarden() {
-    plantBtn.textContent = "🌹 101 Ta Atirgul To'liq Yig'ildi! 💖";
-    plantBtn.style.background = "linear-gradient(135deg, #10b981, #059669)";
-    if (autoPlantBtn) autoPlantBtn.style.display = "none";
-    launchConfetti();
-  }
-
-  plantBtn?.addEventListener("click", () => {
-    if (currentRoses >= maxRoses) {
-      alert("Odina uchun 101 ta atirgul to'liq ekildi! Siz dunyodagi eng go'zal insonsiz! 🌹✨");
-      return;
-    }
-    addSingleRose();
+  // Tap anywhere on meadow stage to plant
+  stage?.addEventListener("click", () => {
+    addRose();
   });
 
-  autoPlantBtn?.addEventListener("click", () => {
+  plantBtn?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (currentRoses >= maxRoses) {
+      alert("Odina uchun barcha 101 ta atirgul ekildi! Siz dunyodagi eng go'zalsiz! 🌹✨");
+      return;
+    }
+    addRose();
+  });
+
+  autoPlantBtn?.addEventListener("click", (e) => {
+    e.stopPropagation();
     if (currentRoses >= maxRoses) return;
-    const interval = setInterval(() => {
+
+    const timer = setInterval(() => {
       if (currentRoses >= maxRoses) {
-        clearInterval(interval);
+        clearInterval(timer);
       } else {
-        addSingleRose();
+        addRose();
       }
-    }, 40);
+    }, 35);
   });
 }
 
-function showMiniPraise(text) {
+function showMiniToast(msg) {
   const toast = document.createElement("div");
-  toast.className = "ig-toast visible";
+  toast.className = "ig-copy-feedback visible";
   toast.style.position = "fixed";
-  toast.style.bottom = "30px";
+  toast.style.bottom = "80px";
   toast.style.left = "50%";
   toast.style.transform = "translateX(-50%)";
   toast.style.zIndex = "99999";
-  toast.textContent = text;
+  toast.textContent = msg;
   document.body.appendChild(toast);
   setTimeout(() => toast.remove(), 3500);
 }
 
-// --- 8. PLAYFUL FORGIVENESS GAME ARENA ---
+// --- 9. FORGIVENESS ARENA (CHAPTER 5) ---
 function initForgivenessGame(audio) {
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
@@ -414,10 +454,10 @@ function initForgivenessGame(audio) {
   const igBtn = document.getElementById("instagramSendBtn");
   const igToast = document.getElementById("igCopyToast");
 
-  let noAttempts = 0;
+  let attempts = 0;
   let yesScale = 1;
 
-  const beggingPhrases = [
+  const phrases = [
     "Rostdanmi? 🥺",
     "Yana bir bor o'ylab ko'ring...",
     "Meni kechirmasdan ketolmaysiz 🙈",
@@ -434,20 +474,20 @@ function initForgivenessGame(audio) {
     if (e && e.type === "touchstart") {
       e.preventDefault();
     }
-    noAttempts++;
+    attempts++;
 
-    // Phrase rotation
-    const phrase = beggingPhrases[(noAttempts - 1) % beggingPhrases.length];
+    // Expressive phrase
+    const phrase = phrases[(attempts - 1) % phrases.length];
     noBtn.textContent = phrase;
-    commentEl.textContent = `Odina, axir Doniyor chin dildan kechirim so'rayapti-ku... 🥺 (Urinish: ${noAttempts})`;
+    commentEl.textContent = `Odina, axir Doniyor chin dildan kechirim so'rayapti-ku... 🥺 (Urinish: ${attempts})`;
 
-    // Scale up "Yes" button within safe mobile limits
+    // Scale up "Yes" button safely
     const isMobile = window.innerWidth <= 600;
     const maxScale = isMobile ? 1.25 : 1.45;
     yesScale = Math.min(maxScale, yesScale + (isMobile ? 0.05 : 0.1));
     yesBtn.style.transform = `scale(${yesScale})`;
 
-    // Move "No" button safely within arena
+    // Safe physics inside arena
     const arenaRect = arena.getBoundingClientRect();
     const btnRect = noBtn.getBoundingClientRect();
 
@@ -459,8 +499,8 @@ function initForgivenessGame(audio) {
 
     noBtn.style.transform = `translate(${randomX}px, ${randomY}px) scale(0.92)`;
 
-    // After 7 attempts, turn into loving surrender button
-    if (noAttempts >= 7) {
+    // Surrender after 7 attempts
+    if (attempts >= 7) {
       noBtn.textContent = "Mayli, kechirdim! ❤️";
       noBtn.style.background = "linear-gradient(135deg, #10b981 0%, #059669 100%)";
       noBtn.style.color = "#ffffff";
@@ -487,7 +527,7 @@ function initForgivenessGame(audio) {
     victoryModal.classList.remove("active");
   });
 
-  // Instagram Send Action with Auto-Copy
+  // Instagram Send Action with 1-Tap Copy
   igBtn?.addEventListener("click", () => {
     const message = "Doniyor, saytingni ko'rdim va seni kechirdim ❤️🥰";
 
@@ -525,8 +565,8 @@ function initForgivenessGame(audio) {
 }
 
 // --- PARTICLE BURST HELPER ---
-function createBurst(x, y, count = 15) {
-  const icons = ["✨", "💖", "🌸", "🌹", "⭐", "💫"];
+function createBurst(x, y, count = 16) {
+  const icons = ["✨", "💖", "🌸", "🌹", "⭐", "💫", "👑"];
   for (let i = 0; i < count; i++) {
     const p = document.createElement("div");
     p.textContent = icons[Math.floor(Math.random() * icons.length)];

@@ -3,351 +3,455 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-  <meta name="theme-color" content="#0a0614">
+  <meta name="theme-color" content="#06020e">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Odina uchun maxsus... 💌 | Doniyor</title>
+  <title>Odina uchun Maxsus... 🌹 | Doniyor</title>
   
   <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌹</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
 
-  <!-- Premium Typography -->
+  <!-- World-Class Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Background Canvas for Stars, Fireflies & Ambient Glow -->
-  <canvas id="ambientCanvas"></canvas>
-  <div id="heartsContainer" aria-hidden="true"></div>
+  <!-- Ambient Cinematic Background Canvas (Stars, Nebula & Dust) -->
+  <canvas id="cinemaCanvas"></canvas>
+  <div id="particleField" aria-hidden="true"></div>
 
-  <!-- Background Aurora Glow Orbs -->
-  <div class="aurora-orb aurora-1" aria-hidden="true"></div>
-  <div class="aurora-orb aurora-2" aria-hidden="true"></div>
-  <div class="aurora-orb aurora-3" aria-hidden="true"></div>
+  <!-- Cosmic Gradient Light Glows -->
+  <div class="cosmic-glow glow-top" aria-hidden="true"></div>
+  <div class="cosmic-glow glow-middle" aria-hidden="true"></div>
+  <div class="cosmic-glow glow-bottom" aria-hidden="true"></div>
 
-  <!-- Luxury Floating Music Controller -->
-  <div class="music-pill" id="musicToggle" role="button" tabindex="0" title="Musiqani yoqish / o'chirish">
-    <div class="music-disc">
-      <span class="disc-note">🎵</span>
+  <!-- Top Floating Header Bar -->
+  <header class="top-nav-bar">
+    <div class="brand-monogram">
+      <span class="monogram-icon">💍</span>
+      <span class="monogram-text">Odina &amp; Doniyor</span>
     </div>
-    <div class="music-waves">
-      <span></span><span></span><span></span><span></span>
-    </div>
-    <span class="music-label">Melodiya: Romantik Pianino</span>
-  </div>
 
-  <main class="main-wrapper">
-
-    <!-- STEP 1: LUXURY 3D WAX-SEALED ENVELOPE -->
-    <section class="envelope-hero" id="envelopeSection">
-      <div class="gold-badge">
-        <span class="badge-sparkle">✨</span> Maxsus Maktub Faqat Odina Uchun <span class="badge-sparkle">✨</span>
+    <!-- Music Player Controller -->
+    <div class="music-controller" id="musicToggle" role="button" tabindex="0" title="Musiqani yoqish / o'chirish">
+      <div class="music-icon-box">
+        <span class="music-note-icon">🎵</span>
       </div>
+      <div class="sound-wave">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <span class="music-status-txt">Melodiya</span>
+    </div>
+  </header>
 
-      <h1 class="hero-title">Kechirasizmi, Odina?</h1>
-      <p class="hero-subtitle">Ushbu maktub ichida yuragimning eng tubidagi samimiy so'zlar bitilgan...</p>
+  <!-- Interactive Story Timeline HUD (Floating Navigation on Desktop & Mobile) -->
+  <nav class="story-hud" id="storyHud">
+    <button class="hud-item active" data-target="chapter1" title="1-Qism: Sirli Maktub">
+      <span class="hud-dot"></span>
+      <span class="hud-name">1. Maktub</span>
+    </button>
+    <button class="hud-item" data-target="chapter2" title="2-Qism: Dildan So'zlar">
+      <span class="hud-dot"></span>
+      <span class="hud-name">2. Dildan</span>
+    </button>
+    <button class="hud-item" data-target="chapter3" title="3-Qism: 5 Oltin Sabab">
+      <span class="hud-dot"></span>
+      <span class="hud-name">3. Sabablar</span>
+    </button>
+    <button class="hud-item" data-target="chapter4" title="4-Qism: 101 Atirgul">
+      <span class="hud-dot"></span>
+      <span class="hud-name">4. Atirgullar</span>
+    </button>
+    <button class="hud-item" data-target="chapter5" title="5-Qism: Kechirish">
+      <span class="hud-dot"></span>
+      <span class="hud-name">5. Yarashuv</span>
+    </button>
+  </nav>
 
-      <div class="envelope-wrapper">
-        <div class="envelope-3d" id="envelope" role="button" tabindex="0" aria-label="Maktubni ochish">
-          <!-- Envelope Back Body -->
-          <div class="env-back"></div>
-          
-          <!-- Inner Parchment Letter -->
-          <div class="env-letter" id="envLetterPreview">
-            <div class="letter-seal-watermark">O &amp; D</div>
-            <div class="letter-gold-line"></div>
-            <div class="letter-gold-line short"></div>
-            <div class="letter-gold-line shorter"></div>
-            <div class="letter-mini-heart">❤️</div>
-          </div>
+  <!-- MAIN STORY CONTAINER -->
+  <main class="story-container">
 
-          <!-- Envelope Pocket Front -->
-          <div class="env-pocket"></div>
+    <!-- ==========================================
+         CHAPTER 1: THE ROYAL WAX-SEALED ENVELOPE
+         ========================================== -->
+    <section class="story-chapter active" id="chapter1">
+      <div class="chapter-content">
+        
+        <div class="royal-tag">
+          <span class="star-icon">👑</span>
+          <span>Maxsus Bag'ishlov • Faqat Odina Uchun</span>
+          <span class="star-icon">👑</span>
+        </div>
 
-          <!-- Envelope Flap (3D folding lid) -->
-          <div class="env-flap" id="envelopeFlap"></div>
+        <h1 class="grand-title">
+          Kechirasizmi, <span class="gradient-text">Odina?</span>
+        </h1>
 
-          <!-- Royal Gold Wax Seal -->
-          <div class="wax-seal" id="waxSeal">
-            <div class="seal-glow"></div>
-            <div class="seal-core">
-              <span class="seal-monogram">O &amp; D</span>
+        <p class="grand-subtitle">
+          Bu oddiy sayt emas... Bu mening qalbimdagi eng samimiy hislarim va chin uzrim bitilgan sehrli maktubdir.
+        </p>
+
+        <!-- 3D Luxury Envelope Stage -->
+        <div class="envelope-scene">
+          <div class="envelope-3d" id="envelope3d" role="button" tabindex="0" aria-label="Maktubni ochish">
+            <!-- Back plate -->
+            <div class="env-base"></div>
+
+            <!-- Inner Pergament Letter -->
+            <div class="env-inner-sheet" id="envSheet">
+              <div class="sheet-watermark">O &amp; D</div>
+              <div class="sheet-line line-1"></div>
+              <div class="sheet-line line-2"></div>
+              <div class="sheet-line line-3"></div>
+              <div class="sheet-heart">💖</div>
             </div>
-            <div class="seal-shine"></div>
+
+            <!-- Front Pockets -->
+            <div class="env-front-pocket"></div>
+
+            <!-- Folding Flap -->
+            <div class="env-folding-flap" id="envFlap"></div>
+
+            <!-- Gold Wax Seal Monogram -->
+            <div class="royal-seal" id="waxSeal">
+              <div class="seal-ring"></div>
+              <div class="seal-core-text">
+                <span>O &amp; D</span>
+              </div>
+              <div class="seal-glimmer"></div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="open-cue" id="openCue">
-        <span class="finger-tap">👆</span> Maktubni ochish uchun <strong>oltin muhr</strong> ustiga bosing
+        <div class="envelope-prompt" id="envelopePrompt">
+          <div class="prompt-hand">👆</div>
+          <p>Maktubni ochish uchun <strong>oltin muhr</strong> ustiga bosing</p>
+        </div>
+
       </div>
     </section>
 
-    <!-- STEP 2: REVEALED CONTENT (Appears after envelope opens) -->
-    <div class="revealed-container" id="revealedContent">
+    <!-- ==========================================
+         CHAPTER 2: DONIYOR'S ROYAL CONFESSION
+         ========================================== -->
+    <section class="story-chapter" id="chapter2">
+      <div class="chapter-content">
 
-      <!-- 1. ROYAL LOVE LETTER -->
-      <section class="letter-section" id="letterSection">
-        <div class="luxury-letter-card">
-          <!-- Gold Corner Ornaments -->
-          <div class="gold-corner top-left">⚜️</div>
-          <div class="gold-corner top-right">⚜️</div>
-          <div class="gold-corner bottom-left">⚜️</div>
-          <div class="gold-corner bottom-right">⚜️</div>
+        <div class="glass-pergament">
+          <!-- Ornate Gold Borders -->
+          <div class="ornament top-l">⚜️</div>
+          <div class="ornament top-r">⚜️</div>
+          <div class="ornament bot-l">⚜️</div>
+          <div class="ornament bot-r">⚜️</div>
 
-          <header class="letter-top">
-            <div class="letter-greeting">
-              <span class="greeting-script">Mehribonim, Odina...</span>
+          <div class="pergament-header">
+            <div class="pergament-title-wrap">
+              <span class="pergament-badge">✨ 1-BOSQICH: DILDAN IZHOR ✨</span>
+              <h2 class="pergament-greeting">Mehribonim, Odina...</h2>
             </div>
-            <div class="letter-date-pill" id="currentDate"></div>
-          </header>
+            <div class="live-date-tag" id="currentDate"></div>
+          </div>
 
-          <article class="letter-content">
-            <p class="letter-p dropcap-p">
-              <span class="dropcap">B</span>ilaman, oramizda kichik tushunmovchilik bo'lib o'tdi va mening ba'zi noo'rin gaplarim yoki e'tiborsizligim sababli seni ranjitib qo'ydim. Lekin ishon, dunyoda men eng oxirgi istaydigan narsa — bu sening chiroyli ko'zlaringda xafagarchilik ko'rishdir...
+          <div class="pergament-body">
+            <p class="lead-paragraph">
+              <span class="royal-dropcap">B</span>ilaman, oramizda kichik tushunmovchilik sodir bo'ldi va mening ba'zi o'ylamay aytgan so'zlarim yoki xatolarim sababli sizni ranjitib qo'ydim. Ammo ishon, bu dunyoda seni xafa qilish men eng oxirgi xohlagan narsadir...
             </p>
 
-            <p class="letter-p">
-              Inson o'zi uchun eng qadrli, eng nozik va eng yaqin insoni bilan arazlashib qolganda, hayot naqadar rangsiz va ma'nosiz bo'lib qolishini har soniya his qilyapman. Sen mening hayotimdagi eng iliq nur, eng beg'ubor tabassum va eng go'zal mo'jizamsan.
+            <p class="body-paragraph">
+              Inson o'ziga eng qadrli, eng nozik va eng beg'ubor inson bilan arazlashganda yuragi qanchalar bo'shab qolishini har daqiqa his qilyapman. Sen mening hayotimdagi eng yorqin quyosh, eng go'zal tabassum va eng qadrli mo'jizamsan.
             </p>
 
-            <blockquote class="letter-quote">
-              <div class="quote-symbol">❝</div>
-              <p>"Kichik arazlar o'tib ketadi, ammo qalbimdagi senga bo'lgan samimiy muhabbatim va hurmatim har qanday xafagarchilikdan ming chandon ustundir..."</p>
-              <div class="quote-symbol right">❞</div>
-            </blockquote>
+            <div class="golden-quote-box">
+              <div class="quote-mark">❝</div>
+              <p class="quote-text">
+                "Kichik arazlar vaqt o'tib ketadi, ammo qalbimdagi senga bo'lgan cheksiz samimiy mehrim har qanday xafagarchilikdan ming chandon kuchliroqdir..."
+              </p>
+              <div class="quote-mark right">❞</div>
+            </div>
 
-            <p class="letter-p">
-              Seni chin dildan juda yaxshi ko'raman. Seni ranjitgan har bir daqiqam uchun ming bor <strong>chin yurakdan uzr so'rayman</strong>. Kel, o'rtamizdagi barcha ginani shu yerda unutaylik va birgalikda yana quvnoq kunlarimizga qaytaylik, maylimi? ❤️
+            <p class="body-paragraph">
+              Seni chin yurakdan yaxshi ko'raman va ranjitgan har bir lahzam uchun ming bor <strong>chin dildan uzr so'rayman</strong>. Kel, o'rtamizdagi barcha ginani shu yerda unutaylik va yana quvonch bilan birga bo'laylik, maylimi? ❤️
             </p>
-          </article>
+          </div>
 
-          <footer class="letter-sign-block">
-            <span class="sign-label">Seni cheksiz qadrlaydigan:</span>
-            <span class="sign-name">Doniyor</span>
-            <div class="sign-heart-stamp">💌</div>
-          </footer>
+          <div class="pergament-signature">
+            <div class="sign-meta">
+              <span class="sign-label">Seni cheksiz qadrlaydigan:</span>
+              <span class="sign-handwriting">Doniyor</span>
+            </div>
+            <div class="sign-seal-stamp">💌</div>
+          </div>
+
+          <div class="pergament-actions">
+            <button class="next-chapter-btn" data-goto="chapter3">
+              <span>Nega aynan sen? (3-Qism)</span>
+              <span class="btn-arrow">➡️</span>
+            </button>
+          </div>
         </div>
-      </section>
 
-      <!-- 2. REASONS WHY SECTION (3D LUXURY FLIP CARDS) -->
-      <section class="reasons-section">
-        <div class="section-heading">
-          <span class="section-tag">✨ Qalbimdagi Haqiqatlar ✨</span>
-          <h2 class="section-title">Nega aynan sen, Odina?</h2>
-          <p class="section-desc">Har bir kartochkani bosing va nima uchun sen yagonam ekaningni bilib oling:</p>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         CHAPTER 3: 5 GOLDEN REASONS (HOLOGRAPHIC CARDS)
+         ========================================== -->
+    <section class="story-chapter" id="chapter3">
+      <div class="chapter-content">
+
+        <div class="section-top-header">
+          <span class="sub-badge">💎 2-BOSQICH: QALBIM HAQIQATLARI 💎</span>
+          <h2 class="section-main-heading">Nega aynan sen, Odina?</h2>
+          <p class="section-subtext">Har bir kartochkani bosing va nima uchun sen mening yagona tanlovim ekaningni o'qing:</p>
         </div>
 
-        <div class="reasons-grid">
+        <div class="cards-grid">
           
           <!-- Card 1 -->
-          <div class="reason-card" role="button" tabindex="0" data-card="1">
-            <div class="card-flipper">
-              <div class="card-face card-front">
-                <div class="card-num">01</div>
-                <div class="card-icon-wrap">✨</div>
-                <h3 class="card-title">Beg'ubor Tabassuming</h3>
-                <span class="card-tap-hint">Ko'rish uchun bosing 👆</span>
+          <div class="crystal-card" role="button" tabindex="0" data-index="1">
+            <div class="crystal-card-inner">
+              <div class="card-side card-front">
+                <div class="card-badge">01</div>
+                <div class="card-emoji-icon">✨</div>
+                <h3 class="card-heading">Beg'ubor Kulging</h3>
+                <span class="card-action-text">Ochish uchun bosing 👆</span>
               </div>
-              <div class="card-face card-back">
-                <div class="card-back-icon">🌟</div>
-                <p>Sen jilmayganingda dunyodagi butun tashvishlarim bir zumda yo'qolgandek bo'ladi. Sening tabassuming — qalbimning eng sokin kuyidir.</p>
-                <span class="card-flip-back-hint">Qaytish 🔄</span>
+              <div class="card-side card-back">
+                <div class="back-star-icon">🌟</div>
+                <p>Sen jilmayganingda dunyodagi butun tashvishlarim bir soniyada yo'qolgandek bo'ladi. Sening tabassuming — qalbimning eng sokin kuyi.</p>
+                <span class="card-return-text">Orqaga qaytarish 🔄</span>
               </div>
             </div>
           </div>
 
           <!-- Card 2 -->
-          <div class="reason-card" role="button" tabindex="0" data-card="2">
-            <div class="card-flipper">
-              <div class="card-face card-front">
-                <div class="card-num">02</div>
-                <div class="card-icon-wrap">🌸</div>
-                <h3 class="card-title">Samimiy Qalbing</h3>
-                <span class="card-tap-hint">Ko'rish uchun bosing 👆</span>
+          <div class="crystal-card" role="button" tabindex="0" data-index="2">
+            <div class="crystal-card-inner">
+              <div class="card-side card-front">
+                <div class="card-badge">02</div>
+                <div class="card-emoji-icon">🌸</div>
+                <h3 class="card-heading">Samimiy Qalbing</h3>
+                <span class="card-action-text">Ochish uchun bosing 👆</span>
               </div>
-              <div class="card-face card-back">
-                <div class="card-back-icon">💖</div>
+              <div class="card-side card-back">
+                <div class="back-star-icon">💖</div>
                 <p>Sening mehring, soxtaliksiz tabiating va nozik qalbing har qanday insonni maftun etadi. Sen bu dunyoning eng yaxshi insonisan.</p>
-                <span class="card-flip-back-hint">Qaytish 🔄</span>
+                <span class="card-return-text">Orqaga qaytarish 🔄</span>
               </div>
             </div>
           </div>
 
           <!-- Card 3 -->
-          <div class="reason-card" role="button" tabindex="0" data-card="3">
-            <div class="card-flipper">
-              <div class="card-face card-front">
-                <div class="card-num">03</div>
-                <div class="card-icon-wrap">⏳</div>
-                <h3 class="card-title">Har Bir Daqiqa</h3>
-                <span class="card-tap-hint">Ko'rish uchun bosing 👆</span>
+          <div class="crystal-card" role="button" tabindex="0" data-index="3">
+            <div class="crystal-card-inner">
+              <div class="card-side card-front">
+                <div class="card-badge">03</div>
+                <div class="card-emoji-icon">⏳</div>
+                <h3 class="card-heading">Har Bir Daqiqa</h3>
+                <span class="card-action-text">Ochish uchun bosing 👆</span>
               </div>
-              <div class="card-face card-back">
-                <div class="card-back-icon">💫</div>
+              <div class="card-side card-back">
+                <div class="back-star-icon">💫</div>
                 <p>Sen bilan o'tgan oddiygina suhbat ham umrimning eng yorqin, eng qadrli xotirasiga aylanadi. Sen borsanki, hayotim go'zal.</p>
-                <span class="card-flip-back-hint">Qaytish 🔄</span>
+                <span class="card-return-text">Orqaga qaytarish 🔄</span>
               </div>
             </div>
           </div>
 
           <!-- Card 4 -->
-          <div class="reason-card" role="button" tabindex="0" data-card="4">
-            <div class="card-flipper">
-              <div class="card-face card-front">
-                <div class="card-num">04</div>
-                <div class="card-icon-wrap">👑</div>
-                <h3 class="card-title">Yagona Tanlovim</h3>
-                <span class="card-tap-hint">Ko'rish uchun bosing 👆</span>
+          <div class="crystal-card" role="button" tabindex="0" data-index="4">
+            <div class="crystal-card-inner">
+              <div class="card-side card-front">
+                <div class="card-badge">04</div>
+                <div class="card-emoji-icon">👑</div>
+                <h3 class="card-heading">Yagona Tanlovim</h3>
+                <span class="card-action-text">Ochish uchun bosing 👆</span>
               </div>
-              <div class="card-face card-back">
-                <div class="card-back-icon">🌹</div>
+              <div class="card-side card-back">
+                <div class="back-star-icon">🌹</div>
                 <p>Minglab insonlar orasida qalbim faqat seni tanlagan. Sening o'rningni bu dunyoda hech kim va hech narsa bosa olmaydi.</p>
-                <span class="card-flip-back-hint">Qaytish 🔄</span>
+                <span class="card-return-text">Orqaga qaytarish 🔄</span>
               </div>
             </div>
           </div>
 
           <!-- Card 5 -->
-          <div class="reason-card" role="button" tabindex="0" data-card="5">
-            <div class="card-flipper">
-              <div class="card-face card-front">
-                <div class="card-num">05</div>
-                <div class="card-icon-wrap">🌟</div>
-                <h3 class="card-title">Go'zal Kelajagimiz</h3>
-                <span class="card-tap-hint">Ko'rish uchun bosing 👆</span>
+          <div class="crystal-card" role="button" tabindex="0" data-index="5">
+            <div class="crystal-card-inner">
+              <div class="card-side card-front">
+                <div class="card-badge">05</div>
+                <div class="card-emoji-icon">🌟</div>
+                <h3 class="card-heading">Go'zal Kelajagimiz</h3>
+                <span class="card-action-text">Ochish uchun bosing 👆</span>
               </div>
-              <div class="card-face card-back">
-                <div class="card-back-icon">💍</div>
+              <div class="card-side card-back">
+                <div class="back-star-icon">💍</div>
                 <p>Oldimizda hali birgalikda erishadigan yuksak orzularimiz, birga quvonadigan baxtli onlari bor. Sen bilan har bir qadam baxt!</p>
-                <span class="card-flip-back-hint">Qaytish 🔄</span>
+                <span class="card-return-text">Orqaga qaytarish 🔄</span>
               </div>
             </div>
           </div>
 
         </div>
-      </section>
 
-      <!-- 3. VIRTUAL 101 ROSE GARDEN -->
-      <section class="garden-section">
-        <div class="garden-glass-card">
-          <div class="section-heading">
-            <span class="section-tag">🌹 Sevgi Bog'i 🌹</span>
-            <h2 class="section-title">Odina uchun 101 Atirgul</h2>
-            <p class="section-desc">Tugmani bosing va sizga atalgan go'zal atirgullarni birma-bir oching:</p>
+        <div class="chapter-footer-action">
+          <button class="next-chapter-btn" data-goto="chapter4">
+            <span>101 Atirgul Bog'iga O'tish (4-Qism)</span>
+            <span class="btn-arrow">🌹</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         CHAPTER 4: 101 MAGIC ROSES MEADOW
+         ========================================== -->
+    <section class="story-chapter" id="chapter4">
+      <div class="chapter-content">
+
+        <div class="rose-sanctuary">
+          <div class="section-top-header">
+            <span class="sub-badge">🌹 3-BOSQICH: SEVGI BOG'I 🌹</span>
+            <h2 class="section-main-heading">Odina uchun 101 Atirgul</h2>
+            <p class="section-subtext">Bog'ga bosing va siz uchun atalgan sehrli gullarni birma-bir oching:</p>
           </div>
 
-          <div class="garden-status">
-            <div class="garden-counter-box">
-              <span class="counter-label">Odinaga ekilgan atirgullar:</span>
-              <div class="counter-digits">
-                <span class="current-roses" id="roseCount">0</span>
-                <span class="total-roses">/ 101 ta 🌹</span>
+          <!-- Rose Meter Status -->
+          <div class="rose-meter">
+            <div class="meter-info">
+              <span class="meter-title">Odinaga ekilgan atirgullar:</span>
+              <div class="meter-score">
+                <span class="score-current" id="roseCount">0</span>
+                <span class="score-target">/ 101 ta 🌹</span>
               </div>
             </div>
-            
-            <div class="progress-bar-container">
-              <div class="progress-fill" id="roseProgress"></div>
-              <div class="progress-sparkle" id="progressSparkle"></div>
+
+            <div class="gold-progress-track">
+              <div class="gold-progress-fill" id="roseProgress"></div>
+              <div class="gold-progress-glint"></div>
             </div>
           </div>
 
-          <!-- Interactive Meadow Stage -->
-          <div class="garden-stage" id="gardenStage">
-            <div class="empty-stage-cue" id="emptyStageCue">
-              <span class="cue-flower">🌱</span>
-              <p>Atirgul qo'shish tugmasini bosing...</p>
+          <!-- Meadow Stage with Physics -->
+          <div class="meadow-stage" id="gardenStage">
+            <div class="meadow-empty-prompt" id="gardenPrompt">
+              <span class="sprout-icon">🌱</span>
+              <p>Pastdagi tugmani bosing yoki to'g'ridan-to'g'ri maydonga teging...</p>
             </div>
           </div>
 
-          <!-- Garden Action Controls -->
-          <div class="garden-controls">
-            <button class="garden-btn plant-btn" id="plantRoseBtn">
-              🌹 Atirgul Qo'shish (+1)
+          <!-- Meadow Buttons -->
+          <div class="meadow-actions">
+            <button class="primary-rose-btn" id="plantRoseBtn">
+              <span class="btn-rose-icon">🌹</span>
+              <span>Atirgul Qo'shish (+1)</span>
             </button>
-            <button class="garden-btn-secondary auto-plant-btn" id="autoPlantBtn">
-              ✨ Barcha 101 Atirgulni Ochish
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- 4. PLAYFUL FORGIVENESS GAME ARENA -->
-      <section class="game-section" id="forgivenessSection">
-        <div class="game-glass-card">
-          <div class="game-top-badge">🥺 Eng Muhim Savol 🥺</div>
-          <h2 class="game-main-title">Doniyorni kechirasizmi? 🥰</h2>
-          <p class="game-subtext">Rostini ayting, arazlab o'tirishni bas qilib yarashamizmi?</p>
-
-          <div class="game-arena" id="buttonsArena">
-            <button class="arena-btn yes-choice-btn" id="yesBtn">
-              <span class="btn-heart-pulse">💚</span> Ha, kechirdim ❤️
-            </button>
-            <button class="arena-btn no-choice-btn" id="noBtn">
-              💔 Yo'q 😤
+            <button class="secondary-auto-btn" id="autoPlantBtn">
+              <span>✨ Barcha 101 Atirgulni Ochish</span>
             </button>
           </div>
 
-          <div class="game-commentary" id="attemptsComment"></div>
+          <div class="chapter-footer-action">
+            <button class="next-chapter-btn" data-goto="chapter5">
+              <span>Eng Muhim Savol (5-Qism)</span>
+              <span class="btn-arrow">💖</span>
+            </button>
+          </div>
         </div>
-      </section>
 
-    </div>
+      </div>
+    </section>
 
-    <!-- STEP 3: VICTORY CELEBRATION MODAL -->
-    <div class="victory-modal" id="victoryModal" role="dialog" aria-modal="true" aria-hidden="true">
-      <div class="modal-backdrop"></div>
-      
-      <div class="modal-card">
-        <div class="modal-gold-crown">👑</div>
-        <div class="modal-badge">🎉 YURAGIM TO'LDI! 💖</div>
-        
-        <h2 class="modal-title">Rahmat, Mehribonim Odina! 🥰</h2>
-        
-        <div class="modal-body">
-          <p class="modal-desc">
-            Bilar edim qalbingiz naqadar nozik va kechiruvchan ekanini! <br>
-            Yuzingizda yoqimli tabassum paydo bo'ldi, shunday emasmi? <br>
-            Doniyor seni juda-juda yaxshi ko'radi va bundan keyin faqat quvontirishga so'z beradi! 🌹
+    <!-- ==========================================
+         CHAPTER 5: FORGIVENESS ARENA
+         ========================================== -->
+    <section class="story-chapter" id="chapter5">
+      <div class="chapter-content">
+
+        <div class="game-sanctuary" id="forgivenessSection">
+          <div class="game-badge-royal">🥺 HAL QILUVCHI BOSQICH 🥺</div>
+          
+          <h2 class="game-headline">Doniyorni kechirasizmi? 🥰</h2>
+          
+          <p class="game-description">
+            Rostini ayting, arazlashib o'tirishni to'xtatib yana yarashamizmi?
           </p>
 
-          <div class="sweet-promise-card">
-            <div class="promise-icon">💍</div>
-            <div class="promise-text">
-              <strong>Kichik va'da:</strong> Endi har safar kichik tushunmovchilik bo'lmasligi uchun avval sizga bir dasta atirgul va shirinlik olib kelaman! 😉✨
-            </div>
-          </div>
-        </div>
+          <!-- The Dodging Arena -->
+          <div class="arena-stage" id="buttonsArena">
+            <button class="choice-button yes-button" id="yesBtn">
+              <span class="yes-heart-pulse">💚</span>
+              <span>Ha, kechirdim ❤️</span>
+            </button>
 
-        <div class="modal-footer">
-          <!-- Instagram Direct Button -->
-          <button class="instagram-btn" id="instagramSendBtn">
-            <svg class="ig-svg" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-            </svg>
-            <span>Doniyorga xabar jo'natish (Instagram)</span>
-          </button>
-          
-          <div class="ig-toast" id="igCopyToast">
-            <span class="toast-check">✅</span> <em>"Doniyor, saytingni ko'rdim va seni kechirdim ❤️🥰"</em> nusxalandi! Instagram ochilmoqda...
+            <button class="choice-button no-button" id="noBtn">
+              <span>💔 Yo'q 😤</span>
+            </button>
           </div>
 
-          <button class="modal-return-btn" id="closeVictoryBtn">
-            Sahifaga qaytish 💕
-          </button>
+          <div class="arena-dialogue" id="attemptsComment"></div>
         </div>
+
       </div>
-    </div>
+    </section>
 
   </main>
 
-  <footer class="luxury-footer">
-    <div class="footer-gold-divider"></div>
-    <p>Doniyor tomonidan cheksiz muhabbat va hurmat bilan faqat Odina uchun maxsus yaratildi ❤️</p>
+  <!-- ==========================================
+       VICTORY CELEBRATION MODAL (ROYAL DECREE)
+       ========================================== -->
+  <div class="victory-modal-root" id="victoryModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-glass-backdrop"></div>
+    
+    <div class="royal-decree-card">
+      <div class="decree-crown">👑</div>
+      <div class="decree-badge">🎉 YURAKLARIMIZ BIRGA! 💖</div>
+      
+      <h2 class="decree-title">Rahmat, Mehribonim Odina! 🥰</h2>
+      
+      <div class="decree-body">
+        <p class="decree-text">
+          Bilar edim qalbingiz naqadar mehribon va pok ekanini! <br>
+          Hozir yuzingizda yoqimli tabassum paydo bo'ldi, shunday emasmi? <br>
+          Doniyor sizni juda-juda yaxshi ko'radi va bundan keyin faqat xursand qilishga so'z beradi! 🌹
+        </p>
+
+        <div class="decree-promise-box">
+          <span class="promise-ring">💍</span>
+          <div class="promise-content">
+            <strong>Kichik Va'da:</strong> Endi har qanday holatda ham sizni avaylayman va har doim birinchi bo'lib ko'nglingizni olaman! 😉✨
+          </div>
+        </div>
+      </div>
+
+      <div class="decree-footer">
+        <!-- Direct Instagram DM button with copy -->
+        <button class="instagram-launch-btn" id="instagramSendBtn">
+          <svg class="ig-svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+          </svg>
+          <span>Doniyorga xabar jo'natish (Instagram)</span>
+        </button>
+        
+        <div class="ig-copy-feedback" id="igCopyToast">
+          <span class="check-sign">✅</span> <em>"Doniyor, saytingni ko'rdim va seni kechirdim ❤️🥰"</em> nusxalandi! Instagram ochilmoqda...
+        </div>
+
+        <button class="return-home-btn" id="closeVictoryBtn">
+          Sahifaga qaytish 💕
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="royal-footer">
+    <div class="footer-gold-bar"></div>
+    <p>Doniyor tomonidan cheksiz muhabbat va samimiyat bilan faqat Odina uchun yaratildi ❤️</p>
   </footer>
 
   <script src="script.js"></script>
