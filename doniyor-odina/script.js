@@ -1,5 +1,5 @@
 // ========================================================
-// DONIYOR & ODINA: CINEMATIC ROMANTIC STORY ENGINE
+// DONIYOR & ODINA: ROSE-GOLD & VELVET ROMANTIC ENGINE
 // ========================================================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -7,28 +7,28 @@ document.addEventListener("DOMContentLoaded", () => {
   // 1. LIVE DATE IN UZBEK
   initLiveDate();
 
-  // 2. CINEMATIC BACKGROUND CANVAS (STARS & AURORA DUST)
-  initCinemaCanvas();
+  // 2. AMBIENT CANVAS (STARS, GLOWING BOKEH & ROSE PETALS)
+  initAmbientCanvas();
 
-  // 3. FLOATING SPARKLES GENERATOR
-  initSparkleField();
+  // 3. FLOATING ROSE PETALS GENERATOR
+  initFloatingPetals();
 
   // 4. CRYSTALLINE WEB AUDIO API ENGINE
   const audio = initAudioEngine();
 
-  // 5. CHAPTER HUD & STORY NAVIGATION
-  initStoryNavigation(audio);
+  // 5. 3D CRYSTAL HEART PORTAL UNLOCK
+  initHeartPortal(audio);
 
-  // 6. 3D WAX-SEAL ENVELOPE (CHAPTER 1 -> 2)
-  initEnvelope(audio);
+  // 6. LUXURY TAB SWITCHER & PANEL ROUTING
+  initTabSwitcher(audio);
 
-  // 7. 3D FLIP CARDS WITH HARMONIC CHIMES (CHAPTER 3)
-  initFlipCards(audio);
+  // 7. 3D HOLOGRAM FLIP CARDS WITH HARMONIC CHIMES
+  initHologramCards(audio);
 
-  // 8. 101 MAGIC ROSES MEADOW WITH MILESTONES (CHAPTER 4)
+  // 8. 101 MAGIC ROSES MEADOW WITH MILESTONES
   initRoseGarden(audio);
 
-  // 9. FORGIVENESS ARENA WITH DODGING PHYSICS (CHAPTER 5)
+  // 9. FORGIVENESS ARENA WITH DODGING PHYSICS
   initForgivenessGame(audio);
 
 });
@@ -46,21 +46,21 @@ function initLiveDate() {
   }
 }
 
-// --- 2. CINEMATIC BACKGROUND CANVAS ---
-function initCinemaCanvas() {
-  const canvas = document.getElementById("cinemaCanvas");
+// --- 2. AMBIENT CANVAS (STARS & BOKEH) ---
+function initAmbientCanvas() {
+  const canvas = document.getElementById("ambientCanvas");
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
 
   let width, height;
   let stars = [];
-  let cosmicDust = [];
+  let bokehOrbs = [];
 
   function resize() {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
 
-    // Generate Stars
+    // Stars
     stars = [];
     const count = Math.floor((width * height) / 3600);
     for (let i = 0; i < count; i++) {
@@ -69,18 +69,18 @@ function initCinemaCanvas() {
         y: Math.random() * height,
         radius: Math.random() * 1.5 + 0.4,
         alpha: Math.random(),
-        speed: Math.random() * 0.016 + 0.005
+        speed: Math.random() * 0.016 + 0.006
       });
     }
 
-    // Generate Drifting Cosmic Dust
-    cosmicDust = [];
-    const dustCount = Math.min(30, Math.floor(width / 30));
-    for (let i = 0; i < dustCount; i++) {
-      cosmicDust.push({
+    // Glowing Bokeh Orbs
+    bokehOrbs = [];
+    const orbCount = Math.min(25, Math.floor(width / 32));
+    for (let i = 0; i < orbCount; i++) {
+      bokehOrbs.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: Math.random() * 2.5 + 1,
+        radius: Math.random() * 2.8 + 1.2,
         vx: (Math.random() - 0.5) * 0.5,
         vy: (Math.random() - 0.5) * 0.5,
         alpha: Math.random() * 0.7 + 0.2,
@@ -107,8 +107,8 @@ function initCinemaCanvas() {
       ctx.fill();
     });
 
-    // Cosmic Dust
-    cosmicDust.forEach(p => {
+    // Bokeh Orbs
+    bokehOrbs.forEach(p => {
       p.x += p.vx;
       p.y += p.vy;
 
@@ -120,7 +120,7 @@ function initCinemaCanvas() {
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
       ctx.fillStyle = p.color;
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = 12;
       ctx.shadowColor = p.color;
       ctx.globalAlpha = p.alpha;
       ctx.fill();
@@ -134,17 +134,17 @@ function initCinemaCanvas() {
   animate();
 }
 
-// --- 3. FLOATING SPARKLES GENERATOR ---
-function initSparkleField() {
-  const container = document.getElementById("particleField");
+// --- 3. FLOATING ROSE PETALS ---
+function initFloatingPetals() {
+  const container = document.getElementById("petalContainer");
   if (!container) return;
 
-  const symbols = ["✨", "💖", "🌸", "🌹", "⭐", "💫", "❤️"];
+  const petals = ["🌸", "🌹", "💖", "✨", "💫", "❤️", "🌺"];
 
-  function spawnSparkle() {
+  function spawnPetal() {
     const el = document.createElement("div");
-    el.className = "floating-sparkle";
-    el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+    el.className = "falling-rose-petal";
+    el.textContent = petals[Math.floor(Math.random() * petals.length)];
     el.style.left = Math.random() * 94 + "vw";
     el.style.fontSize = Math.floor(Math.random() * 16 + 14) + "px";
     el.style.animationDuration = (Math.random() * 3 + 4.5) + "s";
@@ -155,7 +155,7 @@ function initSparkleField() {
     }, 8000);
   }
 
-  setInterval(spawnSparkle, 900);
+  setInterval(spawnPetal, 900);
 }
 
 // --- 4. CRYSTALLINE WEB AUDIO API ENGINE ---
@@ -270,81 +270,81 @@ function initAudioEngine() {
   };
 }
 
-// --- 5. CHAPTER NAVIGATION & HUD ---
-function initStoryNavigation(audio) {
-  const hudButtons = document.querySelectorAll(".hud-item");
-  const chapters = document.querySelectorAll(".story-chapter");
-  const nextButtons = document.querySelectorAll(".next-chapter-btn");
+// --- 5. 3D CRYSTAL HEART PORTAL UNLOCK ---
+function initHeartPortal(audio) {
+  const portal = document.getElementById("heartPortal");
+  const portalSection = document.getElementById("portalSection");
+  const showcase = document.getElementById("experienceShowcase");
+  const cue = document.getElementById("portalTapCue");
+  let unlocked = false;
 
-  function goToChapter(targetId) {
-    const targetChapter = document.getElementById(targetId);
-    if (!targetChapter) return;
-
-    chapters.forEach(ch => ch.classList.remove("active"));
-    targetChapter.classList.add("active");
-
-    hudButtons.forEach(btn => {
-      btn.classList.toggle("active", btn.getAttribute("data-target") === targetId);
-    });
-
-    targetChapter.scrollIntoView({ behavior: "smooth", block: "start" });
-    if (audio) audio.playChime();
-  }
-
-  hudButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const targetId = btn.getAttribute("data-target");
-      goToChapter(targetId);
-    });
-  });
-
-  nextButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      const targetId = btn.getAttribute("data-goto");
-      goToChapter(targetId);
-    });
-  });
-
-  window.goToChapter = goToChapter;
-}
-
-// --- 6. 3D WAX-SEAL ENVELOPE (CHAPTER 1 -> 2) ---
-function initEnvelope(audio) {
-  const envelope = document.getElementById("envelope3d");
-  const waxSeal = document.getElementById("waxSeal");
-  const prompt = document.getElementById("envelopePrompt");
-  let opened = false;
-
-  function triggerOpen(e) {
+  function unlockHeart(e) {
     if (e) e.stopPropagation();
-    if (opened) return;
-    opened = true;
+    if (unlocked) return;
+    unlocked = true;
 
-    envelope.classList.add("opened");
-    if (prompt) prompt.style.display = "none";
-
+    if (cue) cue.style.display = "none";
     if (audio) audio.playChime();
 
-    // Burst golden sparkles from seal center
-    const rect = waxSeal.getBoundingClientRect();
-    createBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 24);
+    // Massive Rose Petal Burst from Portal
+    const rect = portal.getBoundingClientRect();
+    createBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 28);
 
-    // Transition smoothly to Chapter 2
+    // Smooth reveal showcase
     setTimeout(() => {
-      if (window.goToChapter) {
-        window.goToChapter("chapter2");
-      }
-    }, 1100);
+      portalSection.style.display = "none";
+      showcase.classList.add("active");
+      showcase.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 850);
   }
 
-  waxSeal?.addEventListener("click", triggerOpen);
-  waxSeal?.addEventListener("pointerdown", triggerOpen);
-  envelope?.addEventListener("click", triggerOpen);
+  portal?.addEventListener("click", unlockHeart);
+  portal?.addEventListener("pointerdown", unlockHeart);
 }
 
-// --- 7. 3D FLIP CARDS (CHAPTER 3) ---
-function initFlipCards(audio) {
-  const cards = document.querySelectorAll(".crystal-card");
+// --- 6. LUXURY TAB SWITCHER ---
+function initTabSwitcher(audio) {
+  const tabButtons = document.querySelectorAll(".tab-btn");
+  const tabPanels = document.querySelectorAll(".tab-panel");
+  const navForwardButtons = document.querySelectorAll(".nav-forward-btn");
+
+  function switchTab(tabId) {
+    const targetPanel = document.getElementById(tabId);
+    if (!targetPanel) return;
+
+    tabPanels.forEach(panel => panel.classList.remove("active"));
+    targetPanel.classList.add("active");
+
+    tabButtons.forEach(btn => {
+      const isActive = btn.getAttribute("data-tab") === tabId;
+      btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-selected", isActive);
+    });
+
+    targetPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (audio) audio.playChime();
+  }
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const tabId = btn.getAttribute("data-tab");
+      switchTab(tabId);
+    });
+  });
+
+  navForwardButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const nextTabId = btn.getAttribute("data-next");
+      switchTab(nextTabId);
+    });
+  });
+
+  window.switchTab = switchTab;
+}
+
+// --- 7. 3D HOLOGRAM CARDS ---
+function initHologramCards(audio) {
+  const cards = document.querySelectorAll(".hologram-card");
   cards.forEach(card => {
     card.addEventListener("click", () => {
       card.classList.toggle("flipped");
@@ -355,7 +355,7 @@ function initFlipCards(audio) {
   });
 }
 
-// --- 8. 101 MAGIC ROSES MEADOW (CHAPTER 4) ---
+// --- 8. 101 MAGIC ROSES MEADOW ---
 function initRoseGarden(audio) {
   const plantBtn = document.getElementById("plantRoseBtn");
   const autoPlantBtn = document.getElementById("autoPlantBtn");
@@ -378,7 +378,7 @@ function initRoseGarden(audio) {
     if (prompt) prompt.style.display = "none";
 
     const rose = document.createElement("span");
-    rose.className = "bloomed-rose-item";
+    rose.className = "bloomed-rose-leaf";
     rose.textContent = emojis[Math.floor(Math.random() * emojis.length)];
     stage.appendChild(rose);
     stage.scrollTop = stage.scrollHeight;
@@ -402,7 +402,6 @@ function initRoseGarden(audio) {
     }
   }
 
-  // Tap anywhere on meadow stage to plant
   stage?.addEventListener("click", () => {
     addRose();
   });
@@ -443,7 +442,7 @@ function showMiniToast(msg) {
   setTimeout(() => toast.remove(), 3500);
 }
 
-// --- 9. FORGIVENESS ARENA (CHAPTER 5) ---
+// --- 9. FORGIVENESS ARENA ---
 function initForgivenessGame(audio) {
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
