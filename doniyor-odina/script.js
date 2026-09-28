@@ -1,129 +1,83 @@
 /* ==========================================================================
-   DONIYOR & ODINA — INTERACTIVE EXPERIENCE ENGINE
-   Web Audio API, Stardust Particles, Voice Note, Scanner & DM Integration
+   ODINA & DONIYOR — SWEET EMOTIONAL ENGINE
+   Sakura Petals, Cute Mascot Interaction, 101 Roses, Audio & Instagram DM
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
 
   // ==========================================
-  // 1. COSMIC BACKGROUND & STARDUST CANVAS
+  // 1. FALLING SAKURA & ROSE PETALS CANVAS
   // ==========================================
-  const cosmosCanvas = document.getElementById('cosmosCanvas');
-  const cosmosCtx = cosmosCanvas.getContext('2d');
-  const stardustCanvas = document.getElementById('stardustCanvas');
-  const stardustCtx = stardustCanvas.getContext('2d');
+  const canvas = document.getElementById('petalsCanvas');
+  const ctx = canvas.getContext('2d');
 
-  let width = (cosmosCanvas.width = stardustCanvas.width = window.innerWidth);
-  let height = (cosmosCanvas.height = stardustCanvas.height = window.innerHeight);
+  let width = (canvas.width = window.innerWidth);
+  let height = (canvas.height = window.innerHeight);
 
   window.addEventListener('resize', () => {
-    width = cosmosCanvas.width = stardustCanvas.width = window.innerWidth;
-    height = cosmosCanvas.height = stardustCanvas.height = window.innerHeight;
-    initStars();
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+    initPetals();
   });
 
-  // Background ambient stars
-  let stars = [];
-  function initStars() {
-    stars = [];
-    const count = Math.floor((width * height) / 9000);
-    for (let i = 0; i < count; i++) {
-      stars.push({
+  let petals = [];
+  const petalCount = 35;
+
+  function initPetals() {
+    petals = [];
+    for (let i = 0; i < petalCount; i++) {
+      petals.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: Math.random() * 1.5 + 0.5,
-        alpha: Math.random() * 0.8 + 0.2,
-        speed: Math.random() * 0.02 + 0.005,
-        twinkleSpeed: Math.random() * 0.03 + 0.01,
-        color: ['#ffffff', '#ff9ebb', '#ffd166', '#a78bfa'][Math.floor(Math.random() * 4)]
+        r: Math.random() * 8 + 6,
+        d: Math.random() * petalCount,
+        dx: Math.random() * 1.5 - 0.7,
+        dy: Math.random() * 1.2 + 0.8,
+        angle: Math.random() * 360,
+        tilt: Math.random() * 10 - 5,
+        color: ['#ffb3c1', '#ffc2d1', '#ffe5ec', '#ff85a2', '#ffccd5'][Math.floor(Math.random() * 5)]
       });
     }
   }
-  initStars();
+  initPetals();
 
-  // Touch / Interactive Stardust particles
-  let touchParticles = [];
-  function addTouchSpark(x, y, isHeart = false) {
-    const count = isHeart ? 12 : 3;
-    for (let i = 0; i < count; i++) {
-      touchParticles.push({
-        x: x,
-        y: y,
-        vx: (Math.random() - 0.5) * (isHeart ? 6 : 2),
-        vy: (Math.random() - 0.5) * (isHeart ? 6 : 2) - 0.5,
-        size: Math.random() * (isHeart ? 12 : 5) + 3,
-        alpha: 1,
-        decay: Math.random() * 0.02 + 0.015,
-        color: ['#ff2d75', '#ffd166', '#ff85a2', '#4ecdc4', '#ffffff'][Math.floor(Math.random() * 5)],
-        isHeart: isHeart || Math.random() > 0.6
-      });
-    }
-  }
+  function drawPetals() {
+    ctx.clearRect(0, 0, width, height);
 
-  window.addEventListener('pointermove', (e) => {
-    if (Math.random() > 0.4) {
-      addTouchSpark(e.clientX, e.clientY, false);
-    }
-  });
+    for (let i = 0; i < petals.length; i++) {
+      const p = petals[i];
+      ctx.save();
+      ctx.beginPath();
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.angle * Math.PI) / 180);
+      ctx.fillStyle = p.color;
 
-  window.addEventListener('pointerdown', (e) => {
-    addTouchSpark(e.clientX, e.clientY, true);
-  });
+      // Draw soft petal shape
+      ctx.ellipse(0, 0, p.r, p.r / 1.8, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
 
-  function renderParticles() {
-    // Render Cosmos
-    cosmosCtx.clearRect(0, 0, width, height);
-    for (let star of stars) {
-      star.alpha += Math.sin(Date.now() * star.twinkleSpeed) * 0.01;
-      star.alpha = Math.max(0.2, Math.min(1, star.alpha));
-      cosmosCtx.save();
-      cosmosCtx.globalAlpha = star.alpha;
-      cosmosCtx.fillStyle = star.color;
-      cosmosCtx.beginPath();
-      cosmosCtx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-      cosmosCtx.fill();
-      cosmosCtx.restore();
-    }
+      p.y += p.dy;
+      p.x += Math.sin(p.d) * 1.2 + p.dx;
+      p.angle += p.tilt * 0.2;
 
-    // Render Stardust
-    stardustCtx.clearRect(0, 0, width, height);
-    for (let i = touchParticles.length - 1; i >= 0; i--) {
-      const p = touchParticles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      p.alpha -= p.decay;
-
-      if (p.alpha <= 0) {
-        touchParticles.splice(i, 1);
-        continue;
+      if (p.y > height + 20) {
+        p.y = -20;
+        p.x = Math.random() * width;
       }
-
-      stardustCtx.save();
-      stardustCtx.globalAlpha = p.alpha;
-      stardustCtx.fillStyle = p.color;
-
-      if (p.isHeart) {
-        stardustCtx.font = `${p.size}px sans-serif`;
-        stardustCtx.fillText('❤️', p.x, p.y);
-      } else {
-        stardustCtx.beginPath();
-        stardustCtx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2);
-        stardustCtx.fill();
-      }
-      stardustCtx.restore();
     }
 
-    requestAnimationFrame(renderParticles);
+    requestAnimationFrame(drawPetals);
   }
-  renderParticles();
+  drawPetals();
 
 
   // ==========================================
-  // 2. WEB AUDIO API SYNTHESIZER (MUSIC & SFX)
+  // 2. ROMANTIC AMBIENT AUDIO SYNTHESIZER
   // ==========================================
   let audioCtx = null;
   let isPlayingMusic = false;
-  let musicInterval = null;
+  let musicTimer = null;
 
   function initAudio() {
     if (!audioCtx) {
@@ -134,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function playTone(freq, type = 'sine', duration = 0.5, gainLevel = 0.15) {
+  function playNote(freq, duration = 0.6, type = 'sine', gainVal = 0.12) {
     initAudio();
     try {
       const osc = audioCtx.createOscillator();
@@ -143,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
       osc.type = type;
       osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
 
-      gain.gain.setValueAtTime(gainLevel, audioCtx.currentTime);
+      gain.gain.setValueAtTime(gainVal, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
 
       osc.connect(gain);
@@ -154,373 +108,210 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {}
   }
 
-  // Ambient Romantic Melody Notes (Celeste / Music Box Chords)
-  const melodyChords = [
-    [523.25, 659.25, 783.99], // C Major (C5, E5, G5)
-    [587.33, 739.99, 880.00], // D Major (D5, F#5, A5)
-    [440.00, 554.37, 659.25], // A Major (A4, C#5, E5)
-    [392.00, 493.88, 587.33], // G Major (G4, B4, D5)
-    [659.25, 830.61, 987.77]  // E Major
+  // Sweet lullaby / acoustic piano progression
+  const chords = [
+    [523.25, 659.25, 783.99], // C
+    [440.00, 554.37, 659.25], // A
+    [349.23, 440.00, 523.25], // F
+    [392.00, 493.88, 587.33]  // G
   ];
   let chordIndex = 0;
 
-  function playNextMelodyStep() {
+  function playMelodyLoop() {
     if (!isPlayingMusic) return;
-    const chord = melodyChords[chordIndex % melodyChords.length];
-    chord.forEach((freq, idx) => {
+    const currentChord = chords[chordIndex % chords.length];
+    currentChord.forEach((freq, idx) => {
       setTimeout(() => {
-        if (isPlayingMusic) playTone(freq, 'sine', 1.8, 0.08);
-      }, idx * 280);
+        if (isPlayingMusic) playNote(freq, 2.0, 'sine', 0.08);
+      }, idx * 300);
     });
     chordIndex++;
   }
 
-  const audioToggleBtn = document.getElementById('audioToggleBtn');
-  const audioIsland = document.getElementById('audioIsland');
-  const playIcon = document.getElementById('playIcon');
-  const pauseIcon = document.getElementById('pauseIcon');
-  const musicWave = document.getElementById('musicWave');
-  const musicTitle = document.getElementById('musicTitle');
+  const musicPill = document.getElementById('musicPill');
+  const musicStatus = document.getElementById('musicStatus');
 
   function toggleMusic() {
     initAudio();
     isPlayingMusic = !isPlayingMusic;
 
     if (isPlayingMusic) {
-      playIcon.style.display = 'none';
-      pauseIcon.style.display = 'block';
-      musicWave.classList.add('playing');
-      musicTitle.textContent = "Kuy Yangramoqda 🎵";
-      playNextMelodyStep();
-      musicInterval = setInterval(playNextMelodyStep, 2200);
-      showToast("Musiqa yoqildi 🎶");
+      musicPill.classList.add('playing');
+      musicStatus.textContent = "Kuy yangramoqda 🎵";
+      playMelodyLoop();
+      musicTimer = setInterval(playMelodyLoop, 2400);
+      showToast("Romantik kuy yoqildi 🎶");
     } else {
-      playIcon.style.display = 'block';
-      pauseIcon.style.display = 'none';
-      musicWave.classList.remove('playing');
-      musicTitle.textContent = "Romantik Kuyni Yoqish";
-      clearInterval(musicInterval);
+      musicPill.classList.remove('playing');
+      musicStatus.textContent = "Tinglash uchun bosing";
+      clearInterval(musicTimer);
     }
   }
 
-  audioIsland.addEventListener('click', toggleMusic);
+  musicPill.addEventListener('click', toggleMusic);
 
 
   // ==========================================
-  // 3. SIMULATED VOICE NOTE PLAYER
+  // 3. CUTE MASCOT INTERACTION
   // ==========================================
-  const voicePlayBtn = document.getElementById('voicePlayBtn');
-  const voiceWaveform = document.getElementById('voiceWaveform');
-  const voiceSubtitle = document.getElementById('voiceSubtitle');
-  const voiceDuration = document.getElementById('voiceDuration');
+  const mascotPatBtn = document.getElementById('mascotPatBtn');
+  const mascotEmoji = document.getElementById('mascotEmoji');
+  const mascotSpeech = document.getElementById('mascotSpeech');
 
-  // Generate 28 dynamic waveform bars
-  const totalBars = 28;
-  const bars = [];
-  for (let i = 0; i < totalBars; i++) {
-    const bar = document.createElement('div');
-    bar.classList.add('voice-bar');
-    bar.style.height = `${Math.floor(Math.random() * 16) + 4}px`;
-    voiceWaveform.appendChild(bar);
-    bars.push(bar);
-  }
-
-  let isVoicePlaying = false;
-  let voiceTimer = null;
-  let voiceSec = 0;
-  const maxVoiceSec = 15;
-
-  const voiceQuotes = [
-    "Odina, eshitayapsanmi...",
-    "Bilmasdan xafa qilib qo'ygan bo'lsam, ming bor uzr so'rayman...",
-    "Sening tabassuming men uchun butun dunyodan qimmat...",
-    "Kechir meni jonim, kel yarashaylik... ❤️",
-    "Seni juda qadrlayman va yaxshi ko'raman! 🥰"
+  const mascotMoods = [
+    { emoji: "🥰", text: "Rahmat Odina! Sening mehring dunyodagi eng katta mo'jiza! ❤️" },
+    { emoji: "🥹💖", text: "Endi Doniyor har doim seni xursand qiladi, so'z beramiz!" },
+    { emoji: "🌸✨", text: "Sen eng shirin, eng mehribon qizsan, Odinam!" },
+    { emoji: "🥺👉👈", text: "Kechirganing uchun million marta rahmat! 🥰" }
   ];
+  let moodIdx = 0;
 
-  voicePlayBtn.addEventListener('click', () => {
+  mascotPatBtn.addEventListener('click', () => {
     initAudio();
-    isVoicePlaying = !isVoicePlaying;
+    playNote(659.25, 0.4, 'triangle', 0.15);
+    setTimeout(() => playNote(880.00, 0.6, 'triangle', 0.2), 150);
 
-    if (isVoicePlaying) {
-      voicePlayBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
-      voiceSec = 0;
-      updateVoicePlay();
-      voiceTimer = setInterval(updateVoicePlay, 1000);
-      playTone(587.33, 'triangle', 0.6, 0.15); // soft chime
-    } else {
-      stopVoicePlay();
-    }
-  });
+    const m = mascotMoods[moodIdx % mascotMoods.length];
+    mascotEmoji.textContent = m.emoji;
+    mascotSpeech.textContent = `"${m.text}"`;
+    moodIdx++;
 
-  function updateVoicePlay() {
-    voiceSec++;
-    const remaining = Math.max(0, maxVoiceSec - voiceSec);
-    const mm = String(Math.floor(remaining / 60)).padStart(1, '0');
-    const ss = String(remaining % 60).padStart(2, '0');
-    voiceDuration.textContent = `${mm}:${ss}`;
-
-    // Update active waveform bars
-    const progressIdx = Math.floor((voiceSec / maxVoiceSec) * totalBars);
-    bars.forEach((b, idx) => {
-      if (idx <= progressIdx) {
-        b.classList.add('active');
-        b.style.height = `${Math.floor(Math.random() * 18) + 6}px`;
-      } else {
-        b.classList.remove('active');
-      }
-    });
-
-    // Subtitle typewriter sequence
-    const quoteIdx = Math.min(voiceQuotes.length - 1, Math.floor((voiceSec / maxVoiceSec) * voiceQuotes.length));
-    voiceSubtitle.textContent = voiceQuotes[quoteIdx];
-    voiceSubtitle.style.color = '#ffd166';
-
-    // Soft heart note
-    playTone(440 + voiceSec * 25, 'sine', 0.4, 0.05);
-
-    if (voiceSec >= maxVoiceSec) {
-      stopVoicePlay();
-      voiceDuration.textContent = "0:00";
-      voiceSubtitle.textContent = "Odina, seni juda qadrlayman! ❤️";
-    }
-  }
-
-  function stopVoicePlay() {
-    clearInterval(voiceTimer);
-    isVoicePlaying = false;
-    voicePlayBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
-  }
-
-
-  // ==========================================
-  // 4. LOVE & FORGIVENESS SYNC TUNER
-  // ==========================================
-  const loveSlider = document.getElementById('loveSlider');
-  const syncPercent = document.getElementById('syncPercent');
-  const syncMoodLabel = document.getElementById('syncMoodLabel');
-
-  loveSlider.addEventListener('input', (e) => {
-    const val = parseInt(e.target.value);
-    syncPercent.textContent = `${val}%`;
-
-    if (val === 0) {
-      syncMoodLabel.textContent = "Ozroq xafaman 🥺";
-      syncMoodLabel.style.color = "#ff85a2";
-    } else if (val < 40) {
-      syncMoodLabel.textContent = "Yarashishga yaqinlashyapman... 🤔";
-      syncMoodLabel.style.color = "#ffd166";
-    } else if (val < 80) {
-      syncMoodLabel.textContent = "Kechirdim, lekin shirinlik kutaman! 🍰";
-      syncMoodLabel.style.color = "#ff6584";
-    } else {
-      syncMoodLabel.textContent = "To'liq Kechirdim & Cheksiz Sevgi! ❤️✨";
-      syncMoodLabel.style.color = "#10b981";
-    }
-
-    if (val % 20 === 0) {
-      playTone(300 + val * 5, 'sine', 0.15, 0.08);
-      addTouchSpark(window.innerWidth / 2, window.innerHeight / 2, val > 70);
-    }
+    showToast("Mitti yurakcha xursand bo'ldi! 🥰");
   });
 
 
   // ==========================================
-  // 5. HOLOGRAPHIC STORY CARDS
+  // 4. 101 ATIRGUL GULDASTA YIG'ISH
   // ==========================================
-  const holoCards = document.querySelectorAll('.holo-card');
+  const btnAddRose = document.getElementById('btnAddRose');
+  const roseCountNum = document.getElementById('roseCountNum');
+  const roseFlowerDisplay = document.getElementById('roseFlowerDisplay');
 
-  holoCards.forEach((card) => {
-    card.addEventListener('click', () => {
-      initAudio();
-      const isOpen = card.classList.contains('open');
+  let roseCount = 0;
+  const flowerEmojis = ["🌹", "🌸", "💐", "🌺", "🌷"];
 
-      // Close all others
-      holoCards.forEach(c => {
-        c.classList.remove('open');
-        const btn = c.querySelector('.card-action-btn');
-        if (btn) btn.textContent = "Ochib o'qish 💌";
-      });
-
-      if (!isOpen) {
-        card.classList.add('open');
-        const btn = card.querySelector('.card-action-btn');
-        if (btn) btn.textContent = "Yopish ✨";
-        playTone(659.25, 'triangle', 0.4, 0.12);
-        showToast("Sehrli xotira ochildi ✨");
-      }
-    });
-  });
-
-
-  // ==========================================
-  // 6. 3 MYSTERY GIFT BOXES
-  // ==========================================
-  const giftBoxes = document.querySelectorAll('.gift-box');
-
-  giftBoxes.forEach((box) => {
-    box.addEventListener('click', () => {
-      initAudio();
-      if (!box.classList.contains('opened')) {
-        box.classList.add('opened');
-        playTone(880, 'sine', 0.6, 0.2);
-        setTimeout(() => playTone(1046.50, 'sine', 0.8, 0.25), 150);
-        showToast("Kutilmagan sovg'a ochildi! 🎉");
-        addTouchSpark(window.innerWidth / 2, window.innerHeight / 2, true);
-      }
-    });
-  });
-
-
-  // ==========================================
-  // 7. BIOMETRIC SCANNER (PRESS & HOLD)
-  // ==========================================
-  const scannerBtn = document.getElementById('scannerBtn');
-  const scanProgressFill = document.getElementById('scanProgressFill');
-  const scanStatusText = document.getElementById('scanStatusText');
-
-  let scanHoldTimer = null;
-  let scanProgress = 0;
-
-  function startScan(e) {
-    e.preventDefault();
+  btnAddRose.addEventListener('click', () => {
     initAudio();
-    scannerBtn.classList.add('scanning');
-    scanStatusText.textContent = "Yarashish tasdiqlanmoqda... (Ushlab turing) 💖";
-    scanProgress = 0;
+    roseCount += (roseCount < 90 ? 10 : 1);
+    if (roseCount > 101) roseCount = 101;
 
-    scanHoldTimer = setInterval(() => {
-      scanProgress += 4;
-      scanProgressFill.style.width = `${scanProgress}%`;
-      playTone(350 + scanProgress * 6, 'sine', 0.08, 0.05);
+    roseCountNum.textContent = roseCount;
+    roseFlowerDisplay.textContent = flowerEmojis[roseCount % flowerEmojis.length];
 
-      if (scanProgress >= 100) {
-        clearInterval(scanHoldTimer);
-        completeScan();
-      }
-    }, 60);
-  }
+    playNote(500 + roseCount * 5, 'sine', 0.2, 0.1);
 
-  function stopScan() {
-    if (scanProgress < 100) {
-      clearInterval(scanHoldTimer);
-      scannerBtn.classList.remove('scanning');
-      scanProgress = 0;
-      scanProgressFill.style.width = '0%';
-      scanStatusText.textContent = "Barmog'ingizni bosing va ushlab turing ✨";
+    if (roseCount === 101) {
+      btnAddRose.textContent = "🌹 101 ta Atirgul Odina Uchun Yig'ildi! 💖";
+      btnAddRose.style.background = "#10b981";
+      showToast("Tabriklaymiz! 101 ta atirgul Odina uchun taqdim etildi! 🌹");
+    } else {
+      showToast(`+10 ta atirgul qo'shildi! (${roseCount}/101)`);
     }
-  }
-
-  function completeScan() {
-    scannerBtn.classList.remove('scanning');
-    scanStatusText.textContent = "TASDIQLANDI! 🎉";
-    playTone(1046.5, 'triangle', 0.8, 0.3);
-    setTimeout(triggerVictory, 300);
-  }
-
-  scannerBtn.addEventListener('mousedown', startScan);
-  scannerBtn.addEventListener('touchstart', startScan, { passive: false });
-  window.addEventListener('mouseup', stopScan);
-  window.addEventListener('touchend', stopScan);
+  });
 
 
   // ==========================================
-  // 8. DODGING "YO'Q" BUTTON & DIRECT FORGIVE
+  // 5. DODGING "YO'Q" BUTTON & FORGIVE ACTION
   // ==========================================
   const btnDecline = document.getElementById('btnDecline');
-  const btnForgiveDirect = document.getElementById('btnForgiveDirect');
-  const dodgeBubble = document.getElementById('dodgeBubble');
+  const btnForgive = document.getElementById('btnForgive');
+  const dodgeMsg = document.getElementById('dodgeMsg');
 
-  const dodgeTexts = [
-    "Qochib ketdim! 😂",
-    "Iltimos kechiraqol 🥺",
-    "Xafa bo'lma jonim ❤️",
-    "Ushlay olmaysan 😜",
-    "Faqat 'Ha' deysan baribir! 🥰"
+  const funnyDodges = [
+    "Qochib ketdim! 😜",
+    "Iltimos, arazlama 🥺",
+    "Axir sevasan-ku 🥰",
+    "Ushlay olmaysan 😂",
+    "Baribir 'Ha' deysan! ❤️"
   ];
   let dodgeCount = 0;
 
-  function dodgeButton(e) {
+  function dodgeDecline(e) {
     if (e) e.preventDefault();
     initAudio();
     dodgeCount++;
-    playTone(320, 'sine', 0.2, 0.1);
+    playNote(300, 0.15, 'sine', 0.1);
 
     const maxX = window.innerWidth - btnDecline.offsetWidth - 40;
     const maxY = window.innerHeight - btnDecline.offsetHeight - 40;
 
     const randX = Math.max(20, Math.floor(Math.random() * maxX));
-    const randY = Math.max(60, Math.floor(Math.random() * maxY));
+    const randY = Math.max(80, Math.floor(Math.random() * maxY));
 
     btnDecline.style.position = 'fixed';
     btnDecline.style.left = `${randX}px`;
     btnDecline.style.top = `${randY}px`;
     btnDecline.style.zIndex = '999';
 
-    // Show funny speech bubble
-    dodgeBubble.textContent = dodgeTexts[dodgeCount % dodgeTexts.length];
-    dodgeBubble.style.left = `${randX}px`;
-    dodgeBubble.style.top = `${Math.max(10, randY - 40)}px`;
-    dodgeBubble.classList.add('show');
+    dodgeMsg.textContent = funnyDodges[dodgeCount % funnyDodges.length];
+    dodgeMsg.style.left = `${randX}px`;
+    dodgeMsg.style.top = `${Math.max(20, randY - 40)}px`;
+    dodgeMsg.classList.add('active');
 
-    setTimeout(() => dodgeBubble.classList.remove('show'), 1500);
+    setTimeout(() => dodgeMsg.classList.remove('active'), 1400);
 
     if (dodgeCount >= 5) {
       btnDecline.textContent = "Mayli, kechirdim! ❤️";
-      btnDecline.style.background = "#ff2d75";
+      btnDecline.style.background = "#ff4d6d";
       btnDecline.style.color = "#fff";
-      btnDecline.onclick = triggerVictory;
+      btnDecline.onclick = celebrateForgiveness;
     }
   }
 
-  btnDecline.addEventListener('mouseenter', dodgeButton);
-  btnDecline.addEventListener('touchstart', dodgeButton, { passive: false });
+  btnDecline.addEventListener('mouseenter', dodgeDecline);
+  btnDecline.addEventListener('touchstart', dodgeDecline, { passive: false });
 
-  btnForgiveDirect.addEventListener('click', () => {
+  btnForgive.addEventListener('click', () => {
+    celebrateForgiveness();
+  });
+
+
+  // ==========================================
+  // 6. VICTORY MODAL & INSTAGRAM DM
+  // ==========================================
+  const modalOverlay = document.getElementById('modalOverlay');
+  const btnClosePop = document.getElementById('btnClosePop');
+  const btnSendInsta = document.getElementById('btnSendInsta');
+
+  function celebrateForgiveness() {
     initAudio();
-    triggerVictory();
-  });
+    modalOverlay.classList.add('active');
 
+    // Play triumphant happy chime
+    playNote(523.25, 0.4, 'sine', 0.2);
+    setTimeout(() => playNote(659.25, 0.4, 'sine', 0.2), 120);
+    setTimeout(() => playNote(783.99, 0.4, 'sine', 0.2), 240);
+    setTimeout(() => playNote(1046.50, 1.2, 'sine', 0.3), 360);
 
-  // ==========================================
-  // 9. VICTORY MODAL & INSTAGRAM DM
-  // ==========================================
-  const victoryModal = document.getElementById('victoryModal');
-  const btnCloseModal = document.getElementById('btnCloseModal');
-  const btnInstaDM = document.getElementById('btnInstaDM');
-
-  function triggerVictory() {
-    victoryModal.classList.add('active');
-    playTone(523.25, 'sine', 0.4, 0.2);
-    setTimeout(() => playTone(659.25, 'sine', 0.4, 0.2), 120);
-    setTimeout(() => playTone(783.99, 'sine', 0.4, 0.2), 240);
-    setTimeout(() => playTone(1046.50, 'sine', 1.2, 0.3), 360);
-
-    // Blast hearts
-    for (let i = 0; i < 40; i++) {
-      setTimeout(() => {
-        addTouchSpark(
-          Math.random() * window.innerWidth,
-          Math.random() * window.innerHeight,
-          true
-        );
-      }, i * 60);
+    // Blast extra petals
+    for (let i = 0; i < 30; i++) {
+      petals.push({
+        x: Math.random() * width,
+        y: Math.random() * (height / 2),
+        r: Math.random() * 12 + 8,
+        d: Math.random() * 10,
+        dx: Math.random() * 3 - 1.5,
+        dy: Math.random() * 2 + 1.5,
+        angle: Math.random() * 360,
+        tilt: Math.random() * 12 - 6,
+        color: '#ff4d6d'
+      });
     }
   }
 
-  btnCloseModal.addEventListener('click', () => {
-    victoryModal.classList.remove('active');
+  btnClosePop.addEventListener('click', () => {
+    modalOverlay.classList.remove('active');
   });
 
-  btnInstaDM.addEventListener('click', () => {
-    const textToSend = "Doniyor, saytingni ko'rdim va juda ta'sirlandim... Men seni kechirdim ❤️🥰 Kel, yarashaylik!";
+  btnSendInsta.addEventListener('click', () => {
+    const message = "Doniyor, saytingni ko'rdim va juda ta'sirlandim... Men seni kechirdim ❤️🥰 Kel, yarashaylik!";
     
     // Copy to clipboard
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(textToSend).catch(() => {});
+      navigator.clipboard.writeText(message).catch(() => {});
     }
 
-    showToast("Xabar nusxalandi! Instagram ochilmoqda... 💖");
+    showToast("Xabar nusxalandi! Instagram ochilmoqda... 💌");
 
     setTimeout(() => {
       window.open('https://www.instagram.com/direct/inbox/', '_blank');
@@ -529,18 +320,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ==========================================
-  // 10. TOAST NOTIFICATION UTILITY
+  // 7. TOAST NOTIFICATION UTILITY
   // ==========================================
-  const toastNotify = document.getElementById('toastNotify');
+  const toastBox = document.getElementById('toastBox');
   let toastTimer = null;
 
   function showToast(msg) {
-    toastNotify.textContent = msg;
-    toastNotify.classList.add('show');
+    toastBox.textContent = msg;
+    toastBox.classList.add('active');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => {
-      toastNotify.classList.remove('show');
-    }, 2800);
+      toastBox.classList.remove('active');
+    }, 2600);
   }
 
 });
