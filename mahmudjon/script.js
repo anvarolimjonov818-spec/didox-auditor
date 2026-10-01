@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const cyberParticles = [];
-  const emojis = ['⚽', '💻', '🪂', '🎮', '⚡', '🍗'];
+  const emojis = ['⚽', '💻', '🪂', '🎮', '⚡', '🍗', '🍼', '🍭'];
 
   for (let i = 0; i < 25; i++) {
     cyberParticles.push({
@@ -137,13 +137,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
     futCard.addEventListener('click', () => {
       playCyberTone(880, 'triangle', 0.3, 0.2);
-      showToast("🏆 OVR 99: Mahallaning mutlaq chempioni!");
+      showToast("🏆 Mahmudjon: Doniyor do'sting senga omad tilaydi!");
     });
   }
 
 
   // ==========================================
-  // 4. CODE TERMINAL RUNNER & EXCUSES
+  // 4. BIG BOY METER (QACHON KATTA BOLA BO'LASAN)
+  // ==========================================
+  const btnLevelUp = document.getElementById('btnLevelUp');
+  const meterFill = document.getElementById('meterFill');
+  const meterVal = document.getElementById('meterVal');
+
+  let bigBoyPercent = 1;
+
+  if (btnLevelUp) {
+    btnLevelUp.addEventListener('click', () => {
+      initAudio();
+      playCyberTone(440 + bigBoyPercent * 5, 'sine', 0.2, 0.15);
+
+      if (bigBoyPercent < 90) {
+        bigBoyPercent += 20;
+        meterFill.style.width = `${bigBoyPercent}%`;
+        meterVal.textContent = `${bigBoyPercent}% (Dars qilishga oz qoldi...)`;
+        showToast(`Katta bola bo'lish darajasi: ${bigBoyPercent}%!`);
+      } else if (bigBoyPercent >= 90 && bigBoyPercent < 100) {
+        bigBoyPercent = 99;
+        meterFill.style.width = `99%`;
+        meterVal.textContent = `99% (Deyarli katta bola!)`;
+        showToast("Deyarli katta bola bo'ldi! Lekin...");
+      } else {
+        // Reset joke
+        bigBoyPercent = 1;
+        meterFill.style.width = `1%`;
+        meterVal.textContent = `1% (Yana PUBGga kirib ketdi! 😂)`;
+        playCyberTone(220, 'square', 0.4, 0.2);
+        showToast("🚨 Xatolik: Mahmudjon yana PUBGga kirib ketdi! Qachon katta bola bo'lasan?! 😂");
+      }
+    });
+  }
+
+
+  // ==========================================
+  // 5. CODE TERMINAL RUNNER & EXCUSES
   // ==========================================
   const btnRunCode = document.getElementById('btnRunCode');
   const btnMakeExcuse = document.getElementById('btnMakeExcuse');
@@ -154,7 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
     "Ustoz, mahallaning 3-sinflari bilan chempionat finali bor edi, penalti tepishim kerak edi! ⚽",
     "CSS yozayotgandim, to'satdan telefonimda PUBG 'Squad Invite' kelib qoldi... 🎮",
     "Ustoz, kompyuterim qizib ketdi, PUBG o'ynab sovitib oldim 😂",
-    "Bugun 10-sinfda charchab keldim, keyingi oy aniq dars qilaman! 🥱"
+    "Bugun 10-sinfda charchab keldim, keyingi oy aniq dars qilaman! 🥱",
+    "Doniyor do'stim chaqirib qoldi, 'Sayt quryapmiz' deb aytmadi! 😂"
   ];
   let excuseIdx = 0;
 
@@ -174,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ==========================================
-  // 5. PENALTY SHOOTOUT ON 8-YEAR-OLDS
+  // 6. PENALTY SHOOTOUT ON 8-YEAR-OLDS
   // ==========================================
   const btnShootBall = document.getElementById('btnShootBall');
   const soccerBall = document.getElementById('soccerBall');
@@ -211,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ==========================================
-  // 6. PUBG AIRDROP OPENER
+  // 7. PUBG AIRDROP OPENER
   // ==========================================
   const btnOpenAirdrop = document.getElementById('btnOpenAirdrop');
   const airdropLoot = document.getElementById('airdropLoot');
@@ -224,12 +261,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ==========================================
-  // 7. TELEGRAM & INSTAGRAM SHARE
+  // 8. TELEGRAM & INSTAGRAM SHARE
   // ==========================================
   const btnShareTG = document.getElementById('btnShareTG');
   const btnShareInsta = document.getElementById('btnShareInsta');
 
-  const shareMessage = "Mahmudjon, saytingni ko'rdik! 😂 10-sinf bo'lib yosh bolalar bilan futbol va kechasi PUBG o'ynashni yig'ishtirib, Najot Ta'limdagi Web Dasturlash darslaringni qil! 💻⚡ Sayting:";
+  const shareMessage = "Mahmudjon, Doniyor senga maxsus sayt yasabdi! 😂 10-sinf bo'lding-ku, qachon katta bola bo'lasan?! PUBG va yosh bolalar bilan futbolni yig'ishtirib, Najot Ta'limdagi darslaringni qil! 💻⚡ Sayting:";
 
   btnShareTG.addEventListener('click', () => {
     playCyberTone(784, 'sine', 0.2, 0.15);
@@ -251,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   // ==========================================
-  // 8. TOAST HUD
+  // 9. TOAST HUD
   // ==========================================
   const cyberToast = document.getElementById('cyberToast');
   let toastTimer = null;

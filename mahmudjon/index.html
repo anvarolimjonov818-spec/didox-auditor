@@ -10,9 +10,9 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Fira+Code:wght@400;600;700&family=Caveat:wght@700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=1.0" />
+  <link rel="stylesheet" href="style.css?v=2.0" />
 </head>
 <body>
 
@@ -43,6 +43,16 @@
     </div>
   </header>
 
+  <!-- DEDICATED BANNER FROM DONIYOR -->
+  <div class="doniyor-banner">
+    <div class="banner-inner">
+      <span class="banner-icon">🎁</span>
+      <p class="banner-text">
+        <strong>"Do'stim Mahmudjon, bu saytni sen uchun maxsus yasadim!"</strong> — <span class="author-tag">Doniyordan ❤️</span>
+      </p>
+    </div>
+  </div>
+
   <!-- Main Container -->
   <main class="page-container">
 
@@ -50,7 +60,7 @@
     <section class="hero-section">
       <div class="profile-layout">
         
-        <!-- 3D Holographic Player Card -->
+        <!-- 3D Holographic Player Card with Real Photo -->
         <div class="fut-card-wrapper">
           <div class="fut-card" id="futCard">
             <div class="fut-card-glow"></div>
@@ -67,9 +77,12 @@
               </div>
             </div>
 
-            <!-- Avatar & Nickname -->
+            <!-- Real Avatar Photo & Nickname -->
             <div class="fut-avatar">
-              <div class="avatar-icon">👑</div>
+              <div class="photo-frame">
+                <img src="mahmudjon.png" alt="Mahmudjon" class="player-photo" />
+                <div class="crown-badge">👑</div>
+              </div>
               <div class="player-name">MAHMUDJON</div>
               <div class="player-sub">"KICHIK BOLALAR SARVORI"</div>
             </div>
@@ -111,6 +124,12 @@
         <!-- Quick Bio / Hero Text -->
         <div class="hero-bio-card">
           <div class="badge-vip">⚠️ RASMIY DOSYE — 10-"A" SINFI</div>
+          
+          <div class="question-callout">
+            <span class="callout-icon">📢</span>
+            <span class="callout-text">"Mahmudjon, 10-sinf bo'lding-ku, qachon katta bola bo'lasan?! 😂"</span>
+          </div>
+
           <h1 class="bio-title">
             Mahmudjon — <span class="neon-text">Kiber Coder & Mahallaning Mbappesi</span>
           </h1>
@@ -135,15 +154,66 @@
           </div>
 
           <div class="hero-actions">
-            <a href="#penaltyGame" class="btn-cyber-primary">⚽ Bolalar bilan Futbol O'ynash</a>
-            <a href="#codeTerminal" class="btn-cyber-secondary">💻 Najot Ta'lim Darsini Ko'rish</a>
+            <a href="#kidsPack" class="btn-cyber-primary">🍼 Yosh Bolalar To'plami</a>
+            <a href="#penaltyGame" class="btn-cyber-secondary">⚽ Bolalar bilan Futbol</a>
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- SECTION 2: Mahmudjon's 24-Hour Routine (Kun Tartibi) -->
+    <!-- SECTION 2: YOSH BOLALAR UCHUN STARTER PACK (NEW!) -->
+    <section class="cyber-section" id="kidsPack">
+      <div class="sec-badge">🍼 MAXSUS BO'LIM // YOSH BOLALAR UCHUN</div>
+      <h2 class="sec-title">Mahmudjonning "Kichkintoylar To'plami" (Starter Pack) 👶</h2>
+      <p class="sec-desc">10-sinf Mahmudjonga yosh bolalar bilan futbol o'ynash va kechasi PUBG o'ynashda kerak bo'ladigan eng muhim narsalar:</p>
+
+      <div class="kids-pack-grid">
+        <!-- Item 1 -->
+        <div class="kid-item-card">
+          <div class="kid-icon">🍼</div>
+          <h4 class="kid-title">Bolalar Emzigi & Butilkasi</h4>
+          <p class="kid-desc">Kechasi 04:00 gacha Pochinkida camperlik qilib o'tirganda chanqab qolmaslik uchun maxsus sutli idish! 😂</p>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="kid-item-card">
+          <div class="kid-icon">🍭</div>
+          <h4 class="kid-title">Chupa Chups & Shirinlik</h4>
+          <p class="kid-desc">Najot Ta'limda Web darsida o'qituvchi kod yozdirayotganda dars qilmasdan shirinlik so'rib o'tirish uchun!</p>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="kid-item-card">
+          <div class="kid-icon">🧸</div>
+          <h4 class="kid-title">Multik Ayiqcha (Panda)</h4>
+          <p class="kid-desc">10-sinf darslarida partaning orqa qatorida charchab uxlab qolmaslik uchun yumshoq yostiqcha!</p>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="kid-item-card">
+          <div class="kid-icon">⚽</div>
+          <h4 class="kid-title">Kichik Rezinka To'p</h4>
+          <p class="kid-desc">Mahalladagi 7-8 yoshli bolalarni yig'ib, ularga 25 ta gol urib o'zini Krishtianu Ronaldu deb his qilish uchun!</p>
+        </div>
+      </div>
+
+      <!-- Interactive Big Boy Meter -->
+      <div class="big-boy-meter-box">
+        <div class="meter-header">
+          <span class="m-label">📊 Mahmudjonning Katta Bola Bo'lish Jarayoni:</span>
+          <span class="m-val" id="meterVal">1% (Hali yosh bola)</span>
+        </div>
+        <div class="meter-bar-track">
+          <div class="meter-bar-fill" id="meterFill"></div>
+        </div>
+        <button class="btn-level-up" id="btnLevelUp">
+          🆙 Katta Bola Bo'lishga Harakat Qilish!
+        </button>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Mahmudjon's 24-Hour Routine (Kun Tartibi) -->
     <section class="cyber-section">
       <div class="sec-badge">⏰ KUNLIK JADVAL</div>
       <h2 class="sec-title">Mahmudjonning "Tig'iz" Kun Tartibi</h2>
@@ -184,7 +254,7 @@
       </div>
     </section>
 
-    <!-- SECTION 3: NAJOT TA'LIM CODE TERMINAL SIMULATOR -->
+    <!-- SECTION 4: NAJOT TA'LIM CODE TERMINAL SIMULATOR -->
     <section class="cyber-section" id="codeTerminal">
       <div class="sec-badge">💻 NAJOT TA'LIM // WEB BO'LIMI</div>
       <h2 class="sec-title">Mahmudjonning 1 Oylik Web Kodlari</h2>
@@ -206,6 +276,7 @@
   <span class="c-prop">ism</span>: <span class="c-str">"Mahmudjon"</span>,
   <span class="c-prop">sinf</span>: <span class="c-num">10</span>,
   <span class="c-prop">kurs</span>: <span class="c-str">"Najot Ta'lim Web Dasturlash (1-oy)"</span>,
+  <span class="c-prop">kattaBolaBoldimi</span>: <span class="c-bool">false</span>, <span class="c-comment">// Qachon katta bola bo'lasan?! 😂</span>
   <span class="c-prop">uyVazifasiBormi</span>: <span class="c-bool">false</span>,
   <span class="c-prop">hozirgiBandligi</span>: <span class="c-str">"Ko'chada 7 yoshli bolalar bilan penalti tepmoqda ⚽"</span>,
   <span class="c-prop">tungiRejasi</span>: <span class="c-str">"PUBG Mobile: Pochinki camperlik 🪂"</span>
@@ -236,7 +307,7 @@ console.log(tekshirUyVazifani());</code></pre>
       </div>
     </section>
 
-    <!-- SECTION 4: MINI GAME 1 — YOSH BOLALARGA GOL URISH -->
+    <!-- SECTION 5: MINI GAME 1 — YOSH BOLALARGA GOL URISH -->
     <section class="cyber-section" id="penaltyGame">
       <div class="sec-badge">⚽ MINI O'YIN // STREET CUP</div>
       <h2 class="sec-title">Mahmudjonning "Katta G'alabasi" 🏆</h2>
@@ -266,7 +337,7 @@ console.log(tekshirUyVazifani());</code></pre>
       </div>
     </section>
 
-    <!-- SECTION 5: MINI GAME 2 — PUBG POCHINKI AIRDROP -->
+    <!-- SECTION 6: MINI GAME 2 — PUBG POCHINKI AIRDROP -->
     <section class="cyber-section">
       <div class="sec-badge">🪂 PUBG MOBILE // POCHINKI DROPS</div>
       <h2 class="sec-title">Tungi PUBG Airdrop Ovchisi</h2>
@@ -289,10 +360,10 @@ console.log(tekshirUyVazifani());</code></pre>
       </div>
     </section>
 
-    <!-- SECTION 6: SINCERE MOTIVATION & ADVICE (DO'STONA MASLAHAT) -->
+    <!-- SECTION 7: SINCERE MOTIVATION & ADVICE (DO'STONA MASLAHAT) -->
     <section class="cyber-section motivation-sec">
-      <div class="sec-badge">🌟 DO'STONA MOTIVATSIYA // FUTURE SENIOR</div>
-      <h2 class="sec-title">Mahmudjonga Samimiy Maslahat ❤️</h2>
+      <div class="sec-badge">🌟 DO'STONA MOTIVATSIYA // DONIYORDAN</div>
+      <h2 class="sec-title">Mahmudjonga Do'stona Maslahat ❤️</h2>
       
       <div class="motivation-card">
         <div class="m-icon">🚀</div>
@@ -312,21 +383,21 @@ console.log(tekshirUyVazifani());</code></pre>
           </div>
           <div class="perk-item">
             <span class="p-check">✅</span>
-            <span>Mahalladagi bolalarga gol urish o'rniga, IT sohasida eng zo'r loyihalarni yaratasan!</span>
+            <span>Mahalladagi yosh bolalarga gol urish o'rniga, IT sohasida eng zo'r xalqaro loyihalarni yaratasan!</span>
           </div>
         </div>
 
         <div class="m-footer">
-          <strong>Shuning uchun bugundan boshlab darslarni vaqtida qil, Mahmudjon! Kelajak seni kutmoqda! 💪</strong>
+          <strong>Shuning uchun bugundan boshlab darslarni vaqtida qil, Mahmudjon! Kelajak seni kutmoqda! — Do'sting Doniyor 💪</strong>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 7: TELEGRAM / INSTAGRAM SHARE -->
+    <!-- SECTION 8: TELEGRAM / INSTAGRAM SHARE -->
     <section class="cyber-section share-sec">
       <div class="sec-badge">📱 ULASHISH</div>
       <h2 class="sec-title">Mahmudjonga Saytni Yuboring! 😂</h2>
-      <p class="sec-desc">Unga do'stona hazil qilib, "Darsingni qil!" deb xabar yuborish uchun quyidagi tugmalarni bosing:</p>
+      <p class="sec-desc">Unga do'stona hazil qilib, "Qachon katta bola bo'lasan, darsingni qil!" deb xabar yuborish uchun quyidagi tugmalarni bosing:</p>
 
       <div class="share-buttons">
         <button class="btn-share-tg" id="btnShareTG">
@@ -343,7 +414,7 @@ console.log(tekshirUyVazifani());</code></pre>
 
     <!-- Footer -->
     <footer class="cyber-footer">
-      <p>⚡ 2026 • <strong>Mahmudjon (10-Sinf)</strong> Uchun Maxsus Yaratilgan Do'stona Kiber Sayt ⚡</p>
+      <p>⚡ 2026 • <strong>Do'stim Mahmudjon (10-Sinf)</strong> Uchun Doniyor Tomonidan Yaratildi ❤️ ⚡</p>
       <div class="f-sub">Najot Ta'lim Web Dasturlash & Mahallaning Kichik Bolalar Ligasi ©</div>
     </footer>
 
@@ -352,6 +423,6 @@ console.log(tekshirUyVazifani());</code></pre>
   <!-- Sound/Toast HUD -->
   <div class="cyber-toast" id="cyberToast"></div>
 
-  <script src="script.js?v=1.0"></script>
+  <script src="script.js?v=2.0"></script>
 </body>
 </html>
