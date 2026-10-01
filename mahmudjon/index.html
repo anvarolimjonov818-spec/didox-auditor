@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>MAHMUDJON PRO — 10-Sinf | PUBG Master & Najot Ta'lim Legend</title>
+  <meta name="description" content="Mahmudjon: 10-sinf yetakchisi, yosh bolalar murabbiyi, PUBG kiber-sportchisi va Najot Ta'lim Web dasturchisi!" />
+  <meta name="theme-color" content="#0a0518" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;0,800;1,700&family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css?v=1.0" />
+</head>
+<body>
+
+  <!-- Dynamic Cyber Grid & Falling Airdrops / Code Particles -->
+  <div class="cyber-bg">
+    <div class="grid-lines"></div>
+    <div class="glow-orb orb-green"></div>
+    <div class="glow-orb orb-orange"></div>
+    <div class="glow-orb orb-cyan"></div>
+  </div>
+  <canvas id="cyberCanvas"></canvas>
+
+  <!-- Top Cyber HUD / Status Bar -->
+  <header class="cyber-nav">
+    <div class="hud-brand">
+      <span class="hud-tag">10-SINF // PRO</span>
+      <span class="hud-title">MAHMUDJON.DEV ⚡</span>
+    </div>
+
+    <div class="hud-status">
+      <div class="status-indicator">
+        <span class="blink-dot"></span>
+        <span class="status-txt">STATUS: <strong class="text-orange">PUBG (POCHINKI)</strong></span>
+      </div>
+      <button class="sound-toggle-btn" id="soundToggleBtn" title="Ovozni yoqish/o'chirish">
+        🔊 SFX: ON
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="page-container">
+
+    <!-- HERO PROFILE: Cyberpunk FIFA FUT Card & Overview -->
+    <section class="hero-section">
+      <div class="profile-layout">
+        
+        <!-- 3D Holographic Player Card -->
+        <div class="fut-card-wrapper">
+          <div class="fut-card" id="futCard">
+            <div class="fut-card-glow"></div>
+            
+            <!-- Card Header -->
+            <div class="fut-header">
+              <div class="fut-rating">
+                <span class="rating-num">99</span>
+                <span class="rating-pos">ST / DEV</span>
+              </div>
+              <div class="fut-flags">
+                <span class="flag-icon">🇺🇿</span>
+                <span class="club-icon">⚽🎮</span>
+              </div>
+            </div>
+
+            <!-- Avatar & Nickname -->
+            <div class="fut-avatar">
+              <div class="avatar-icon">👑</div>
+              <div class="player-name">MAHMUDJON</div>
+              <div class="player-sub">"KICHIK BOLALAR SARVORI"</div>
+            </div>
+
+            <!-- Detailed Stats Grid -->
+            <div class="fut-stats-grid">
+              <div class="stat-box">
+                <span class="s-val text-green">99</span>
+                <span class="s-lbl">FUT (YOSH BOLALARGA)</span>
+              </div>
+              <div class="stat-box">
+                <span class="s-val text-orange">100</span>
+                <span class="s-lbl">PUBG (TUNGI 04:00)</span>
+              </div>
+              <div class="stat-box">
+                <span class="s-val text-cyan">01</span>
+                <span class="s-lbl">HTML / CSS BILISH</span>
+              </div>
+              <div class="stat-box">
+                <span class="s-val text-red">00</span>
+                <span class="s-lbl">UY VAZIFA QILISH</span>
+              </div>
+              <div class="stat-box">
+                <span class="s-val text-gold">95</span>
+                <span class="s-lbl">DARSDAN QOCHISH</span>
+              </div>
+              <div class="stat-box">
+                <span class="s-val text-purple">99</span>
+                <span class="s-lbl">POCHINKI CAMPER</span>
+              </div>
+            </div>
+
+            <div class="card-footer-quote">
+              "Najot Ta'limda o'qiyman, lekin qalbim maydonda va Pochinkida!"
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Bio / Hero Text -->
+        <div class="hero-bio-card">
+          <div class="badge-vip">⚠️ RASMIY DOSYE — 10-"A" SINFI</div>
+          <h1 class="bio-title">
+            Mahmudjon — <span class="neon-text">Kiber Coder & Mahallaning Mbappesi</span>
+          </h1>
+          <p class="bio-desc">
+            10-sinf bo'lishiga qaramay, mahalladagi 3-4 sinf yosh bolalarini yig'ib to'p tepish bo'yicha mutlaq chempion! 
+            Najot Ta'limda Web Dasturlashga yozilganiga 1 oy bo'ldi, ammo barcha kodlari PUBGda M416 avtomatiga aylanib ketgan! 😂
+          </p>
+
+          <div class="bio-highlights">
+            <div class="highlight-pill">
+              <span class="pill-icon">📍</span>
+              <span><strong>Asosiy joylashuvi:</strong> Mahalla stadioni & Pochinki</span>
+            </div>
+            <div class="highlight-pill">
+              <span class="pill-icon">💻</span>
+              <span><strong>Najot Ta'lim:</strong> 1 oy (Hali ham <code>&lt;h1&gt;</code> darajasida)</span>
+            </div>
+            <div class="highlight-pill">
+              <span class="pill-icon">🎮</span>
+              <span><strong>PUBG Rejimi:</strong> Tungi 04:00 gacha uxlamaslik</span>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <a href="#penaltyGame" class="btn-cyber-primary">⚽ Bolalar bilan Futbol O'ynash</a>
+            <a href="#codeTerminal" class="btn-cyber-secondary">💻 Najot Ta'lim Darsini Ko'rish</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 2: Mahmudjon's 24-Hour Routine (Kun Tartibi) -->
+    <section class="cyber-section">
+      <div class="sec-badge">⏰ KUNLIK JADVAL</div>
+      <h2 class="sec-title">Mahmudjonning "Tig'iz" Kun Tartibi</h2>
+      <p class="sec-desc">Bunday intensiv rejim bilan qanday qilib charchamaslik mumkin? Qoyil qolish kerak!</p>
+
+      <div class="timeline-grid">
+        <!-- 08:00 -->
+        <div class="timeline-card">
+          <div class="t-time">08:00 - 13:00</div>
+          <div class="t-emoji">😴</div>
+          <h4 class="t-name">Maktabda 10-sinfda Uxlash</h4>
+          <p class="t-info">Partaning orqa qatorida kechasi PUBG o'ynab charchagan ko'zlarni dam oldirish vaqti.</p>
+        </div>
+
+        <!-- 14:00 -->
+        <div class="timeline-card active-card">
+          <div class="t-time">14:00 - 18:00</div>
+          <div class="t-emoji">⚽</div>
+          <h4 class="t-name">Mahallada Yosh Bolalarga Gol Urish</h4>
+          <p class="t-info">3-sinf bolalarini terma jamoa qilib olib, ularga 25 ta gol urib o'zini Krishtianu Ronaldu his qilish.</p>
+        </div>
+
+        <!-- 19:00 -->
+        <div class="timeline-card">
+          <div class="t-time">19:00 - 20:30</div>
+          <div class="t-emoji">💻</div>
+          <h4 class="t-name">Najot Ta'lim Darsi (Web)</h4>
+          <p class="t-info">Monitorga qarab "Ustoz, CSS juda qiyin ekan, qachon tanaffus bo'ladi?" deb bosh qashish.</p>
+        </div>
+
+        <!-- 21:00 -->
+        <div class="timeline-card">
+          <div class="t-time">21:00 - 04:30</div>
+          <div class="t-emoji">🪂</div>
+          <h4 class="t-name">Tungi PUBG Mobile Sessiyasi</h4>
+          <p class="t-info">"Pochinkiga tushamiz, M416 meni kutyapti!" Tonggacha uxlamay Conqueror orzusi bilan camperlik qilish.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: NAJOT TA'LIM CODE TERMINAL SIMULATOR -->
+    <section class="cyber-section" id="codeTerminal">
+      <div class="sec-badge">💻 NAJOT TA'LIM // WEB BO'LIMI</div>
+      <h2 class="sec-title">Mahmudjonning 1 Oylik Web Kodlari</h2>
+      <p class="sec-desc">O'qituvchilar ko'rsa yig'laydigan, dasturchilar ko'rsa kuladigan haqiqiy terminal!</p>
+
+      <div class="terminal-box">
+        <div class="terminal-header">
+          <div class="term-dots">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          <div class="term-title">mahmudjon_najot_talim_vazifa.js — Node.js v20.0</div>
+          <div class="term-git">git:(master) ✗ [100+ uncommitted homeworks]</div>
+        </div>
+
+        <div class="terminal-body">
+          <pre><code><span class="c-keyword">const</span> <span class="c-var">mahmudjon</span> = {
+  <span class="c-prop">ism</span>: <span class="c-str">"Mahmudjon"</span>,
+  <span class="c-prop">sinf</span>: <span class="c-num">10</span>,
+  <span class="c-prop">kurs</span>: <span class="c-str">"Najot Ta'lim Web Dasturlash (1-oy)"</span>,
+  <span class="c-prop">uyVazifasiBormi</span>: <span class="c-bool">false</span>,
+  <span class="c-prop">hozirgiBandligi</span>: <span class="c-str">"Ko'chada 7 yoshli bolalar bilan penalti tepmoqda ⚽"</span>,
+  <span class="c-prop">tungiRejasi</span>: <span class="c-str">"PUBG Mobile: Pochinki camperlik 🪂"</span>
+};
+
+<span class="c-keyword">function</span> <span class="c-func">tekshirUyVazifani</span>() {
+  <span class="c-keyword">if</span> (mahmudjon.uyVazifasiBormi === <span class="c-bool">false</span>) {
+    <span class="c-keyword">return</span> <span class="c-str">"🚨 XATOLIK 404: Mahmudjon dars qilmagan! Futbol va PUBG muhimroq chiqdi!"</span>;
+  }
+}
+
+<span class="c-comment">// Natijani konsolga chiqaramiz:</span>
+console.log(tekshirUyVazifani());</code></pre>
+        </div>
+
+        <div class="terminal-actions">
+          <button class="btn-term-run" id="btnRunCode">
+            ▶️ KODNI ISHGA TUSHIRISH (Tekshirish)
+          </button>
+          <button class="btn-term-excuse" id="btnMakeExcuse">
+            🎲 Mahmudjonning Yangi Bahonasi!
+          </button>
+        </div>
+
+        <div class="term-output" id="termOutput">
+          <span class="out-prompt">$ output:</span> <span id="outText">Kodni ishga tushiring va natijani ko'ring...</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: MINI GAME 1 — YOSH BOLALARGA GOL URISH -->
+    <section class="cyber-section" id="penaltyGame">
+      <div class="sec-badge">⚽ MINI O'YIN // STREET CUP</div>
+      <h2 class="sec-title">Mahmudjonning "Katta G'alabasi" 🏆</h2>
+      <p class="sec-desc">10-sinf Mahmudjon mahalladagi 8 yoshli darvozabonga qarshi penalti tepmoqda. Zarba bering!</p>
+
+      <div class="game-arena">
+        <div class="stadium-box">
+          <div class="goal-posts">
+            <div class="goalie-keeper" id="goalie">🧤 8 yoshli bola</div>
+            <div class="soccer-ball" id="soccerBall">⚽</div>
+          </div>
+        </div>
+
+        <div class="game-dashboard">
+          <div class="score-pill">
+            <span>MAHMUDJON: <strong class="text-green" id="playerScore">15</strong></span>
+            <span> : </span>
+            <span>3-SINF BOLALARI: <strong class="text-red">0</strong></span>
+          </div>
+
+          <button class="btn-shoot-ball" id="btnShootBall">
+            ⚡ ZARBA BERISH (8 yoshli bolaga gol urish!)
+          </button>
+
+          <p class="game-cheer" id="gameCheer">"Mahmudjon o'zini mahallaning eng kuchli futbolchisi deb hisoblamoqda!" 😎</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: MINI GAME 2 — PUBG POCHINKI AIRDROP -->
+    <section class="cyber-section">
+      <div class="sec-badge">🪂 PUBG MOBILE // POCHINKI DROPS</div>
+      <h2 class="sec-title">Tungi PUBG Airdrop Ovchisi</h2>
+      <p class="sec-desc">Mahmudjon kechasi 03:00 da uxlamay Airdrop quvlamoqda. Qutini oching!</p>
+
+      <div class="pubg-airdrop-box" id="airdropBox">
+        <div class="airdrop-crate" id="airdropCrate">
+          <div class="crate-top">📦 AIRDROP</div>
+          <div class="crate-smoke">💨</div>
+        </div>
+
+        <div class="airdrop-loot" id="airdropLoot">
+          <h4 class="loot-title">🎉 WINNER WINNER CHICKEN DINNER! 🍗</h4>
+          <p class="loot-items">Topilgan narsalar: <strong>AWM + M416 (Gletcher) + 10 ta qilmagan Najot Ta'lim vazifasi!</strong> 😂</p>
+        </div>
+
+        <button class="btn-open-airdrop" id="btnOpenAirdrop">
+          🪂 AIRDROP QUTISINI OCHISH ✨
+        </button>
+      </div>
+    </section>
+
+    <!-- SECTION 6: SINCERE MOTIVATION & ADVICE (DO'STONA MASLAHAT) -->
+    <section class="cyber-section motivation-sec">
+      <div class="sec-badge">🌟 DO'STONA MOTIVATSIYA // FUTURE SENIOR</div>
+      <h2 class="sec-title">Mahmudjonga Samimiy Maslahat ❤️</h2>
+      
+      <div class="motivation-card">
+        <div class="m-icon">🚀</div>
+        <h3 class="m-title">Mahmudjon, hazil o'z yo'liga, sen kelajakda kuchli dasturchi bo'lasan!</h3>
+        <p class="m-text">
+          Futbol o'ynash va do'stlar bilan vaqt o'tkazish juda yaxshi! Lekin <strong>Najot Ta'limdagi Web Dasturlash</strong> kursini qunt bilan o'qisang:
+        </p>
+
+        <div class="m-perks">
+          <div class="perk-item">
+            <span class="p-check">✅</span>
+            <span>PUBGda 100 ta kill qilgandan ko'ra, <strong>Senior Web Dasturchi</strong> bo'lib oyiga <strong>3000$ oylik</strong> olish zo'rroq!</span>
+          </div>
+          <div class="perk-item">
+            <span class="p-check">✅</span>
+            <span>Kechasi 04:00 gacha o'yin o'ynash o'rniga kod yozsang, butun dunyo bo'ylab sayohat qilasan!</span>
+          </div>
+          <div class="perk-item">
+            <span class="p-check">✅</span>
+            <span>Mahalladagi bolalarga gol urish o'rniga, IT sohasida eng zo'r loyihalarni yaratasan!</span>
+          </div>
+        </div>
+
+        <div class="m-footer">
+          <strong>Shuning uchun bugundan boshlab darslarni vaqtida qil, Mahmudjon! Kelajak seni kutmoqda! 💪</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: TELEGRAM / INSTAGRAM SHARE -->
+    <section class="cyber-section share-sec">
+      <div class="sec-badge">📱 ULASHISH</div>
+      <h2 class="sec-title">Mahmudjonga Saytni Yuboring! 😂</h2>
+      <p class="sec-desc">Unga do'stona hazil qilib, "Darsingni qil!" deb xabar yuborish uchun quyidagi tugmalarni bosing:</p>
+
+      <div class="share-buttons">
+        <button class="btn-share-tg" id="btnShareTG">
+          <span class="s-icon">✈️</span>
+          <span>Telegramda Mahmudjonga Yuborish</span>
+        </button>
+
+        <button class="btn-share-insta" id="btnShareInsta">
+          <span class="s-icon">📸</span>
+          <span>Instagramda Ulashish</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="cyber-footer">
+      <p>⚡ 2026 • <strong>Mahmudjon (10-Sinf)</strong> Uchun Maxsus Yaratilgan Do'stona Kiber Sayt ⚡</p>
+      <div class="f-sub">Najot Ta'lim Web Dasturlash & Mahallaning Kichik Bolalar Ligasi ©</div>
+    </footer>
+
+  </main>
+
+  <!-- Sound/Toast HUD -->
+  <div class="cyber-toast" id="cyberToast"></div>
+
+  <script src="script.js?v=1.0"></script>
+</body>
+</html>

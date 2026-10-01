@@ -1,0 +1,1133 @@
+/* ==========================================================================
+   MAHMUDJON PRO // CYBERPUNK FUT, PUBG & NAJOT TA'LIM EXPERIENCE
+   High-Octane Gaming & Motivation Web Interface
+   ========================================================================== */
+
+:root {
+  --bg-dark: #070412;
+  --bg-card: rgba(18, 12, 34, 0.75);
+  --bg-card-hover: rgba(28, 18, 54, 0.9);
+  --border-neon: rgba(0, 255, 136, 0.25);
+  --border-glow: rgba(0, 255, 136, 0.6);
+
+  --neon-green: #00ff88;
+  --neon-orange: #ff5722;
+  --neon-cyan: #00f0ff;
+  --neon-gold: #ffd700;
+  --neon-red: #ff2a5f;
+  --neon-purple: #b537f2;
+
+  --text-main: #ffffff;
+  --text-muted: #a39bbb;
+  --text-dim: #6e6488;
+
+  --font-hud: 'Chakra Petch', sans-serif;
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+  --font-code: 'Fira Code', monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  --shadow-neon-green: 0 0 25px rgba(0, 255, 136, 0.35);
+  --shadow-neon-orange: 0 0 25px rgba(255, 87, 34, 0.4);
+  --shadow-card: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   DYNAMIC CYBER BACKGROUND & CANVAS
+   ========================================================================== */
+.cyber-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.grid-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(0, 255, 136, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 136, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.4;
+  animation: orbFloat 20s infinite alternate ease-in-out;
+}
+
+.orb-green {
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, var(--neon-green), transparent 70%);
+  top: -100px;
+  left: -100px;
+}
+
+.orb-orange {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--neon-orange), transparent 70%);
+  bottom: -150px;
+  right: -100px;
+  animation-duration: 25s;
+}
+
+.orb-cyan {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, var(--neon-cyan), transparent 70%);
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.2;
+}
+
+@keyframes orbFloat {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(50px, 40px); }
+  100% { transform: translate(-30px, -40px); }
+}
+
+#cyberCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   TOP CYBER HUD NAVIGATION
+   ========================================================================== */
+.cyber-nav {
+  position: sticky;
+  top: 14px;
+  left: 0;
+  width: calc(100% - 32px);
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  background: rgba(12, 7, 24, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-neon);
+  border-radius: var(--radius-full);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), var(--shadow-neon-green);
+}
+
+.hud-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hud-tag {
+  background: rgba(0, 255, 136, 0.15);
+  color: var(--neon-green);
+  font-family: var(--font-hud);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 255, 136, 0.3);
+}
+
+.hud-title {
+  font-family: var(--font-hud);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.hud-status {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-family: var(--font-hud);
+}
+
+.blink-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--neon-orange);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--neon-orange);
+  animation: blinkAnim 1s infinite alternate;
+}
+
+@keyframes blinkAnim {
+  0% { opacity: 0.3; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
+
+.sound-toggle-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-family: var(--font-hud);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sound-toggle-btn:hover {
+  background: var(--neon-green);
+  color: #000;
+  border-color: var(--neon-green);
+}
+
+/* ==========================================================================
+   PAGE CONTAINER & TYPOGRAPHY
+   ========================================================================== */
+.page-container {
+  position: relative;
+  z-index: 10;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 30px 16px 80px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.text-green { color: var(--neon-green); }
+.text-orange { color: var(--neon-orange); }
+.text-cyan { color: var(--neon-cyan); }
+.text-gold { color: var(--neon-gold); }
+.text-red { color: var(--neon-red); }
+.text-purple { color: var(--neon-purple); }
+
+/* ==========================================================================
+   HERO SECTION & 3D FIFA FUT CARD
+   ========================================================================== */
+.hero-section {
+  padding-top: 10px;
+}
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 28px;
+  align-items: center;
+}
+
+/* 3D FUT Golden Card */
+.fut-card-wrapper {
+  perspective: 1000px;
+  display: flex;
+  justify-content: center;
+}
+
+.fut-card {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  background: linear-gradient(145deg, #e5b045, #7a5416, #d49c33, #3a2507);
+  border-radius: 20px;
+  padding: 22px 18px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(229, 176, 69, 0.4);
+  border: 2px solid #ffd700;
+  color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.fut-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(25deg);
+  animation: shimmerCard 4s infinite linear;
+  pointer-events: none;
+}
+
+@keyframes shimmerCard {
+  0% { transform: translateY(-100%) rotate(25deg); }
+  100% { transform: translateY(100%) rotate(25deg); }
+}
+
+.fut-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.fut-rating {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.rating-num {
+  font-family: var(--font-hud);
+  font-size: 3rem;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.rating-pos {
+  font-family: var(--font-hud);
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #ffe699;
+}
+
+.fut-flags {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 1.4rem;
+}
+
+.fut-avatar {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.avatar-icon {
+  font-size: 4rem;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
+  animation: avatarBounce 2s infinite ease-in-out;
+}
+
+@keyframes avatarBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.player-name {
+  font-family: var(--font-hud);
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+}
+
+.player-sub {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ffe699;
+  letter-spacing: 1px;
+}
+
+/* Stats Grid on FUT Card */
+.fut-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.stat-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+}
+
+.s-val {
+  font-family: var(--font-hud);
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+
+.s-lbl {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #e6e6e6;
+  line-height: 1.1;
+}
+
+.card-footer-quote {
+  font-size: 0.7rem;
+  font-style: italic;
+  text-align: center;
+  color: #fff2cc;
+  opacity: 0.9;
+}
+
+/* Hero Bio Card */
+.hero-bio-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-neon);
+  border-radius: var(--radius-lg);
+  padding: 34px 28px;
+  box-shadow: var(--shadow-card);
+}
+
+.badge-vip {
+  display: inline-block;
+  background: rgba(255, 87, 34, 0.15);
+  color: var(--neon-orange);
+  font-family: var(--font-hud);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(255, 87, 34, 0.35);
+  margin-bottom: 16px;
+}
+
+.bio-title {
+  font-family: var(--font-hud);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+
+.neon-text {
+  background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bio-desc {
+  font-size: 0.98rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+
+.bio-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 26px;
+}
+
+.highlight-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.88rem;
+}
+
+.pill-icon {
+  font-size: 1.2rem;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.btn-cyber-primary {
+  background: linear-gradient(135deg, var(--neon-green), #00c766);
+  color: #000;
+  font-family: var(--font-hud);
+  font-size: 0.95rem;
+  font-weight: 800;
+  padding: 14px 24px;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow-neon-green);
+  transition: all 0.25s ease;
+}
+
+.btn-cyber-primary:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 0 35px rgba(0, 255, 136, 0.6);
+}
+
+.btn-cyber-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: var(--font-hud);
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 14px 22px;
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.btn-cyber-secondary:hover {
+  background: rgba(0, 240, 255, 0.15);
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+
+/* ==========================================================================
+   CYBER SECTIONS & HEADERS
+   ========================================================================== */
+.cyber-section {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-neon);
+  border-radius: var(--radius-lg);
+  padding: 34px 26px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+.sec-badge {
+  color: var(--neon-green);
+  font-family: var(--font-hud);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.sec-title {
+  font-family: var(--font-hud);
+  font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.sec-desc {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  margin-bottom: 26px;
+  max-width: 680px;
+}
+
+/* ==========================================================================
+   24-HOUR TIMELINE GRID
+   ========================================================================== */
+.timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.timeline-card {
+  background: rgba(10, 5, 22, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 20px 16px;
+  transition: all 0.3s;
+}
+
+.timeline-card:hover, .timeline-card.active-card {
+  border-color: var(--neon-green);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 255, 136, 0.15);
+}
+
+.t-time {
+  font-family: var(--font-hud);
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--neon-gold);
+  margin-bottom: 8px;
+}
+
+.t-emoji {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+}
+
+.t-name {
+  font-family: var(--font-hud);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.t-info {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   NAJOT TA'LIM CODE TERMINAL
+   ========================================================================== */
+.terminal-box {
+  background: #0d091a;
+  border: 1px solid rgba(0, 255, 136, 0.4);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+}
+
+.terminal-header {
+  background: #18112d;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-code);
+  font-size: 0.78rem;
+}
+
+.term-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot-red { background: #ff5f56; }
+.dot-yellow { background: #ffbd2e; }
+.dot-green { background: #27c93f; }
+
+.term-title {
+  color: var(--text-muted);
+}
+
+.term-git {
+  color: var(--neon-red);
+}
+
+.terminal-body {
+  padding: 20px;
+  font-family: var(--font-code);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  overflow-x: auto;
+}
+
+.c-keyword { color: #ff7b72; font-weight: 700; }
+.c-var { color: #79c0ff; }
+.c-prop { color: #d2a8ff; }
+.c-str { color: #a5d6ff; }
+.c-num { color: #ffab70; }
+.c-bool { color: #ff7b72; font-weight: 700; }
+.c-func { color: #d2a8ff; }
+.c-comment { color: #8b949e; font-style: italic; }
+
+.terminal-actions {
+  display: flex;
+  gap: 12px;
+  padding: 14px 20px;
+  background: #130c24;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+}
+
+.btn-term-run {
+  background: var(--neon-green);
+  color: #000;
+  font-family: var(--font-hud);
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-term-run:hover {
+  box-shadow: var(--shadow-neon-green);
+  transform: scale(1.03);
+}
+
+.btn-term-excuse {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-family: var(--font-hud);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-term-excuse:hover {
+  background: rgba(255, 87, 34, 0.2);
+  border-color: var(--neon-orange);
+}
+
+.term-output {
+  background: #080410;
+  padding: 14px 20px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.15);
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  color: var(--neon-orange);
+}
+
+.out-prompt {
+  color: var(--neon-green);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   MINI GAME 1: PENALTY SHOOTOUT ON 8-YEAR-OLDS
+   ========================================================================== */
+.game-arena {
+  background: #0d091a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  text-align: center;
+}
+
+.stadium-box {
+  height: 180px;
+  background: linear-gradient(180deg, #120b24 0%, #1a3d1c 100%);
+  border: 2px solid rgba(0, 255, 136, 0.4);
+  border-radius: var(--radius-sm);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.goal-posts {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 90px;
+  border: 4px solid #ffffff;
+  border-bottom: none;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.goalie-keeper {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.1rem;
+  font-weight: 800;
+  background: #ff5722;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  animation: goalieMove 2.5s infinite alternate ease-in-out;
+}
+
+@keyframes goalieMove {
+  0% { left: 20%; }
+  100% { left: 80%; }
+}
+
+.soccer-ball {
+  position: absolute;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2.2rem;
+  transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.soccer-ball.kicked {
+  bottom: 25px;
+  transform: translateX(-50%) rotate(720deg) scale(0.8);
+}
+
+.game-dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.score-pill {
+  font-family: var(--font-hud);
+  font-size: 1.3rem;
+  font-weight: 800;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 24px;
+  border-radius: var(--radius-full);
+}
+
+.btn-shoot-ball {
+  background: linear-gradient(135deg, var(--neon-green), #00c766);
+  color: #000;
+  font-family: var(--font-hud);
+  font-size: 1.05rem;
+  font-weight: 900;
+  padding: 14px 28px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-neon-green);
+  transition: transform 0.2s;
+}
+
+.btn-shoot-ball:hover {
+  transform: scale(1.05);
+}
+
+.game-cheer {
+  font-size: 0.88rem;
+  color: var(--neon-gold);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   MINI GAME 2: PUBG POCHINKI AIRDROP
+   ========================================================================== */
+.pubg-airdrop-box {
+  background: #0d091a;
+  border: 1px solid rgba(255, 87, 34, 0.4);
+  border-radius: var(--radius-md);
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.airdrop-crate {
+  display: inline-block;
+  margin-bottom: 16px;
+  cursor: pointer;
+  position: relative;
+}
+
+.crate-top {
+  background: #d32f2f;
+  color: #fff;
+  font-family: var(--font-hud);
+  font-size: 1.2rem;
+  font-weight: 900;
+  padding: 20px 30px;
+  border: 3px solid #ff5722;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 10px 30px rgba(255, 87, 34, 0.5);
+  animation: crateFloat 2s infinite alternate ease-in-out;
+}
+
+@keyframes crateFloat {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-8px); }
+}
+
+.crate-smoke {
+  font-size: 1.6rem;
+  animation: smokeRise 1.5s infinite;
+}
+
+@keyframes smokeRise {
+  0% { opacity: 0.3; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1.3); }
+}
+
+.airdrop-loot {
+  display: none;
+  background: rgba(255, 87, 34, 0.15);
+  border: 1px solid var(--neon-orange);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-bottom: 18px;
+  animation: fadeInPop 0.4s ease;
+}
+
+.loot-title {
+  font-family: var(--font-hud);
+  font-size: 1.1rem;
+  color: var(--neon-gold);
+  margin-bottom: 6px;
+}
+
+.loot-items {
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.btn-open-airdrop {
+  background: linear-gradient(135deg, var(--neon-orange), #ff2a5f);
+  color: #fff;
+  font-family: var(--font-hud);
+  font-size: 1rem;
+  font-weight: 800;
+  padding: 14px 28px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--shadow-neon-orange);
+  transition: all 0.25s;
+}
+
+.btn-open-airdrop:hover {
+  transform: scale(1.05);
+}
+
+@keyframes fadeInPop {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* ==========================================================================
+   MOTIVATION & SINCERE ADVICE
+   ========================================================================== */
+.motivation-card {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.08), rgba(0, 240, 255, 0.08));
+  border: 2px solid var(--neon-green);
+  border-radius: var(--radius-md);
+  padding: 28px 24px;
+}
+
+.m-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.m-title {
+  font-family: var(--font-hud);
+  font-size: 1.4rem;
+  color: #fff;
+  margin-bottom: 14px;
+}
+
+.m-text {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+.m-perks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.perk-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.92rem;
+  color: #e0dbf2;
+}
+
+.p-check {
+  font-size: 1.1rem;
+}
+
+.m-footer {
+  font-size: 0.95rem;
+  color: var(--neon-gold);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 14px;
+}
+
+/* ==========================================================================
+   SHARE BUTTONS
+   ========================================================================== */
+.share-buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-share-tg {
+  background: #229ed9;
+  color: #fff;
+  border: none;
+  font-family: var(--font-hud);
+  font-size: 0.98rem;
+  font-weight: 800;
+  padding: 16px 26px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 260px;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(34, 158, 217, 0.4);
+  transition: all 0.25s;
+}
+
+.btn-share-tg:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(34, 158, 217, 0.6);
+}
+
+.btn-share-insta {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #fff;
+  border: none;
+  font-family: var(--font-hud);
+  font-size: 0.98rem;
+  font-weight: 800;
+  padding: 16px 26px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 260px;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(220, 39, 67, 0.4);
+  transition: all 0.25s;
+}
+
+.btn-share-insta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(220, 39, 67, 0.6);
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.cyber-footer {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  padding-top: 20px;
+}
+
+.cyber-footer strong {
+  color: var(--neon-green);
+}
+
+.f-sub {
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   TOAST HUD
+   ========================================================================== */
+.cyber-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(14, 8, 28, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--neon-green);
+  color: #fff;
+  font-family: var(--font-hud);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), var(--shadow-neon-green);
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cyber-toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ==========================================================================
+   MOBILE RESPONSIVENESS
+   ========================================================================== */
+@media (max-width: 768px) {
+  .profile-layout {
+    grid-template-columns: 1fr;
+  }
+  
+  .fut-card-wrapper {
+    margin-bottom: 10px;
+  }
+  
+  .cyber-section {
+    padding: 24px 16px;
+  }
+  
+  .hero-bio-card {
+    padding: 24px 16px;
+  }
+
+  .hud-status {
+    gap: 8px;
+  }
+  
+  .status-txt {
+    display: none;
+  }
+}
